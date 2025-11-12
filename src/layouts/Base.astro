@@ -9,10 +9,87 @@ const { title = 'Portfolio', description = '' } = Astro.props
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <link rel="icon" type="image/png" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#0f0f0f" />
+    <link rel="canonical" href={new URL(Astro.url.pathname, import.meta.env.SITE ?? 'https://prammmoe.space').toString()} />
+    <meta name="author" content="Pram" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="prammmoe" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={new URL(Astro.url.pathname, import.meta.env.SITE ?? 'https://prammmoe.space').toString()} />
+    <meta property="og:image" content="/favicon.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/favicon.svg" />
+    <script type="application/ld+json" is:inline>
+      {JSON.stringify({
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'prammmoe',
+        url: (import.meta.env.SITE ?? 'https://prammmoe.space'),
+        inLanguage: 'id',
+        publisher: { '@type': 'Person', name: 'Pram' }
+      })}
+    </script>
   </head>
   <body>
     <main class="container">
       <slot />
     </main>
+    <nav class="site-nav" aria-label="Main Navigation">
+      <ul class="main">
+        <li><a href="/">Home</a></li>
+        <li><a href="/blog/">Blog</a></li>
+        <li><a href="/projects/">Projects</a></li>
+        <li><a href="/about/">About</a></li>
+        <li>
+          <details class="more">
+            <summary>More</summary>
+            <ul class="submenu">
+              <li><a href="/media/">Media I Consumed</a></li>
+              <li><a href="/musics/">Musics I Consumed</a></li>
+            </ul>
+          </details>
+        </li>
+      </ul>
+    </nav>
+    <style>
+      .site-nav {
+        position: fixed;
+        left: 2rem;
+        bottom: 2rem;
+        z-index: 1000;
+      }
+      .site-nav .main {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .site-nav a { color: var(--accent); }
+      .site-nav .more { position: relative; }
+      .site-nav .more > summary { cursor: pointer; }
+      .site-nav .submenu {
+        position: absolute;
+        left: 0;
+        bottom: calc(100% + 0.5rem);
+        list-style: none;
+        margin: 0;
+        padding: 0.75rem 1rem;
+        background: rgba(255,255,255,0.06);
+        border-radius: 8px;
+        display: none;
+        min-width: 260px;
+        white-space: nowrap;
+      }
+      .site-nav .more[open] .submenu { display: block; }
+      .site-nav .submenu li { margin: 0.25rem 0; }
+    </style>
   </body>
   </html>

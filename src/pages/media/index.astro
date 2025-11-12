@@ -1,0 +1,23 @@
+---
+import Base from '../../layouts/Base.astro'
+import { getCollection } from 'astro:content'
+const items = (await getCollection('media'))
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+---
+<Base title="Media I Consumed">
+  <h1>Media I Consumed</h1>
+  <ul class="posts">
+    {items.map((p) => (
+      <li>
+        <a href={`/media/${p.slug}/`}>{p.data.title}</a>
+        <span class="date">{new Date(p.data.pubDate).toLocaleDateString('id-ID')}</span>
+      </li>
+    ))}
+  </ul>
+  <style>
+    .posts { list-style: none; padding: 0; margin: 1rem 0 0 0; }
+    .posts li { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+    .date { color: var(--muted); font-size: 0.95rem; }
+  </style>
+</Base>

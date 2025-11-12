@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://prammmoe.space/sitemap-index.xml

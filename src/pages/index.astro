@@ -1,63 +1,73 @@
 ---
 import Base from '../layouts/Base.astro'
-import { getCollection } from 'astro:content'
-const posts = (await getCollection('blog'))
-  .filter((p) => !p.data.draft)
-  .sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
-  .slice(0, 3)
+ 
 ---
 <Base title="Beranda">
   <section class="hero">
     <div class="hero-inner">
-      <p class="quote">“So which of the favours of your Lord will you deny?”</p>
-      <p class="ref">[55:13]</p>
+      <h1 class="quote">Hi, I am Pram.</h1>
+      <p class="intro-sub">I am a Software Engineer | Aspiring iOS Engineer.</p>
     </div>
   </section>
-  <section>
-    <h2>Tulisan Terbaru</h2>
-    <ul class="posts">
-      {posts.map((p) => (
-        <li>
-          <a href={`/blog/${p.slug}/`}>{p.data.title}</a>
-          <span class="date">{new Date(p.data.pubDate).toLocaleDateString('id-ID')}</span>
-        </li>
-      ))}
-    </ul>
-  </section>
+  <footer class="site-footer">
+    <ul class="posts"></ul>
+  </footer>
   <style>
-    .hero {
-      min-height: 80vh;
-      display: flex;
-      align-items: center;
-    }
-    .hero-inner {
-      max-width: 840px;
-      margin-left: 4vw;
-    }
-    .quote {
-      font-size: clamp(2rem, 5vw, 4rem);
-      font-style: italic;
-      color: var(--muted);
-    }
-    .ref {
-      margin-top: 0.75rem;
-      font-size: clamp(0.9rem, 2vw, 1.2rem);
-      color: var(--muted);
-    }
-    .posts {
-      list-style: none;
-      padding: 0;
-      margin: 1rem 0 0 0;
-    }
-    .posts li {
-      display: flex;
-      justify-content: space-between;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid rgba(255,255,255,0.06);
-    }
-    .date {
-      color: var(--muted);
-      font-size: 0.95rem;
-    }
-  </style>
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .hero-inner {
+    max-width: 840px;
+    margin: 0;
+    text-align: left;
+  }
+
+  /* Besarkan tulisan hero */
+  .quote {
+    font-size: clamp(3rem, 7vw, 6rem);
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.1;
+  }
+
+  .intro-sub {
+    margin-top: 1rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    color: var(--muted);
+  }
+
+ 
+
+  .posts {
+    list-style: none;
+    padding: 0;
+    margin: 1rem 0 0 0;
+  }
+
+  .posts li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+
+  .date {
+    color: var(--muted);
+    font-size: 0.95rem;
+  }
+
+  .site-footer {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    position: relative;
+    max-width: 840px;
+    margin: 0;
+  }
+</style>
+
 </Base>

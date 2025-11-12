@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",
+    "@astrojs/sitemap": "^3.1.6",
     "@fontsource/eb-garamond": "^5.2.7",
     "astro": "^5.15.5",
     "typescript": "^5.9.3"
