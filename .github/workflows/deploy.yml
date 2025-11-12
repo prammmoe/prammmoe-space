@@ -1,0 +1,62 @@
+name: Deploy Astro to VPS
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'astro.config.mjs'
+      - 'package.json'
+      - 'package-lock.json'
+      - 'pnpm-lock.yaml'
+      - 'tsconfig.json'
+      - 'src/content/**'
+      - '.github/workflows/deploy.yml'
+
+concurrency:
+  group: deploy-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+      SSH_HOST: ${{ secrets.SSH_HOST }}
+      SSH_USER: ${{ secrets.SSH_USER }}
+      SSH_PORT: ${{ secrets.SSH_PORT }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm install --no-audit --no-fund
+
+      - name: Build
+        run: npm run build
+
+      - name: Setup SSH
+        shell: bash
+        run: |
+          mkdir -p ~/.ssh
+          PORT="${SSH_PORT:-22}"
+          ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+          eval "$(ssh-agent -s)"
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" | ssh-add -
+          echo "PORT=$PORT" >> $GITHUB_ENV
+
+      - name: Prepare remote directories
+        run: ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH/releases'"
+
+      - name: Rsync release
+        run: rsync -az --delete -e "ssh -p $PORT" ./dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/releases/${{ github.sha }}/"
+
+      - name: Activate release
+        run: ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "ln -sfn '$DEPLOY_PATH/releases/${{ github.sha }}' '$DEPLOY_PATH/current' && (sudo systemctl reload nginx || true)"

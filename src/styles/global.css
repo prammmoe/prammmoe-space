@@ -1,0 +1,51 @@
+@import "@fontsource/eb-garamond/400.css";
+@import "@fontsource/eb-garamond/500.css";
+@import "@fontsource/eb-garamond/700.css";
+@import "@fontsource/eb-garamond/400-italic.css";
+
+:root {
+  --bg: #0f0f0f;
+  --text: #d8d6cd;
+  --muted: #b1afa6;
+  --accent: #e2dfd5;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "EB Garamond", serif;
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  opacity: 0.9;
+}
+
+h1, h2, h3 {
+  font-weight: 500;
+}
+
+.post .content p {
+  margin: 1rem 0;
+}
+
+.post .content img {
+  max-width: 100%;
+  border-radius: 6px;
+}
