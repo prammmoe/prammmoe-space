@@ -2,17 +2,17 @@ name: Deploy Astro to VPS
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
     paths:
-      - 'src/**'
-      - 'public/**'
-      - 'astro.config.mjs'
-      - 'package.json'
-      - 'package-lock.json'
-      - 'pnpm-lock.yaml'
-      - 'tsconfig.json'
-      - 'src/content/**'
-      - '.github/workflows/deploy.yml'
+      - "src/**"
+      - "public/**"
+      - "astro.config.mjs"
+      - "package.json"
+      - "package-lock.json"
+      - "pnpm-lock.yaml"
+      - "tsconfig.json"
+      - "src/content/**"
+      - ".github/workflows/deploy.yml"
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -34,7 +34,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install deps
         run: npm install --no-audit --no-fund
@@ -43,16 +43,16 @@ jobs:
         run: npm run build
 
       - name: Setup SSH
-        shell: bash
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
           set -e
           mkdir -p ~/.ssh
           PORT="${SSH_PORT:-22}"
-          if [ -z "$SSH_HOST" ]; then echo "Missing SSH_HOST secret" >&2; exit 1; fi
-          if [ -z "${{ secrets.SSH_PRIVATE_KEY }}" ]; then echo "Missing SSH_PRIVATE_KEY secret" >&2; exit 1; fi
           ssh-keyscan -p "$PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
           eval "$(ssh-agent -s)"
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" | ssh-add - >/dev/null 2>&1 || { echo "Invalid private key format or passphrase-protected key" >&2; exit 1; }
+          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
           echo "PORT=$PORT" >> $GITHUB_ENV
 
       - name: Prepare remote directories
