@@ -2,7 +2,7 @@
 title: "#LitKod FizzBuzz Problem in Swift"
 description: "Posting percobaan untuk verifikasi"
 pubDate: 2025-12-22
-tags: ["intro"]
+tags: ["Swift", "DSA", "LeetCode"]
 ---
 
 Karena banyak denger problem ini bikin Junior (seperti saya) gagal pas technical test, jadi memutuskan untuk menulis solusinya di sini.
