@@ -56,3 +56,10 @@ h2 {
   max-width: 100%;
   border-radius: 6px;
 }
+
+/* Mobile responsive styling */
+@media (max-width: 640px) {
+  .container {
+    padding: 1rem;
+  }
+}
