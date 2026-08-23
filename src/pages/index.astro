@@ -1,6 +1,6 @@
 ---
 import Base from '../layouts/Base.astro'
- 
+
 ---
 <Base title="Pramuditha Muhammad Ikhwan - iOS Developer">
   <section class="hero">
@@ -11,10 +11,25 @@ import Base from '../layouts/Base.astro'
       <div class="profile-info">
         <h1 class="name">Pramuditha Muhammad Ikhwan (Pram)</h1>
         <p class="title">Software Engineer | iOS Developer</p>
-        <p class="bio">
-          Just a random software engineer who loves to build things and solve problems.
-        </p>
-        
+
+        <pre class="ascii-cat">                 _
+              _                        
+       \`*-.                    
+        )  _`-.                 
+       .  : `. .                
+       : _   '  \               
+       ; *` _.   `*-._          
+       `-.-'          `-.       
+         ;       `       `.     
+         :.       .        \    
+         . \  .   :   .-'   .   
+         '  `+.;  ;  '      :   
+         :  '  |    ;       ;-. 
+         ; '   : :`-:     _.`* ;
+[bug] .*' /  .*' ; .*`- +'  `*' 
+      `*-*   `*-*  `*-*'
+      </pre>
+
         <!-- Connect Links -->
         <div class="connect-section">
           <span class="connect-label">Connect</span>
@@ -51,7 +66,7 @@ import Base from '../layouts/Base.astro'
             </a>
           </div>
         </div>
-        
+
         <!-- Download Section -->
         <div class="download-section">
           <span class="download-label">Download</span>
@@ -84,19 +99,19 @@ import Base from '../layouts/Base.astro'
       <!-- Educational Background -->
       <div class="background-section">
         <h2 class="section-title">Educational Background</h2>
-        
+
         <div class="background-item">
           <h3 class="item-title">Apple Developer Academy @ Infinite Learning</h3>
           <p class="item-subtitle">Learner Cohort 6</p>
           <p class="item-date">Feb 2025 - Dec 2025</p>
         </div>
-        
+
         <div class="background-item">
           <h3 class="item-title">Universitas Negeri Yogyakarta</h3>
           <p class="item-subtitle">Majoring in Information Technology</p>
           <p class="item-date">Aug 2021 - May 2025</p>
         </div>
-        
+
         <div class="background-item">
           <h3 class="item-title">Bangkit Academy</h3>
           <p class="item-subtitle">Mobile Development Cohort</p>
@@ -107,25 +122,25 @@ import Base from '../layouts/Base.astro'
       <!-- Professional Background -->
       <div class="background-section">
         <h2 class="section-title">Professional Background</h2>
-        
-         <div class="background-item">
+
+        <div class="background-item">
           <h3 class="item-title">Arya Noble (ERHA Clinic)</h3>
           <p class="item-subtitle">iOS Developer</p>
           <p class="item-date">Mar 2026 - Present</p>
         </div>
-        
+
         <div class="background-item">
           <h3 class="item-title">4TITU PTE LTD</h3>
           <p class="item-subtitle">Full Stack Developer</p>
           <p class="item-date">Aug 2025 - Mar 2026</p>
         </div>
-        
+
         <div class="background-item">
           <h3 class="item-title">Apple Developer Academy @ Infinite Learning</h3>
           <p class="item-subtitle">iOS Developer</p>
           <p class="item-date">Feb 2025 - Dec 2025</p>
         </div>
-        
+
         <div class="background-item">
           <h3 class="item-title">PT Widya Inovasi Indonesia</h3>
           <p class="item-subtitle">System Analyst</p>
@@ -202,6 +217,8 @@ import Base from '../layouts/Base.astro'
 
     .profile-info {
       padding-top: 0.5rem;
+      min-width: 0;
+      overflow: visible;
     }
 
     .name {
@@ -218,14 +235,21 @@ import Base from '../layouts/Base.astro'
       margin: 0 0 1.5rem 0;
     }
 
-    .bio {
-      font-size: 1.1rem;
-      line-height: 1.6;
-      color: var(--muted);
+    .ascii-cat {
       margin: 0;
-      max-width: 400px;
+      padding: 0;
+      width: max-content;
+      max-width: 100%;
+      overflow-x: auto;
+      overflow-y: hidden;
+      white-space: pre;
+      color: var(--muted);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 14px;
+      line-height: 1.2;
       font-style: normal;
-      font-weight: 200;
+      font-weight: 400;
+      tab-size: 2;
     }
 
     /* Connect Section */
@@ -376,11 +400,19 @@ import Base from '../layouts/Base.astro'
       }
 
       .profile-info {
+        width: 100%;
         padding-top: 0;
       }
 
-      .bio {
-        max-width: 100%;
+      .ascii-cat {
+        margin-inline: auto;
+        font-size: 11px;
+        line-height: 1.15;
+      }
+
+      .connect-section,
+      .download-section {
+        justify-content: center;
       }
 
       .background-container {
