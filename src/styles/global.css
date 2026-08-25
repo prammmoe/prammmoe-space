@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap');
+@import 'katex/dist/katex.min.css';
 
 :root {
   --bg: #0f0f0f;
@@ -46,10 +47,6 @@ h1 {
 h2 {
   font-size: clamp(1.8rem, 4.5vw, 2.2rem);
   margin: 0;
-}
-
-.post .content p {
-  margin: 1rem 0;
 }
 
 .post .content img {

@@ -12,16 +12,60 @@ const { post } = Astro.props
 const { Content } = await post.render()
 ---
 <Base title={post.data.title} description={post.data.description}>
-  <article class="post">
-    <h1>{post.data.title}</h1>
-    <p class="meta">{new Date(post.data.pubDate).toLocaleDateString('id-ID')}</p>
-    <div class="content">
+  <article class="post blog-post">
+    <header class="article-header">
+      <p class="article-kicker">Blog</p>
+      <h1>{post.data.title}</h1>
+      {post.data.description && <p class="article-dek">{post.data.description}</p>}
+      <p class="meta">{new Date(post.data.pubDate).toLocaleDateString('id-ID')}</p>
+    </header>
+    {post.data.coverImage && (
+      <figure class="cover">
+        <img src={post.data.coverImage} alt={`Cover image for ${post.data.title}`} />
+        {post.data.coverCredit && (
+          <figcaption>
+            Credit: {post.data.coverCreditUrl ? <a href={post.data.coverCreditUrl}>{post.data.coverCredit}</a> : post.data.coverCredit}
+          </figcaption>
+        )}
+      </figure>
+    )}
+    <div class="content article-content">
       <Content />
     </div>
   </article>
   <style>
-    .post h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 0; }
-    .meta { color: var(--muted); margin-top: 0.5rem; }
-    .content { margin-top: 1.5rem; }
+    .blog-post { max-width: 43rem; margin: 0 auto 6rem; }
+    .article-header { margin-bottom: 2.5rem; }
+    .article-kicker { color: var(--muted); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; margin: 0 0 0.875rem; text-transform: uppercase; }
+    .blog-post h1 { font-size: clamp(2.5rem, 6vw, 4.25rem); letter-spacing: -0.045em; line-height: 1.04; margin: 0; }
+    .article-dek { color: var(--muted); font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.15rem, 2.5vw, 1.4rem); line-height: 1.45; margin: 1.25rem 0 0; }
+    .meta { color: var(--muted); font-size: 0.875rem; margin: 1.25rem 0 0; }
+    .cover { margin: 0 0 2.5rem; }
+    .cover img { aspect-ratio: 16 / 8; display: block; object-fit: cover; object-position: center; width: 100%; }
+    .cover figcaption { color: var(--muted); font-size: 0.78rem; margin-top: 0.75rem; }
+    .cover figcaption a { text-decoration: underline; text-underline-offset: 0.2em; }
+    .article-content { font-family: Georgia, 'Times New Roman', serif; font-size: clamp(1.125rem, 1rem + 0.35vw, 1.25rem); line-height: 1.78; }
+    .article-content :global(h2), .article-content :global(h3) { font-family: 'IBM Plex Sans', sans-serif; letter-spacing: -0.025em; line-height: 1.16; margin: 3.5rem 0 1rem; }
+    .article-content :global(h2) { font-size: clamp(1.65rem, 3.5vw, 2.2rem); }
+    .article-content :global(h3) { font-size: clamp(1.3rem, 3vw, 1.6rem); }
+    .article-content :global(p), .article-content :global(ul), .article-content :global(ol) { margin: 0 0 1.5rem; }
+    .article-content :global(blockquote) { border-left: 2px solid var(--accent); color: var(--text); font-style: italic; margin: 2rem 0; padding: 0.25rem 0 0.25rem 1.25rem; }
+    .article-content :global(blockquote p) { margin: 0; }
+    .article-content :global(strong) { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; }
+    .article-content :global(hr) { border: 0; border-top: 1px solid rgba(255, 255, 255, 0.14); margin: 3rem 0; }
+    .article-content :global(.katex-display) { margin: 2rem 0; overflow-x: auto; overflow-y: hidden; padding: 0.25rem 0; }
+    .article-content :global(.article-figure) { margin: 2rem 0; }
+    .article-content :global(.article-figure--wide) { margin: 2.5rem 0; }
+    .article-content :global(.article-figure--wide img) { aspect-ratio: 16 / 9; display: block; object-fit: cover; width: 100%; }
+    .article-content :global(.article-figure--portrait) { max-width: 14rem; }
+    .article-content :global(.article-figure--portrait img) { display: block; width: 100%; }
+    .article-content :global(.article-figure figcaption) { color: var(--muted); font-family: 'IBM Plex Sans', sans-serif; font-size: 0.75rem; line-height: 1.4; margin-top: 0.5rem; }
+    .article-content :global(.article-figure figcaption a) { text-decoration: underline; text-underline-offset: 0.2em; }
+    @media (max-width: 640px) {
+      .blog-post { margin-bottom: 5rem; }
+      .article-header { margin-bottom: 2rem; }
+      .cover { margin-bottom: 2rem; }
+      .article-content { line-height: 1.72; }
+    }
   </style>
 </Base>

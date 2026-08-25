@@ -7,6 +7,9 @@ const baseSchema = z.object({
   updatedDate: z.date().optional(),
   tags: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
+  coverImage: z.string().optional(),
+  coverCredit: z.string().optional(),
+  coverCreditUrl: z.string().url().optional(),
 });
 
 const projectSchema = z.object({
