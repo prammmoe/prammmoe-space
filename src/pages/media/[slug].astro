@@ -1,26 +1,8 @@
 ---
 import Base from '../../layouts/Base.astro'
 import { getCollection } from 'astro:content'
-
-export async function getStaticPaths() {
-  const items = await getCollection('media')
-  return items.map((p) => ({ params: { slug: p.slug }, props: { item: p } }))
-}
-
+export async function getStaticPaths() { return (await getCollection('media')).map((item) => ({ params: { slug: item.slug }, props: { item } })) }
 const { item } = Astro.props
 const { Content } = await item.render()
 ---
-<Base title={item.data.title} description={item.data.description}>
-  <article class="post">
-    <h1>{item.data.title}</h1>
-    <p class="meta">{new Date(item.data.pubDate).toLocaleDateString('id-ID')}</p>
-    <div class="content">
-      <Content />
-    </div>
-  </article>
-  <style>
-    .post h1 { font-size: clamp(2rem, 4vw, 3rem); margin: 0; }
-    .meta { color: var(--muted); margin-top: 0.5rem; }
-    .content { margin-top: 1.5rem; }
-  </style>
-</Base>
+<Base title={item.data.title} description={item.data.description}><article class="post"><a class="back-link" href="/media/">← back to media</a><header class="article-header"><p class="page-kicker">media</p><h1>{item.data.title}</h1><p class="meta">{new Date(item.data.pubDate).toLocaleDateString('en-US')}</p></header><div class="content"><Content /></div></article></Base>
