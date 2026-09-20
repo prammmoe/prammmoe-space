@@ -5,7 +5,13 @@ import remarkMath from 'remark-math'
 
 export default defineConfig({
   site: 'https://prammmoe.space',
-  integrations: [sitemap()],
+  integrations: [sitemap({
+    filter: (page) => ![
+      'https://prammmoe.space/happy-birthday-nana/',
+      'https://prammmoe.space/wishes-for-nana/',
+      'https://prammmoe.space/matcha-round-the-globe/',
+    ].includes(page),
+  })],
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],

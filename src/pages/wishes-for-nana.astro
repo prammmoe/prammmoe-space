@@ -1,0 +1,633 @@
+---
+const archivedWishGroups = [
+  [
+    'Four years with you still feels like my favorite lucky streak, Nana.',
+    'Semoga cinta kita selalu punya ruang untuk tumbuh, bahkan di hari yang paling sibuk.',
+    'You make ordinary days feel like a little celebration.',
+    'Terima kasih sudah menjadi rumah yang hangat di banyak versi hidupku.',
+    'May our next chapter be even softer, braver, and more beautiful.',
+    'Aku selalu bangga bisa menyebutmu sebagai pacarku.',
+    'You are my favorite person to come home to, in every sense.',
+    'Semoga kita selalu memilih satu sama lain, lagi dan lagi.',
+    'Four years down, a lifetime of tiny happy moments to go.',
+    'Kamu adalah salah satu keputusan terbaik yang pernah hadir di hidupku.',
+    'May our love keep feeling safe, silly, and wonderfully ours.',
+    'Aku suka cara kita bisa menjadi tim, bahkan dalam hal-hal kecil.',
+    'You are the sweetest part of my long-term plans.',
+    'Semoga setiap anniversary nanti masih membuat kita tersenyum selebar hari ini.',
+    'With you, even the future feels familiar and exciting.',
+    'Aku berharap kita selalu punya waktu untuk tertawa bersama.',
+    'May our story stay full of patience, loyalty, and inside jokes.',
+    'Kamu membuat empat tahun ini terasa sangat berarti.',
+    'You are proof that love can be both calm and thrilling.',
+    'Semoga kita terus saling menguatkan di setiap musim hidup.',
+  ],
+  [
+    'May your career keep opening doors as bright as your ambition.',
+    'Aku bangga melihatmu mengejar tujuan dengan keberanianmu sendiri.',
+    'You deserve every room that recognizes your talent.',
+    'Semoga kerja kerasmu selalu bertemu dengan kesempatan yang tepat.',
+    'Your ambition is beautiful because you carry it with grace.',
+    'Aku harap semua targetmu pelan-pelan berubah menjadi pencapaian yang membanggakan.',
+    'May your leadership grow as naturally as your confidence.',
+    'Kamu adalah perempuan tangguh yang tahu apa yang ia perjuangkan.',
+    'You inspire people simply by refusing to give up.',
+    'Semoga setiap langkah kariermu membawa kamu lebih dekat pada hidup impianmu.',
+    'Your discipline is one of the many things I admire about you.',
+    'Aku percaya kamu bisa menaklukkan hal-hal besar tanpa kehilangan dirimu sendiri.',
+    'May your inbox bring good news more often than stress.',
+    'Semoga usahamu selalu dihargai, terlihat, dan dibalas dengan baik.',
+    'You are built for meaningful success, Nana.',
+    'Aku berharap kamu selalu punya mentor, teman, dan peluang yang baik di sekelilingmu.',
+    'May every difficult meeting turn into a lesson that makes you stronger.',
+    'Kamu pantas mendapatkan karier yang membanggakan dan hidup yang seimbang.',
+    'Your future looks powerful because you keep showing up for it.',
+    'Semoga impianmu tidak pernah terasa terlalu jauh untuk dikejar.',
+  ],
+  [
+    'May your trading decisions stay sharp, calm, and well-timed.',
+    'Semoga chart-mu lebih banyak memberi senyum daripada drama.',
+    'You have the patience to wait for the right setup.',
+    'Aku harap semua analisismu semakin jernih dan percaya dirimu semakin kuat.',
+    'May your risk management protect your peace as much as your capital.',
+    'Semoga profit datang dengan cara yang sehat dan penuh kesadaran.',
+    'You make focus look really attractive.',
+    'Aku suka melihatmu serius belajar tentang hal yang kamu sukai.',
+    'May every red day teach you something useful, not steal your spirit.',
+    'Semoga kamu selalu ingat bahwa konsistensi juga adalah kemenangan.',
+    'Your ambition has both courage and calculation, a rare combination.',
+    'Aku berharap kamu selalu percaya pada prosesmu, bukan hanya hasil cepat.',
+    'May your next good trade feel earned and satisfying.',
+    'Semoga watchlist-mu penuh peluang yang layak ditunggu.',
+    'You are smarter than any noisy market day.',
+    'Aku doakan kamu selalu punya kejernihan saat mengambil keputusan besar.',
+    'May your discipline compound in every part of your life.',
+    'Semoga kamu menikmati proses belajar, bukan cuma mengejar angka.',
+    'You have the heart of a dreamer and the mind of a strategist.',
+    'Aku yakin kamu bisa membuat rencana yang cantik menjadi kenyataan.',
+  ],
+  [
+    'May hard work always leave room for gentle rest.',
+    'Semoga kamu tidak lupa bahwa beristirahat juga bagian dari berjuang.',
+    'You do not have to earn your worth; you already have it.',
+    'Aku harap kamu selalu memberi dirimu sendiri kredit atas kemajuan kecil.',
+    'May your mornings feel lighter and your nights feel calmer.',
+    'Semoga kamu punya energi yang cukup untuk semua hal yang kamu cintai.',
+    'Your persistence is amazing, but so is your soft side.',
+    'Aku ingin kamu selalu tahu bahwa kamu boleh berhenti sejenak.',
+    'May you keep choosing progress without punishing yourself.',
+    'Semoga setiap lelahmu berubah menjadi sesuatu yang sepadan.',
+    'You deserve breaks that actually feel like breaks.',
+    'Aku harap kamu menjaga kesehatanmu sebaik kamu menjaga mimpimu.',
+    'May your schedule make space for joy, not only deadlines.',
+    'Semoga kamu selalu menemukan alasan untuk bangga pada dirimu sendiri.',
+    'You are allowed to be ambitious and still take it slow sometimes.',
+    'Aku doakan hatimu selalu tenang di tengah semua kesibukan.',
+    'May you never confuse being busy with being alive.',
+    'Semoga kerja kerasmu tidak pernah membuatmu lupa menikmati hidup.',
+    'You are doing better than you think, Nana.',
+    'Aku percaya kamu bisa kuat tanpa harus selalu terlihat kuat.',
+  ],
+  [
+    'May your cute little laugh stay contagious forever.',
+    'Kamu lucu dengan cara yang selalu bisa memperbaiki hariku.',
+    'You are beautiful in ways that cannot fit in a mirror.',
+    'Semoga pesonamu selalu datang dari rasa percaya dirimu sendiri.',
+    'Your smile has a way of making everything feel less serious.',
+    'Aku suka semua ekspresi kecilmu yang mungkin kamu anggap biasa saja.',
+    'May you always see the lovely person I see.',
+    'Semoga kamu selalu tahu bahwa kamu sangat cantik, inside and out.',
+    'You have the kind of charm that makes a room feel warmer.',
+    'Aku harap kamu tidak pernah kehilangan sisi menggemaskanmu.',
+    'May your reflection remind you how special you are.',
+    'Semoga kamu terus jadi Nana yang lucu, manis, dan berani.',
+    'Your prettiness is only the beginning of what makes you unforgettable.',
+    'Aku suka caramu membuat hal kecil terasa menyenangkan.',
+    'May your favorite outfits always make you feel unstoppable.',
+    'Semoga hari-harimu penuh alasan untuk tersenyum malu-malu.',
+    'You are equal parts adorable and impressive.',
+    'Aku selalu senang melihatmu jadi diri sendiri.',
+    'May confidence sit on you as naturally as your prettiest smile.',
+    'Semoga dunia selalu memperlakukanmu selembut kamu memperlakukan orang lain.',
+  ],
+  [
+    'May today bring you a surprise that makes you grin all day.',
+    'Semoga ada banyak hal kecil yang membuatmu bahagia hari ini.',
+    'You deserve flowers, good food, and zero unnecessary stress.',
+    'Aku berharap notifikasi baik datang lebih sering daripada notifikasi pekerjaan.',
+    'May your coffee be perfect and your playlist even better.',
+    'Semoga kamu selalu punya alasan untuk merayakan dirimu sendiri.',
+    'You deserve a day that feels as lovely as you are.',
+    'Aku harap semesta sedang menyiapkan banyak hal baik untukmu.',
+    'May every little win find its way to you.',
+    'Semoga kamu dikelilingi orang-orang yang tulus menyayangimu.',
+    'You make joy look like a habit worth keeping.',
+    'Aku doakan kamu punya banyak weekend yang benar-benar menyenangkan.',
+    'May your camera roll fill with happy evidence of a good life.',
+    'Semoga kamu selalu punya tempat untuk pulang dan cerita.',
+    'You deserve laughter that makes your cheeks hurt.',
+    'Aku ingin setiap harimu punya satu momen yang membuatmu bersyukur.',
+    'May your favorite songs always find you at the right time.',
+    'Semoga hidupmu dipenuhi kejutan-kejutan kecil yang manis.',
+    'You deserve to be celebrated loudly and loved gently.',
+    'Aku harap hari ini memperlakukanmu dengan sangat baik.',
+  ],
+  [
+    'May we keep being each other’s calm in a noisy world.',
+    'Semoga kita tetap bisa bicara jujur, bahkan saat sulit.',
+    'You make partnership feel like a privilege.',
+    'Aku berharap kita selalu bisa menjadi tempat aman satu sama lain.',
+    'May our teamwork get stronger with every challenge.',
+    'Semoga kita punya banyak perjalanan kecil yang nantinya jadi cerita besar.',
+    'You make me want to become a better partner every day.',
+    'Aku bersyukur kita bisa tumbuh bersama, bukan hanya berjalan berdampingan.',
+    'May we never run out of reasons to choose kindness.',
+    'Semoga kita selalu punya keberanian untuk saling memahami.',
+    'You are my favorite teammate in this whole life thing.',
+    'Aku ingin kita terus punya mimpi yang bisa direncanakan bersama.',
+    'May our love stay practical, playful, and deeply honest.',
+    'Semoga kita tetap bisa saling menggoda bahkan saat rambut sudah beruban.',
+    'You make commitment feel warm instead of scary.',
+    'Aku harap kita selalu ingat betapa jauh kita sudah melangkah.',
+    'May we protect what we have with patience and intention.',
+    'Semoga kita selalu punya satu sama lain untuk dirayakan.',
+    'You are one of my safest places.',
+    'Aku berharap cinta kita selalu punya waktu untuk bernapas.',
+  ],
+  [
+    'May your biggest dreams stop feeling like dreams and start feeling scheduled.',
+    'Semoga keberanianmu selalu lebih besar daripada rasa ragumu.',
+    'You are capable of building a life that feels like you.',
+    'Aku doakan langkahmu selalu diarahkan ke hal-hal yang bermakna.',
+    'May every yes you give move you closer to your own version of success.',
+    'Semoga kamu berani berkata tidak pada hal-hal yang tidak menghargaimu.',
+    'Your ambition deserves a wide horizon.',
+    'Aku percaya kamu mampu membawa dirimu ke tempat-tempat yang luar biasa.',
+    'May your name be remembered in rooms you have not entered yet.',
+    'Semoga semua kemampuanmu menemukan panggung yang tepat.',
+    'You are allowed to want a big, beautiful life.',
+    'Aku harap kamu selalu punya keberanian untuk mencoba lagi.',
+    'May your goals feel challenging, never impossible.',
+    'Semoga kamu terus belajar tanpa kehilangan rasa ingin tahumu.',
+    'You have so much more magic ahead of you.',
+    'Aku doakan kamu selalu bertemu versi dirimu yang lebih kuat.',
+    'May your future self be proud of the choices you make today.',
+    'Semoga setiap mimpi besar punya langkah kecil yang bisa kamu lakukan sekarang.',
+    'You can be both a masterpiece and a work in progress.',
+    'Aku yakin jalanmu akan indah karena kamu menjalaninya dengan sungguh-sungguh.',
+  ],
+  [
+    'May you always feel loved without having to ask for proof.',
+    'Semoga kamu tidak pernah meragukan betapa berharganya dirimu.',
+    'You deserve affection that feels steady and true.',
+    'Aku harap hatimu selalu diberi kelembutan yang cukup.',
+    'May every compliment you receive land exactly where it is needed.',
+    'Semoga kamu selalu punya keberanian untuk menerima cinta.',
+    'You are more than your productivity, your plans, and your wins.',
+    'Aku sayang kamu untuk semua hal besar dan kecil yang membuatmu Nana.',
+    'May you be proud of the woman you are becoming.',
+    'Semoga kamu selalu merasa cukup, bahkan sebelum semua targetmu tercapai.',
+    'You bring so much goodness into the lives around you.',
+    'Aku harap kamu tetap lembut pada diri sendiri saat dunia terasa keras.',
+    'May you always have a reason to believe in tomorrow.',
+    'Semoga kamu tidak pernah kehilangan cahaya unikmu.',
+    'You are deeply lovable exactly as you are.',
+    'Aku bersyukur bisa mengenal hati yang sebaik hatimu.',
+    'May your days be full of confidence, comfort, and good surprises.',
+    'Semoga hidupmu selalu punya ruang untuk cinta yang menenangkan.',
+    'You are my Nana, and that is already something wonderful.',
+    'Aku akan selalu mendoakan hal-hal baik datang kepadamu.',
+  ],
+  [
+    'May voucher 002 remind you that you are loved 200 different ways.',
+    'Semoga halaman kecil ini bisa menemanimu saat kamu butuh semangat.',
+    'You are the main character of a very beautiful life.',
+    'Aku harap setiap wish di sini membuatmu merasa sedikit lebih dicintai.',
+    'May your next year be full of brave moves and soft landings.',
+    'Semoga kamu terus bertumbuh tanpa terburu-buru menjadi siapa pun selain dirimu.',
+    'You are the kind of person worth cheering for every day.',
+    'Aku akan selalu senang melihatmu menang, belajar, dan bahagia.',
+    'May the world meet your ambition with open doors.',
+    'Semoga kamu selalu punya hati yang kuat dan senyum yang tulus.',
+    'You make love, work, and dreams look wonderfully possible.',
+    'Aku doakan kamu selalu dikelilingi energi baik.',
+    'May every version of you feel worthy of love.',
+    'Semoga kita masih bisa melihat kembali halaman ini dan tersenyum nanti.',
+    'You are a beautiful blend of focus, fun, and tenderness.',
+    'Aku harap kamu selalu ingat: aku sangat bangga padamu.',
+    'May life reward the way you keep showing up.',
+    'Semoga masa depanmu secerah caramu membuat hariku.',
+    'You are loved, admired, and endlessly worth celebrating.',
+    'Aku sayang kamu, Nana. Always rooting for you.',
+  ],
+]
+const archivedWishes = archivedWishGroups.flat()
+
+if (archivedWishes.length !== 200) throw new Error(`Expected 200 archived wishes, received ${archivedWishes.length}`)
+
+const wishBeginnings = [
+  'Four years with you have taught me how beautiful partnership can be.',
+  'Every ordinary day becomes a little softer when it includes you.',
+  'You are my favorite person to celebrate both the big and tiny things with.',
+  'Our story feels more precious because we have grown through it together.',
+  'Being loved by you has made my world feel warmer and steadier.',
+  'I still find new reasons to be grateful that life brought us together.',
+  'You make the future feel exciting without making it feel scary.',
+  'Our best memories are often the quiet ones we did not plan at all.',
+  'I love the way we can be a team without losing who we are.',
+  'You are the person I want beside me in every version of tomorrow.',
+  'Your presence turns even a busy day into something worth remembering.',
+  'I treasure the way we keep choosing each other with intention.',
+  'You have made four years feel both fast, full, and deeply meaningful.',
+  'The life we are building feels brighter because you are in it.',
+  'I love that our relationship has room for laughter, honesty, and growth.',
+  'You are my safest place after a day that asks too much of us.',
+  'Every chapter with you has given me another reason to believe in us.',
+  'I am proud of the patience and care we have poured into this love.',
+  'You make commitment feel like a gift instead of a duty.',
+  'Our little inside jokes are some of my favorite treasures.',
+  'I love how naturally you make a shared future feel possible.',
+  'You are the best companion for both calm evenings and ambitious dreams.',
+  'The way we support each other is one of my favorite parts of us.',
+  'You make home feel less like a place and more like a feeling.',
+  'I would choose our imperfect, beautiful journey again and again.',
+  'Your love has become one of the gentlest constants in my life.',
+  'I admire how we keep learning each other instead of assuming we are finished.',
+  'You make every anniversary feel like a promise worth renewing.',
+  'Our connection has survived busy days because it is built with care.',
+  'I love having someone who understands both my silence and my excitement.',
+  'You bring a sense of calm to the dreams we talk about together.',
+  'The sweetest part of my plans is always imagining you there.',
+  'You are my favorite reminder that love can be practical and magical.',
+  'I appreciate every small way you make our relationship feel alive.',
+  'Your trust means more to me than I can ever fit into one sentence.',
+  'I hope we never stop finding new things to enjoy together.',
+  'You have made the last four years some of the most meaningful of my life.',
+  'Our love feels strongest when we face life as partners.',
+  'I am endlessly thankful for the tenderness you bring into our story.',
+  'You make me look forward to all the years we have not met yet.',
+  'Your work ethic is proof that you take your dreams seriously.',
+  'I admire the way you keep moving even when the path feels demanding.',
+  'You have the kind of ambition that makes people believe bigger is possible.',
+  'Your career deserves every door that opens because of your talent.',
+  'I am proud of how thoughtfully you build the life you want.',
+  'You carry responsibility with a strength that never stops impressing me.',
+  'Your discipline is quietly becoming one of your greatest superpowers.',
+  'I love watching you turn difficult tasks into finished work.',
+  'You have earned the confidence that comes from showing up consistently.',
+  'Your ideas deserve rooms full of people who listen closely.',
+  'You make determination look graceful rather than exhausting.',
+  'I believe in the goals you whisper about and the ones you say out loud.',
+  'Your persistence gives every dream you have a real chance to bloom.',
+  'You are building success in a way that still feels true to you.',
+  'I admire your ability to stay focused when distractions get loud.',
+  'Your ambition has a beautiful balance of courage and kindness.',
+  'You deserve colleagues who recognize the value you bring.',
+  'I am proud of every brave decision you make for your future.',
+  'Your growth is visible in the way you handle challenges now.',
+  'You are capable of more than any difficult week can make you feel.',
+  'I love that you keep learning instead of settling for what is easy.',
+  'Your leadership will feel natural because you lead with both heart and mind.',
+  'You have a way of making hard work look purposeful.',
+  'Your future achievements already have your signature all over them.',
+  'I admire how you make room for excellence in your everyday choices.',
+  'You deserve success that feels peaceful, not only impressive.',
+  'Your courage to try is just as beautiful as every result you earn.',
+  'I am certain that your talent will keep finding the right audience.',
+  'You make progress through patience, not just pressure.',
+  'Your goals are lucky to have someone as devoted as you pursuing them.',
+  'I love the pride in your eyes when something finally clicks.',
+  'You have the resilience to turn setbacks into smarter next steps.',
+  'Your determination gives your dreams a heartbeat.',
+  'I hope every promotion, project, and milestone finds you ready.',
+  'You are allowed to take up space in every room your work leads you to.',
+  'Your professional journey is becoming a story worth being proud of.',
+  'I admire how you turn pressure into focus when it matters most.',
+  'You have the patience to build something lasting instead of chasing shortcuts.',
+  'Your effort deserves appreciation long before the final result arrives.',
+  'I can see how much intention you put into becoming your best self.',
+  'Your career is brighter because you keep showing up with purpose.',
+  'You approach the market with a patience that most people never learn.',
+  'Your calm thinking is one of your greatest strengths when charts get noisy.',
+  'I admire how seriously you take learning the craft of trading.',
+  'You know that a good setup is worth waiting for.',
+  'Your discipline matters more than any single green or red day.',
+  'I love the focused look you get when you are studying a chart.',
+  'You have the wisdom to protect your peace as well as your capital.',
+  'Your patience can turn uncertainty into a better decision.',
+  'I admire the way you choose logic over panic when the market moves fast.',
+  'You are becoming more skilled every time you review your process.',
+  'Your best trades begin with the calm confidence you are building.',
+  'I love how curious you are about the details behind every move.',
+  'You understand that consistency is its own kind of victory.',
+  'Your strategy becomes stronger whenever you learn from a difficult day.',
+  'I admire your willingness to wait for clarity instead of forcing an entry.',
+  'You have the mind of a strategist and the heart of a dreamer.',
+  'Your trading journey is teaching you courage in a very practical form.',
+  'I love that you can care about growth without losing your perspective.',
+  'You are smarter than a bad candle and stronger than a rough session.',
+  'Your risk management is another way you show care for your future self.',
+  'I admire the discipline behind every trade you choose not to take.',
+  'You have learned that patience can be more powerful than urgency.',
+  'Your watchlist is lucky to be studied by someone so observant.',
+  'I love how you turn curiosity into preparation before making a move.',
+  'You are building confidence through practice, not empty promises.',
+  'Your ability to stay grounded is valuable in every market condition.',
+  'I admire how you treat every result as information, not as your identity.',
+  'You know that protecting your mindset is part of becoming successful.',
+  'Your trading notes are small proof of how seriously you honor your goals.',
+  'I love the determination you bring to understanding the bigger picture.',
+  'You have a patient kind of ambition that will take you far.',
+  'Your confidence grows every time you trust a well-made plan.',
+  'I admire your ability to keep learning after both wins and losses.',
+  'You make strategic thinking look natural and attractive.',
+  'Your focus helps you see opportunity where others only see noise.',
+  'I love that you are building skill instead of relying on luck.',
+  'You have the courage to stay disciplined when excitement tries to rush you.',
+  'Your next breakthrough may be hidden inside the patience you practice today.',
+  'I admire how you keep your eyes on the long game.',
+  'You are learning to trust yourself one thoughtful decision at a time.',
+  'Your market knowledge is growing because you respect the process.',
+  'I love that you can be ambitious without forgetting to be careful.',
+  'Your smile has a way of making even serious moments feel lighter.',
+  'I love the little expressions you make when something surprises you.',
+  'You are beautiful in ways that have nothing to do with a mirror.',
+  'Your laugh can rescue a day that started badly.',
+  'I adore the gentle confidence you carry when you feel like yourself.',
+  'You make being cute look completely effortless.',
+  'Your sense of humor is one of the reasons being around you feels easy.',
+  'I love how your eyes change when you are excited about something.',
+  'You have a warmth that makes people feel welcome without trying too hard.',
+  'Your beauty shows up most clearly when you are being genuinely happy.',
+  'I am always charmed by the tiny things that make you laugh.',
+  'You have an adorable way of making ordinary moments feel memorable.',
+  'Your kindness adds something special to every room you enter.',
+  'I love that you can be both funny and incredibly composed.',
+  'You have a smile that deserves to be protected from every bad day.',
+  'Your playful side is one of my favorite versions of you.',
+  'I admire how comfortable you make people feel just by being sincere.',
+  'You are lovely in the quiet moments when you are not trying to impress anyone.',
+  'Your joy is contagious in the best possible way.',
+  'I love the spark you bring to a room when you are feeling silly.',
+  'You have a face that makes good news look even better.',
+  'Your presence feels like a favorite song I never get tired of hearing.',
+  'I adore the way your confidence and softness coexist.',
+  'You are beautiful when you are focused, laughing, resting, and everything between.',
+  'Your charm lives in the details no camera could completely capture.',
+  'I love the way you turn little habits into something endearing.',
+  'You have the kind of laugh that deserves an encore.',
+  'Your humor makes hard days less heavy for everyone around you.',
+  'I admire the sweetness you show without even realizing it.',
+  'You are cute in a way that makes the world feel less serious.',
+  'Your confidence makes your beauty feel even more unforgettable.',
+  'I love watching you enjoy the things that make you happy.',
+  'You have a gentle magic that cannot be copied by anyone else.',
+  'Your grin is one of my favorite sights in the whole world.',
+  'I adore how naturally you make people want to root for you.',
+  'You are proof that strength can have a very soft smile.',
+  'Your sincerity is more beautiful than any perfect picture.',
+  'I love that you still know how to be playful in a serious world.',
+  'You have a way of making affection feel easy and honest.',
+  'Your smile is a small miracle I never want to take for granted.',
+  'I admire every version of you, especially the unguarded ones.',
+  'You deserve mornings that feel peaceful before they feel productive.',
+  'I hope you remember that rest is not something you have to earn.',
+  'Your worth stays whole even on the days when you do less.',
+  'I want you to be as gentle with yourself as you are with others.',
+  'You deserve breaks that make your heart feel lighter.',
+  'I hope you never mistake exhaustion for proof that you care enough.',
+  'Your well-being belongs on your list of important goals.',
+  'I want your quiet moments to feel safe instead of lonely.',
+  'You deserve to celebrate the small progress nobody else can see.',
+  'I hope you give yourself credit for how far you have already come.',
+  'Your heart deserves softness after every demanding season.',
+  'I want you to trust that taking a pause can also be brave.',
+  'You deserve friendships and spaces that refill your energy.',
+  'I hope your future holds work you love and rest you protect.',
+  'Your dreams are important, but so is the person dreaming them.',
+  'I want you to feel enough before every goal is complete.',
+  'You deserve a life with room for slow mornings and big ideas.',
+  'I hope you keep choosing what brings you peace as well as progress.',
+  'Your strength does not disappear when you ask for help.',
+  'I want your next season to be kinder than the last one.',
+  'You deserve people who celebrate your softness and your fire.',
+  'I hope your confidence keeps becoming quieter, deeper, and more certain.',
+  'Your future self will be grateful for the care you give yourself now.',
+  'I want every new year to reveal another reason for you to be proud.',
+  'You deserve to feel seen without having to perform for anyone.',
+  'I hope you always have time for the things that make you feel alive.',
+  'Your best life will include joy that cannot be measured on a checklist.',
+  'I want you to trust the pace that is right for your own heart.',
+  'You deserve calm after every storm you have handled so well.',
+  'I hope you keep making choices that honor the woman you are becoming.',
+  'Your journey does not need to look like anyone else’s to be beautiful.',
+  'I want you to remember that you are loved before you achieve anything today.',
+  'You deserve a future filled with meaningful work and easy laughter.',
+  'I hope your courage keeps making room for more of your true self.',
+  'Your life is allowed to be both successful and deeply joyful.',
+  'I want every beautiful possibility to find its way toward you.',
+]
+const wishEndings = [
+  'May today remind you how much you are loved.',
+  'May this year bring you calm, brave opportunities, and real joy.',
+  'May every small step lead you closer to the life you want.',
+  'May you always see the wonderful person I see.',
+  'May good news find you more often than unnecessary stress.',
+  'May your courage stay bigger than every doubt.',
+  'May your days hold both meaningful progress and gentle rest.',
+  'May the universe keep giving you reasons to smile.',
+]
+const wishes = wishBeginnings.map((beginning, index) => `${beginning} ${wishEndings[(index * 5 + 3) % wishEndings.length]}`)
+
+if (wishes.length !== 200) throw new Error(`Expected 200 wishes, received ${wishes.length}`)
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Voucher 002 — Nana Wish Player</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content="#204b89" />
+  </head>
+  <body>
+    <audio class="akad-audio" src="/audio/payung-teduh-akad.mp3" loop preload="auto"></audio>
+    <main class="desk" aria-labelledby="app-title">
+      <div class="background-tickers" aria-hidden="true"></div>
+      <section class="wish-player">
+        <header class="title-bar"><span id="app-title">✦ NANA_WISHES.EXE — Voucher 002</span><span class="window-buttons" aria-hidden="true">_ □ ×</span></header>
+        <nav class="menu-bar" aria-label="Wish player menu"><span>File</span><button class="menu-item all-wishes-button" type="button">Open all wishes</button><span>Options</span><span>Help</span><strong>VOUCHER 002</strong></nav>
+        <section class="display" aria-live="polite">
+          <p class="display-label">NOW SENDING LOVE TO NANA...</p>
+          <p class="wish-text">Loading 200 little wishes for you...</p>
+        </section>
+        <section class="equalizer" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></section>
+        <div class="transport" aria-label="Wish and music controls">
+          <button class="metal-button previous" type="button" aria-label="Previous wish">◀◀</button>
+          <button class="metal-button wish-toggle" type="button" aria-pressed="true">❚❚ pause wishes</button>
+          <button class="metal-button next" type="button" aria-label="Next wish">▶▶</button>
+          <button class="metal-button music-toggle" type="button" aria-pressed="false">♫ play retro sound</button>
+        </div>
+        <footer class="status-bar"><span>shuffled with love</span><span>made for Nana ♡</span></footer>
+      </section>
+      <dialog class="wish-library" aria-labelledby="wish-library-title">
+        <header class="library-titlebar"><strong id="wish-library-title">♡ ALL 200 WISHES FOR NANA ♡</strong><button class="library-close" type="button" aria-label="Close all wishes">×</button></header>
+        <ol>{wishes.map((wish) => <li>{wish}</li>)}</ol>
+      </dialog>
+    </main>
+
+    <script is:inline define:vars={{ wishData: wishes }}>
+      const wishes = [...wishData]
+      const screen = document.querySelector('.wish-text')
+      const previous = document.querySelector('.previous')
+      const next = document.querySelector('.next')
+      const wishToggle = document.querySelector('.wish-toggle')
+      const musicToggle = document.querySelector('.music-toggle')
+      const allWishesButton = document.querySelector('.all-wishes-button')
+      const wishLibrary = document.querySelector('.wish-library')
+      const libraryClose = document.querySelector('.library-close')
+      const tickerLayer = document.querySelector('.background-tickers')
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+      let order = wishes.map((_, index) => index)
+      let position = 0
+      let autoTimer
+      let wishesPlaying = !reduceMotion
+      const audio = document.querySelector('.akad-audio')
+      let musicPlaying = false
+
+      function makeTicker() {
+        const shuffledWishes = [...wishes]
+        shuffle(shuffledWishes)
+        return `✦ ${shuffledWishes.slice(0, 11).join(' ✦ ')} ✦`
+      }
+
+      function buildTickers() {
+        if (!tickerLayer) return
+        Array.from({ length: 5 }, (_, index) => {
+          const ticker = document.createElement('p')
+          const text = makeTicker()
+          ticker.textContent = `${text} ${text}`
+          ticker.style.setProperty('--ticker-duration', `${26 + index * 5}s`)
+          ticker.style.setProperty('--ticker-delay', `-${index * 7}s`)
+          ticker.addEventListener('animationiteration', () => {
+            const nextText = makeTicker()
+            ticker.textContent = `${nextText} ${nextText}`
+          })
+          tickerLayer.append(ticker)
+        })
+      }
+
+      function shuffle(values) {
+        for (let index = values.length - 1; index > 0; index -= 1) {
+          const swapIndex = Math.floor(Math.random() * (index + 1))
+          ;[values[index], values[swapIndex]] = [values[swapIndex], values[index]]
+        }
+      }
+
+      function showWish(animate = true) {
+        if (!screen) return
+        screen.classList.remove('is-moving')
+        void screen.offsetWidth
+        screen.textContent = wishes[order[position]]
+        if (animate && !reduceMotion) screen.classList.add('is-moving')
+      }
+
+      function moveWish(direction = 1) {
+        position += direction
+        if (position >= order.length) {
+          shuffle(order)
+          position = 0
+        }
+        if (position < 0) position = order.length - 1
+        showWish()
+      }
+
+      function scheduleWish() {
+        window.clearInterval(autoTimer)
+        if (wishesPlaying) autoTimer = window.setInterval(() => moveWish(), 5200)
+      }
+
+      function toggleWishes() {
+        wishesPlaying = !wishesPlaying
+        wishToggle.textContent = wishesPlaying ? '❚❚ pause wishes' : '▶ play wishes'
+        wishToggle.setAttribute('aria-pressed', String(wishesPlaying))
+        scheduleWish()
+      }
+
+      function setMusicUi(active, fallback = false) {
+        if (!musicToggle) return
+        musicToggle.textContent = active ? '❚❚ pause song' : fallback ? '♫ tap anywhere for song' : '♫ play song'
+        musicToggle.setAttribute('aria-pressed', String(active))
+      }
+
+      function stopMusic() {
+        audio?.pause()
+        musicPlaying = false
+        setMusicUi(false)
+      }
+
+      async function startMusic() {
+        if (!audio || musicPlaying) return Boolean(audio)
+        try {
+          audio.volume = 1
+          await audio.play()
+          musicPlaying = true
+          setMusicUi(true)
+          return true
+        } catch {
+          stopMusic()
+          setMusicUi(false, true)
+          return false
+        }
+      }
+
+      async function toggleMusic() {
+        if (musicPlaying) {
+          stopMusic()
+          return
+        }
+        await startMusic()
+      }
+
+      shuffle(order)
+      buildTickers()
+      showWish(false)
+      scheduleWish()
+      previous?.addEventListener('click', () => moveWish(-1))
+      next?.addEventListener('click', () => moveWish())
+      wishToggle?.addEventListener('click', toggleWishes)
+      musicToggle?.addEventListener('click', toggleMusic)
+      allWishesButton?.addEventListener('click', () => wishLibrary?.showModal())
+      libraryClose?.addEventListener('click', () => wishLibrary?.close())
+      if (!reduceMotion) {
+        void startMusic().then((started) => {
+          if (!started) window.addEventListener('pointerdown', (event) => {
+            if (!musicToggle?.contains(event.target)) void startMusic()
+          }, { once: true })
+        })
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html), :global(body) { background: #b8c8d5; min-height: 100%; }
+  :global(body) { color: #101a2a; font-family: Arial, sans-serif; margin: 0; }
+  .desk { align-items: center; background: radial-gradient(circle at 15% 15%, #fff 0 1px, transparent 2px) 0 0 / 13px 13px, linear-gradient(135deg, #dfe8ec, #7991aa 52%, #dce6eb); display: flex; justify-content: center; min-height: 100vh; overflow: hidden; padding: 2rem; position: relative; }
+  .background-tickers { display: flex; flex-direction: column; gap: clamp(2rem, 7vh, 6rem); inset: 0; justify-content: space-around; overflow: hidden; pointer-events: none; position: absolute; }.background-tickers :global(p) { animation: ticker-stream var(--ticker-duration) linear var(--ticker-delay) infinite; color: rgba(4,38,82,.21); font-family: Georgia, serif; font-size: clamp(2.1rem, 5vw, 5.8rem); font-style: italic; font-weight: bold; line-height: .95; margin: 0; text-shadow: 2px 3px rgba(255,255,255,.72); white-space: nowrap; }
+  .wish-player { backdrop-filter: blur(4px); background: linear-gradient(135deg, rgba(248,251,253,.96), rgba(135,152,168,.94) 48%, rgba(237,245,248,.96)); border: 3px outset #f8ffff; box-shadow: 0 0 0 2px #203c63, 12px 16px 0 rgba(14,34,59,.46), inset 0 0 0 2px #c8d6de; max-width: 54rem; padding: .45rem; position: relative; width: 100%; z-index: 1; }
+  .title-bar { align-items: center; background: linear-gradient(90deg, #0a2a60, #4183c6 68%, #d3edff); border: 2px inset #89a9cc; color: #fff; display: flex; font-family: 'Courier New', monospace; font-size: clamp(.72rem, 2vw, .95rem); font-weight: bold; justify-content: space-between; letter-spacing: .04em; padding: .42rem .58rem; text-shadow: 1px 1px #06132d; }
+  .window-buttons { background: #c9d7e0; border: 1px outset #fff; color: #102a4f; letter-spacing: .16em; padding: 0 .25rem; text-shadow: none; }
+  .menu-bar { align-items:center; background: #eaf1f4; border: 2px inset #b2c2cc; display: flex; font-family: 'MS Sans Serif', Arial, sans-serif; font-size: .74rem; gap: 1.1rem; margin-top: .35rem; padding: .35rem .55rem; }.menu-bar strong { color: #17457e; margin-left: auto; }.menu-item { background:none; border:0; color:inherit; cursor:pointer; font:inherit; padding:0; text-decoration:underline; text-underline-offset:2px; }
+  .display { background: repeating-linear-gradient(0deg, rgba(112,176,255,.12) 0 1px, transparent 1px 4px), linear-gradient(135deg, #061737, #164d91); border: 4px inset #58728b; box-shadow: inset 0 0 1.4rem #000; color: #d9f6ff; margin-top: .48rem; min-height: 14rem; overflow: hidden; padding: 1.5rem; position: relative; text-align: center; }.display::after { background: linear-gradient(90deg, transparent, rgba(255,255,255,.16), transparent); content: ''; inset: 0; pointer-events: none; position: absolute; }
+  .display-label, .counter { color: #a8d5ff; font-family: 'Courier New', monospace; font-size: clamp(.65rem, 1.6vw, .82rem); font-weight: bold; letter-spacing: .13em; margin: 0; text-shadow: 0 0 5px #6cb5ff; }.counter { bottom: 1rem; left: 0; position: absolute; right: 0; }.wish-text { align-items: center; display: flex; font-family: Georgia, serif; font-size: clamp(1.45rem, 4vw, 2.55rem); font-style: italic; justify-content: center; line-height: 1.22; margin: 1.8rem auto; max-width: 39rem; min-height: 6rem; position: relative; text-shadow: 2px 2px #061332, 0 0 10px #8ce7ff; }.wish-text.is-moving { animation: wish-pass 5.1s cubic-bezier(.16,.8,.2,1) both; }
+  .equalizer { align-items:end; background: #dce8ee; border: 3px inset #f6ffff; display: flex; gap: .25rem; height: 3.1rem; justify-content: center; margin: .48rem 0; padding: .35rem; }.equalizer i { animation: equalize .8s steps(3,end) infinite alternate; background: linear-gradient(#e9ffff, #3482be); box-shadow: 1px 1px #153e6c; height: 25%; width: .58rem; }.equalizer i:nth-child(3n) { animation-delay: -.3s; }.equalizer i:nth-child(4n) { animation-delay: -.6s; }
+  .transport { display: flex; flex-wrap: wrap; gap: .48rem; justify-content: center; padding: .25rem 0 .48rem; }.metal-button { background: linear-gradient(135deg, #fff, #9aabb8 52%, #f0f8fd); border: 3px outset #f9ffff; box-shadow: 2px 3px 0 #254a71; color: #0b315f; cursor: pointer; font-family: 'Courier New', monospace; font-size: clamp(.64rem, 1.7vw, .78rem); font-weight: bold; min-height: 2.25rem; padding: .45rem .65rem; text-shadow: 1px 1px #fff; }.metal-button:hover, .metal-button[aria-pressed='true'] { background: linear-gradient(135deg, #d7f3ff, #4f8dd0 58%, #d8effc); color: #001b4b; }.metal-button:active { border-style: inset; box-shadow: 1px 1px 0 #254a71; transform: translate(1px, 1px); }
+  .status-bar { background: #d5e2e8; border: 2px inset #f7ffff; color: #163a63; display: flex; font-family: 'Courier New', monospace; font-size: .65rem; font-weight: bold; justify-content: space-between; padding: .3rem .45rem; }
+  .wish-library { background:linear-gradient(135deg,#f7fcff,#aebdca 48%,#eaf4f8); border:4px outset #f9ffff; box-shadow:12px 16px 0 rgba(14,34,59,.5),0 0 0 2px #203c63; color:#10294c; max-height:min(80vh,48rem); max-width:min(88vw,52rem); padding:.45rem; width:100%; }.wish-library::backdrop { background:rgba(7,25,49,.55); backdrop-filter:blur(3px); }.library-titlebar { align-items:center; background:linear-gradient(90deg,#0a2a60,#4183c6 68%,#d3edff); color:#fff; display:flex; font-family:'Courier New',monospace; justify-content:space-between; padding:.45rem .6rem; text-shadow:1px 1px #06132d; }.library-close { background:#d9e7ef; border:2px outset #fff; color:#163a63; cursor:pointer; font:bold 1rem Arial,sans-serif; height:1.55rem; line-height:1; width:1.55rem; }.wish-library ol { background:#eef6fb; border:3px inset #f8ffff; counter-reset:wish; display:grid; font-family:Georgia,serif; gap:1.1rem 2.2rem; grid-template-columns:repeat(2,minmax(0,1fr)); list-style:none; margin:.45rem 0 0; max-height:calc(min(80vh,48rem) - 4rem); overflow:auto; padding:1.25rem; }.wish-library li { counter-increment:wish; display:grid; gap:.5rem; grid-template-columns:2.5rem minmax(0,1fr); line-height:1.35; min-width:0; }.wish-library li::before { color:#17457e; content:counter(wish) '.'; font-weight:bold; text-align:right; }
+  @keyframes wish-pass { 0% { opacity: 0; transform: translateX(-115%); } 14%, 78% { opacity: 1; transform: translateX(0); } 100% { opacity: 0; transform: translateX(115%); } } @keyframes ticker-stream { from { transform: translateX(-50%); } to { transform: translateX(0); } } @keyframes equalize { to { height: 100%; } }
+  @media (max-width: 540px) { .desk { padding: .75rem; }.wish-player { box-shadow: 6px 8px 0 rgba(14,34,59,.46); }.menu-bar { gap: .55rem; }.menu-bar span:nth-child(3), .menu-bar span:nth-child(4) { display: none; }.display { min-height: 17rem; padding: 1.25rem .8rem; }.status-bar { gap: .4rem; }.status-bar span:last-child { text-align: right; }.wish-library { max-width:96vw; }.wish-library ol { grid-template-columns:1fr; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; } }
+</style>
