@@ -1,0 +1,160 @@
+---
+const artifacts = [
+  { id: 'polaroid', asset: 'polaroid', name: 'Polaroid', cipher: 'FS', mark: 'I' },
+  { id: 'clock', asset: 'clock', name: 'Clock', cipher: 'GX', mark: 'II' },
+  { id: 'ticket', asset: 'ticket', name: 'Ticket', cipher: 'U', mark: 'III' },
+  { id: 'matcha', asset: 'pin', name: 'Red pin', cipher: 'S', mark: 'IV' },
+  { id: 'star', asset: 'star', name: 'Pressed-paper star', cipher: 'K', mark: 'V' },
+]
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width" />
+    <title>Forever for Nana</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive" />
+  </head>
+  <body>
+    <main class="archive" aria-labelledby="room-title">
+      <div class="wall" aria-hidden="true"></div>
+      <section class="desk" aria-label="Archive desk">
+        <div class="ledger" data-ledger>
+          <p class="catalogue">Private archive</p>
+          <h1 id="room-title">Five entries are out of order.</h1>
+          <p class="instruction" data-instruction>Inspect each artifact to recover the encrypted records.</p>
+          <div class="tiles" aria-label="Recovered encrypted records">
+            {artifacts.map((artifact) => <button class="tile" type="button" data-tile={artifact.id} hidden aria-pressed="false"><span>{artifact.cipher}</span><small>{artifact.mark}</small></button>)}
+          </div>
+          <div class="slots" aria-label="Archive record order">
+            {Array.from({ length: 5 }, (_, index) => <button class="slot" type="button" data-slot={index} aria-label={`Place selected archive tile in position ${index + 1}`} disabled><span aria-hidden="true">?</span></button>)}
+          </div>
+          <p class="status" data-status role="status">Five artifacts remain on the desk.</p>
+          <button class="seal" type="button" data-seal disabled>Press the seal</button>
+          <form class="cipher-answer" data-answer-form hidden>
+            <label for="decoded-answer">Decoded archive phrase</label>
+            <div class="answer-slots" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+            <input id="decoded-answer" data-answer autocomplete="off" autocapitalize="characters" maxlength="7" spellcheck="false" />
+            <button type="submit">Press the seal</button>
+          </form>
+        </div>
+        <section class="artifacts" aria-label="Archive artifacts">
+          {artifacts.map((artifact) => <button class={`artifact ${artifact.id}`} type="button" data-artifact={artifact.id} aria-label={`Inspect ${artifact.name}`}><img class="object" src={`/images/forever-archive/${artifact.asset}.png`} alt="" /><span class="artifact-name">{artifact.name}</span><span class="artifact-mark" aria-hidden="true"></span></button>)}
+        </section>
+      </section>
+      <dialog class="inspect-card" data-inspect aria-labelledby="inspect-title">
+        <p class="catalogue">Recovered entry</p><h2 id="inspect-title" data-inspect-name></h2>
+        <div class="recovered"><b data-inspect-tile></b><span data-inspect-mark></span></div>
+        <p>Keep this record. Its shelf mark matters later.</p><button type="button" data-close-inspect>Return to the desk</button>
+      </dialog>
+      <dialog class="final-card" data-final aria-labelledby="final-title">
+        <p class="catalogue">Archive unsealed</p><h2 id="final-title">I LOVE YOU FOREVER</h2>
+        <p>The entries finally hold together.</p><button type="button" data-restart>Play again</button>
+      </dialog>
+    </main>
+    <script is:inline>
+      const data = [
+        { id: 'polaroid', name: 'Polaroid', cipher: 'FS', mark: 'I' },
+        { id: 'clock', name: 'Clock', cipher: 'GX', mark: 'II' },
+        { id: 'ticket', name: 'Ticket', cipher: 'U', mark: 'III' },
+        { id: 'matcha', name: 'Red pin', cipher: 'S', mark: 'IV' },
+        { id: 'star', name: 'Pressed-paper star', cipher: 'K', mark: 'V' },
+      ]
+      const expected = ['star', 'matcha', 'ticket', 'clock', 'polaroid']
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
+      const artifacts = [...document.querySelectorAll('[data-artifact]')]
+      const tiles = [...document.querySelectorAll('[data-tile]')]
+      const slots = [...document.querySelectorAll('[data-slot]')]
+      const status = document.querySelector('[data-status]')
+      const instruction = document.querySelector('[data-instruction]')
+      const seal = document.querySelector('[data-seal]')
+      const ledger = document.querySelector('[data-ledger]')
+      const inspectCard = document.querySelector('[data-inspect]')
+      const finalCard = document.querySelector('[data-final]')
+      const answerForm = document.querySelector('[data-answer-form]')
+      const answer = document.querySelector('[data-answer]')
+      let found = new Set(), selected = null, placed = Array(5).fill(null), failures = 0
+      const update = () => {
+        tiles.forEach((tile) => {
+          const placedHere = placed.includes(tile.dataset.tile)
+          tile.disabled = placedHere
+          tile.setAttribute('aria-pressed', String(selected === tile.dataset.tile))
+          tile.classList.toggle('selected', selected === tile.dataset.tile)
+        })
+        slots.forEach((slot, index) => {
+          const item = data.find((entry) => entry.id === placed[index])
+          slot.querySelector('span').textContent = item ? item.cipher : '?'
+          slot.classList.toggle('filled', Boolean(item))
+          slot.disabled = !selected
+        })
+        seal.disabled = placed.some((item) => !item)
+      }
+      const inspect = (id) => {
+        const item = data.find((entry) => entry.id === id)
+        if (found.has(id)) return
+        found.add(id)
+        document.querySelector(`[data-artifact="${id}"]`).classList.add('found')
+        document.querySelector(`[data-tile="${id}"]`).hidden = false
+        document.querySelector('[data-inspect-name]').textContent = item.name
+        document.querySelector('[data-inspect-tile]').textContent = item.cipher
+        document.querySelector('[data-inspect-mark]').textContent = `Shelf mark ${item.mark}`
+        inspectCard.showModal()
+        if (!reduceMotion) { inspectCard.classList.add('arrive'); setTimeout(() => inspectCard.classList.remove('arrive'), 420) }
+        if (found.size === data.length) { instruction.textContent = 'Start with the latest entry. Read the archive backwards.'; status.textContent = 'Every encrypted record is ready to be placed.' }
+        else status.textContent = `${data.length - found.size} artifact${data.length - found.size === 1 ? '' : 's'} remain on the desk.`
+      }
+      const place = (index) => {
+        if (!selected) { status.textContent = 'Choose an archive tile first.'; return }
+        const prior = placed[index]; placed[index] = selected; selected = prior || null
+        status.textContent = 'Tile placed. Continue the archive order.'; update()
+      }
+      const validate = () => {
+        if (placed.join('|') !== expected.join('|')) {
+          placed = Array(5).fill(null); selected = null
+          failures += 1
+          status.textContent = failures >= 3 ? 'Move each ciphertext backward by its shelf mark.' : 'The shelf sequence is wrong. Latest means V, then IV.'
+          ledger.classList.add('incorrect'); setTimeout(() => ledger.classList.remove('incorrect'), reduceMotion ? 0 : 420); update(); return
+        }
+        status.textContent = 'The shelf order holds. Decode the archive phrase.'
+        instruction.textContent = 'Read V to I. Shift each ciphertext backward by its shelf mark.'
+        artifacts.forEach((item) => item.disabled = true); tiles.forEach((item) => item.disabled = true); slots.forEach((item) => item.disabled = true); seal.hidden = true
+        answerForm.hidden = false
+        answer.focus()
+      }
+      const validateAnswer = (event) => {
+        event.preventDefault()
+        if (answer.value.trim().toUpperCase() === 'FOREVER') {
+          status.textContent = 'The archive is complete.'; ledger.classList.add('unlocked')
+          answerForm.querySelector('button').disabled = true; answer.disabled = true
+          setTimeout(() => finalCard.showModal(), reduceMotion ? 0 : 420)
+          return
+        }
+        failures += 1; answer.value = ''
+        status.textContent = failures >= 3 ? 'Move each ciphertext backward by its shelf mark.' : 'The seal does not hold. Check every shift.'
+        ledger.classList.add('incorrect'); setTimeout(() => ledger.classList.remove('incorrect'), reduceMotion ? 0 : 420)
+        answer.focus()
+      }
+      const reset = () => {
+        found = new Set(); selected = null; placed = Array(5).fill(null); failures = 0
+        artifacts.forEach((item) => { item.disabled = false; item.classList.remove('found') }); tiles.forEach((item) => item.hidden = true)
+        instruction.textContent = 'Inspect each artifact to recover the encrypted records.'; status.textContent = 'Five artifacts remain on the desk.'
+        seal.hidden = false; answerForm.hidden = true; answer.value = ''; document.querySelectorAll('.answer-slots span').forEach((slot) => slot.textContent = ''); answer.disabled = false; answerForm.querySelector('button').disabled = false
+        ledger.classList.remove('unlocked', 'incorrect'); finalCard.close(); update()
+      }
+      artifacts.forEach((item) => item.addEventListener('click', () => inspect(item.dataset.artifact)))
+      tiles.forEach((item) => item.addEventListener('click', () => { selected = selected === item.dataset.tile ? null : item.dataset.tile; status.textContent = selected ? 'Choose a place in the archive order.' : 'Tile returned to the ledger.'; update() }))
+      slots.forEach((item) => item.addEventListener('click', () => place(Number(item.dataset.slot))))
+      seal.addEventListener('click', validate)
+      answerForm.addEventListener('submit', validateAnswer)
+      answer.addEventListener('input', () => {
+        answer.value = answer.value.toUpperCase().replace(/[^A-Z]/g, '')
+        document.querySelectorAll('.answer-slots span').forEach((slot, index) => slot.textContent = answer.value[index] || '')
+      })
+      document.querySelector('[data-close-inspect]').addEventListener('click', () => inspectCard.close())
+      document.querySelector('[data-restart]').addEventListener('click', reset)
+      update()
+    </script>
+  </body>
+</html>
+<style>
+  :global(*){box-sizing:border-box}:global(html),:global(body){min-height:100%;margin:0}:global(body){background:#191715;color:#29231d;font-family:Georgia,'Times New Roman',serif}.archive{isolation:isolate;min-height:100svh;overflow:hidden;position:relative}.wall{background:#1d1a17;height:31vh;min-height:13rem;position:absolute;inset:0 0 auto}.wall::after{background:repeating-linear-gradient(90deg,transparent 0 8%,rgba(255,255,255,.025) 8.1% 8.25%);content:'';inset:0;position:absolute}.desk{background:repeating-linear-gradient(2deg,rgba(34,17,10,.2) 0 1px,transparent 1px 8px),linear-gradient(105deg,#302016,#563726 50%,#301f17);display:grid;isolation:isolate;min-height:100svh;padding:clamp(1rem,4vw,3rem);place-items:center;position:relative}.desk::before{background:rgba(255,232,179,.12);content:'';height:1px;inset:31vh 0 auto;position:absolute}.ledger{background:#e7dbc2;background-image:linear-gradient(rgba(94,71,42,.1) 1px,transparent 1px);background-size:100% 1.8rem;border:1px solid #aa9875;box-shadow:0 1.5rem 2.8rem rgba(0,0,0,.45),inset 0 0 0 .35rem rgba(255,252,238,.45);max-width:43rem;padding:clamp(1.4rem,5vw,3rem);position:relative;text-align:center;width:min(100%,43rem);z-index:2}.catalogue{color:#765e3b;font-family:'Courier New',monospace;font-size:.72rem;margin:0 0 .65rem}.ledger h1{font-size:clamp(2.1rem,6vw,4.25rem);font-weight:normal;letter-spacing:-.055em;line-height:.94;margin:0 auto 1rem;max-width:31rem}.instruction,.status{font-size:clamp(.94rem,2vw,1.08rem);line-height:1.45;margin:.75rem auto;max-width:32rem}.status{color:#55432d;min-height:1.5rem}.tiles,.slots{display:flex;gap:.55rem;justify-content:center;margin:1.1rem 0}.tile,.slot{align-items:center;background:#f6eddb;border:1px solid #9b886c;color:#272019;cursor:pointer;display:grid;font-family:'Courier New',monospace;height:3.35rem;place-items:center;position:relative;width:3.35rem}.tile{box-shadow:0 2px 0 rgba(67,47,29,.2);font-size:1.55rem}.tile small{bottom:.2rem;color:#775d3d;font-size:.55rem;position:absolute;right:.28rem}.tile.selected{outline:3px solid #7a3133;outline-offset:2px}.slot{background:rgba(80,57,33,.08);box-shadow:inset 0 1px 4px rgba(47,30,13,.27);font-size:1.1rem}.slot.filled{background:#f6eddb;animation:place .32s ease-out}.seal{background:#7a3133;border:2px solid #572124;border-radius:50%;box-shadow:inset 0 2px 0 rgba(255,220,201,.22),0 3px 0 #42191a;color:#fff2e6;cursor:pointer;font:600 .83rem Georgia,serif;height:5.1rem;margin-top:.4rem;width:5.1rem}.seal:disabled,.slot:disabled{cursor:not-allowed;opacity:.5}.ledger.incorrect{animation:reject .4s ease-in-out}.ledger.unlocked .seal{box-shadow:0 0 1.2rem rgba(255,235,191,.8),inset 0 2px 0 rgba(255,220,201,.22),0 3px 0 #42191a}.cipher-answer{margin-top:1rem}.cipher-answer label{display:block;font-size:.96rem;margin-bottom:.6rem}.cipher-answer input{background:#f6eddb;border:1px solid #9b886c;color:#272019;display:block;font:1.1rem 'Courier New',monospace;letter-spacing:.18em;margin:.7rem auto;width:min(100%,15rem);padding:.6rem;text-align:center}.answer-slots{display:flex;gap:.35rem;justify-content:center;margin:.6rem}.answer-slots span{border-bottom:2px solid #765e3b;display:block;font:1.5rem 'Courier New',monospace;height:2rem;width:1.65rem}.cipher-answer button,.inspect-card button,.final-card button{background:#302016;border:1px solid #19120e;color:#fff3dc;cursor:pointer;font:600 .9rem Georgia,serif;padding:.7rem 1rem}.artifacts{inset:0;pointer-events:none;position:absolute;z-index:3}.artifact{background:none;border:0;color:#ecdfc9;cursor:pointer;display:grid;font-family:Georgia,serif;gap:.4rem;justify-items:center;padding:.4rem;pointer-events:auto;position:absolute;text-shadow:0 2px 3px #000}.artifact:focus-visible,.tile:focus-visible,.slot:focus-visible,.seal:focus-visible,.cipher-answer input:focus-visible,dialog button:focus-visible{outline:3px solid #e9c36e;outline-offset:4px}.artifact:hover .object,.artifact:focus-visible .object,.artifact.found .object{filter:brightness(1.15);transform:translateY(-3px)}.artifact.found .object{box-shadow:0 0 1.1rem rgba(228,191,106,.7)}.artifact-name{font-size:.78rem}.artifact-mark{font-family:'Courier New',monospace;font-size:.7rem;min-height:1em}.artifact.found .artifact-mark::after{content:'recovered'}.object{display:block;filter:drop-shadow(0 10px 8px rgba(0,0,0,.5));height:5rem;object-fit:contain;transition:.2s ease;width:5.6rem}.polaroid{left:7%;top:20%;transform:rotate(-8deg)}.clock{right:8%;top:19%}.ticket{bottom:13%;left:10%;transform:rotate(7deg)}.matcha{bottom:11%;right:11%}.star{bottom:29%;right:4%}.artifact .object{background:none!important;border:0!important;border-radius:0!important;box-shadow:none!important;clip-path:none!important}.inspect-card,.final-card{background:#e7dbc2;border:1px solid #aa9875;box-shadow:0 1.5rem 3.5rem rgba(0,0,0,.55);color:#29231d;max-width:25rem;padding:2rem;text-align:center}.inspect-card::backdrop,.final-card::backdrop{background:rgba(20,16,13,.66)}dialog h2{font-size:2.3rem;font-weight:normal;margin:.2rem}.recovered{align-items:center;display:flex;gap:1rem;justify-content:center;margin:1rem 0}.recovered b{background:#f6eddb;border:1px solid #9b886c;font:2.5rem 'Courier New',monospace;padding:.35rem .7rem}.recovered span{font-family:'Courier New',monospace}.final-card h2{font-size:clamp(2.8rem,9vw,4.7rem);line-height:.92}.arrive{animation:inspect .42s ease-out}@keyframes inspect{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}@keyframes place{from{transform:scale(.72)}to{transform:scale(1)}}@keyframes reject{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}@media(max-width:700px){.ledger{margin-top:-3rem}.artifact-name{font-size:.65rem}.object{transform:scale(.76)}.polaroid{left:1%;top:10%}.clock{right:1%;top:10%}.ticket{bottom:3%;left:1%}.matcha{bottom:2%;right:2%}.star{bottom:27%;right:0}.tiles,.slots{gap:.32rem}.tile,.slot{height:2.9rem;width:2.9rem}.answer-slots{gap:.2rem}.answer-slots span{width:1.3rem}}@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important}}
