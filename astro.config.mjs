@@ -10,6 +10,7 @@ export default defineConfig({
       'https://prammmoe.space/happy-birthday-nana/',
       'https://prammmoe.space/wishes-for-nana/',
       'https://prammmoe.space/matcha-round-the-globe/',
+      'https://prammmoe.space/decode-the-puzzle/',
     ].includes(page),
   })],
   markdown: {
