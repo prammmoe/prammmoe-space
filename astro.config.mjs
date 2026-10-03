@@ -11,6 +11,7 @@ export default defineConfig({
       'https://prammmoe.space/wishes-for-nana/',
       'https://prammmoe.space/matcha-round-the-globe/',
       'https://prammmoe.space/decode-the-puzzle/',
+      'https://prammmoe.space/e-voucher/',
     ].includes(page),
   })],
   markdown: {

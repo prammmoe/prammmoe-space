@@ -1,0 +1,183 @@
+---
+const vouchers = [
+  { number: '001', image: '/images/e-vouchers/001.png' },
+  { number: '002', image: '/images/e-vouchers/002.png' },
+  { number: '003', image: '/images/e-vouchers/003.png' },
+]
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>A Sealed Note</title>
+    <meta name="robots" content="noindex, nofollow, noarchive" />
+    <meta name="googlebot" content="noindex, nofollow, noarchive" />
+    <meta name="theme-color" content="#ded3c4" />
+  </head>
+  <body>
+    <main class="letter-page">
+      <header class="intro">
+        <p class="overline">delivered quietly</p>
+        <h1>A note with<br />your name on it.</h1>
+        <p>There are three sealed notes. Pick the one you want to open.</p>
+      </header>
+
+      <section class="envelope-grid" data-envelope-grid aria-label="Choose a sealed note">
+        {vouchers.map((voucher) => (
+          <button class="envelope" type="button" data-open-voucher={voucher.number} aria-haspopup="dialog" aria-label={`Open sealed note ${voucher.number}`}>
+            <span class="envelope-front" aria-hidden="true"></span>
+            <span class="envelope-flap" aria-hidden="true"></span>
+            <span class="envelope-label"><small>sealed note</small><strong>{voucher.number}</strong></span>
+            <span class="wax-seal" aria-hidden="true">for you</span>
+            <span class="open-label">Open</span>
+          </button>
+        ))}
+      </section>
+    </main>
+
+    <dialog class="voucher-dialog" data-voucher-dialog aria-labelledby="voucher-title">
+      <div class="dialog-shell">
+        <form method="dialog" class="dialog-topbar">
+          <button class="back-button" type="submit" data-close-voucher aria-label="Back to sealed notes">Back to notes</button>
+        </form>
+
+        <div class="voucher-content">
+          <p class="overline">opened just for you</p>
+          <h2 id="voucher-title">A little something <span data-voucher-number>001</span></h2>
+          <p class="voucher-instruction">Keep this close, then use it whenever the moment feels right.</p>
+
+          <div class="ticket-wrap">
+            <img data-voucher-image src="/images/e-vouchers/001.png" alt="Free Matcha voucher 001" width="4709" height="1541" />
+            <button class="star-surprise" type="button" data-surprise aria-label="Reveal a hidden note"><span aria-hidden="true"></span></button>
+          </div>
+
+          <p class="surprise-message" data-surprise-message role="status" aria-live="polite"></p>
+          <div class="voucher-actions">
+            <a class="redeem-button" data-redeem target="_blank" rel="noopener noreferrer">Redeem via WhatsApp</a>
+            <a class="download-button" data-download download="free-matcha-voucher-001.png">Download voucher</a>
+          </div>
+        </div>
+      </div>
+    </dialog>
+
+    <script is:inline>
+      const vouchers = [
+        { number: '001', image: '/images/e-vouchers/001.png' },
+        { number: '002', image: '/images/e-vouchers/002.png' },
+        { number: '003', image: '/images/e-vouchers/003.png' },
+      ]
+      const openingDuration = 500
+      const dialog = document.querySelector('[data-voucher-dialog]')
+      const envelopeGrid = document.querySelector('[data-envelope-grid]')
+      const envelopeButtons = [...document.querySelectorAll('[data-open-voucher]')]
+      const image = document.querySelector('[data-voucher-image]')
+      const number = document.querySelector('[data-voucher-number]')
+      const redeem = document.querySelector('[data-redeem]')
+      const download = document.querySelector('[data-download]')
+      const surprise = document.querySelector('[data-surprise]')
+      const surpriseMessage = document.querySelector('[data-surprise-message]')
+      const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
+      let trigger = null
+      let selectedVoucher = vouchers[0]
+      let opening = false
+
+      function resetOpening() {
+        opening = false
+        envelopeGrid.classList.remove('has-opening')
+        envelopeButtons.forEach((button) => {
+          button.disabled = false
+          button.classList.remove('is-opening')
+        })
+      }
+
+      function showVoucher(voucher) {
+        selectedVoucher = voucher
+        number.textContent = voucher.number
+        image.src = voucher.image
+        image.alt = `Free Matcha voucher ${voucher.number}`
+        const message = `Voucher ${selectedVoucher.number} Redeemed`
+        redeem.href = `https://wa.me/6281247016022?text=${encodeURIComponent(message)}`
+        download.href = voucher.image
+        download.download = `free-matcha-voucher-${voucher.number}.png`
+        surpriseMessage.textContent = ''
+        dialog.showModal()
+        dialog.querySelector('[data-close-voucher]').focus()
+      }
+
+      function celebrate() {
+        surpriseMessage.textContent = 'Kept between the folds: you deserve small surprises.'
+      }
+
+      envelopeButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          if (opening) return
+          const voucher = vouchers.find((entry) => entry.number === button.dataset.openVoucher)
+          if (!voucher) return
+
+          opening = true
+          trigger = button
+          envelopeGrid.classList.add('has-opening')
+          envelopeButtons.forEach((item) => { item.disabled = true })
+          button.classList.add('is-opening')
+
+          if (reduceMotion) {
+            showVoucher(voucher)
+            return
+          }
+
+          window.setTimeout(() => {
+            showVoucher(voucher)
+          }, openingDuration)
+        })
+      })
+      surprise.addEventListener('click', celebrate)
+      dialog.addEventListener('close', () => {
+        resetOpening()
+        trigger?.focus()
+      })
+      dialog.addEventListener('click', (event) => {
+        if (event.target === dialog) dialog.close()
+      })
+    </script>
+  </body>
+</html>
+
+<style>
+  :global(*) { box-sizing: border-box; }
+  :global(html) { background: #ded3c4; }
+  :global(body) { color: #302923; margin: 0; min-width: 20rem; font-family: Georgia, 'Times New Roman', serif; }
+  :global(button), :global(a) { font: inherit; }
+  :global(button) { -webkit-tap-highlight-color: transparent; }
+  .letter-page { align-content: center; background: #ded3c4; background-image: linear-gradient(115deg, rgba(255, 255, 255, .2), transparent 38%), linear-gradient(0deg, rgba(62, 47, 36, .035) 1px, transparent 1px); background-size: auto, 100% .22rem; display: grid; min-height: 100svh; overflow: hidden; padding: clamp(2.5rem, 8vw, 6rem) clamp(1.25rem, 6vw, 6rem); position: relative; }
+  .letter-page::before, .letter-page::after { border: 1px solid rgba(48, 41, 35, .24); content: ''; height: 16rem; pointer-events: none; position: absolute; width: 16rem; }
+  .letter-page::before { border-left: 0; border-top: 0; left: 1.25rem; top: 1.25rem; }.letter-page::after { border-bottom: 0; border-right: 0; bottom: 1.25rem; right: 1.25rem; }
+  .intro { margin: 0 auto; max-width: 39rem; position: relative; text-align: center; z-index: 1; }
+  .overline { color: #9b4031; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .72rem; font-weight: 700; letter-spacing: .14em; margin: 0 0 1rem; text-transform: uppercase; }
+  h1, h2 { font-weight: 400; letter-spacing: -.055em; }
+  h1 { font-size: clamp(3rem, 7vw, 5.9rem); line-height: .88; margin: 0; }
+  .intro > p:last-child { font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.55; margin: 1.45rem auto 0; max-width: 28rem; }
+  .envelope-grid { display: grid; gap: clamp(1rem, 3.5vw, 2.4rem); grid-template-columns: repeat(3, minmax(0, 1fr)); margin: clamp(2.6rem, 6vw, 4.75rem) auto 1.4rem; max-width: 62rem; perspective: 62rem; position: relative; width: min(100%, 62rem); z-index: 1; }
+  .envelope { aspect-ratio: 1.28 / 1; background: #f4ead9; border: 1px solid #a89b89; box-shadow: .3rem .38rem 0 rgba(48, 41, 35, .18); color: #302923; cursor: pointer; display: grid; min-height: 12rem; overflow: hidden; padding: 0; place-items: center; position: relative; transition: box-shadow .18s ease, transform .18s ease; }
+  .envelope:nth-child(2) { background: #f7efdf; }.envelope:nth-child(3) { background: #eee1ce; }
+  .envelope-front { background: linear-gradient(35deg, transparent 49.4%, #c5b8a6 50%, transparent 50.6%), linear-gradient(-35deg, transparent 49.4%, #c5b8a6 50%, transparent 50.6%); inset: 0; position: absolute; }
+  .envelope-flap { background: #e9dbc7; clip-path: polygon(0 0, 100% 0, 50% 55%); inset: 0; position: absolute; transform-origin: top; z-index: 2; }
+  .envelope-label { background: #f9f2e7; border: 1px solid #8c7d6d; display: grid; line-height: 1; padding: .72rem 1rem; place-items: center; position: relative; z-index: 3; }
+  .envelope-label small { font-family: ui-sans-serif, system-ui, sans-serif; font-size: clamp(.6rem, 1.25vw, .72rem); font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }.envelope-label strong { font-size: clamp(2rem, 4.5vw, 3.6rem); font-weight: 400; }
+  .wax-seal { align-items: center; background: #9b4031; border: .17rem solid #7c2f25; border-radius: 50%; bottom: .8rem; box-shadow: inset 0 0 0 .12rem rgba(255, 235, 210, .25); color: #f8e9d5; display: flex; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .56rem; font-weight: 700; height: 2.65rem; justify-content: center; letter-spacing: .03em; position: absolute; right: .8rem; transform: rotate(-10deg); width: 2.65rem; z-index: 4; }
+  .open-label { bottom: .85rem; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .76rem; font-weight: 700; left: .9rem; position: absolute; z-index: 4; }
+  .envelope:hover:not(:disabled), .envelope:focus-visible { box-shadow: .45rem .55rem 0 rgba(48, 41, 35, .22); transform: translateY(-.22rem); }
+  .envelope:disabled { cursor: default; }.envelope-grid.has-opening .envelope:not(.is-opening) { opacity: .35; transition: opacity .16s ease; }.envelope.is-opening { animation: envelope-departs .5s cubic-bezier(.45, 0, .55, 1) forwards; z-index: 6; }.envelope.is-opening .envelope-flap { animation: envelope-opens .22s ease-out forwards; }
+  .hint { font-family: ui-sans-serif, system-ui, sans-serif; font-size: .9rem; margin: 0; position: relative; text-align: center; z-index: 1; }
+  .voucher-dialog { background: transparent; border: 0; max-height: 100svh; max-width: 100%; padding: 0; width: 100%; }.voucher-dialog::backdrop { background: rgba(42, 35, 29, .66); }
+  .dialog-shell { background: #f7efdf; border: 1px solid #b8a996; box-shadow: 0 1.5rem 3.5rem rgba(42, 35, 29, .38); margin: auto; max-height: calc(100svh - 2rem); overflow: auto; width: min(94vw, 71rem); }
+  .dialog-topbar { align-items: center; border-bottom: 1px solid #c9bba9; display: flex; min-height: 3.6rem; padding: .45rem .7rem; }.back-button { background: transparent; border: 0; color: #302923; cursor: pointer; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .9rem; font-weight: 700; min-height: 2.75rem; padding: .45rem .7rem; }
+  .voucher-content { padding: clamp(1.5rem, 4vw, 3.3rem); text-align: center; }.voucher-content .overline { margin-bottom: .8rem; }h2 { font-size: clamp(2.1rem, 5vw, 4rem); line-height: 1; margin: 0; }h2 span { color: #9b4031; font-style: italic; }.voucher-instruction { line-height: 1.5; margin: .85rem auto 1.6rem; max-width: 34rem; }
+  .ticket-wrap { box-shadow: 0 .85rem 1.65rem rgba(48, 41, 35, .2); line-height: 0; margin: auto; max-width: 65rem; position: relative; }.ticket-wrap img { display: block; height: auto; width: 100%; }.star-surprise { background: transparent; border: 0; cursor: pointer; height: 49%; padding: 0; position: absolute; right: 20%; top: 43%; width: 29%; }.surprise-message { color: #7c3328; font-style: italic; min-height: 1.6rem; margin: .9rem 0 0; }
+  .voucher-actions { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; margin-top: 1.25rem; }.voucher-actions a { align-items: center; display: inline-flex; font-family: ui-sans-serif, system-ui, sans-serif; font-size: .9rem; font-weight: 700; justify-content: center; min-height: 3rem; padding: .7rem 1rem; text-decoration: none; }.redeem-button { background: #302923; box-shadow: 0 .2rem 0 #17120f; color: #fff8ed; }.download-button { border: 1px solid #302923; color: #302923; }
+  :global(button:focus-visible), :global(a:focus-visible) { outline: 3px solid #9b4031; outline-offset: 4px; }
+  @keyframes envelope-opens { to { transform: rotateX(168deg); } }@keyframes envelope-departs { 55% { opacity: 1; transform: translateY(-.5rem) scale(1.02); } to { opacity: 0; transform: translateY(-1.35rem) scale(.94); } }
+  @media (max-width: 48rem) { .letter-page { padding: 2.5rem 1.1rem; }.letter-page::before, .letter-page::after { height: 7rem; width: 7rem; }.envelope-grid { gap: .7rem; }.envelope { min-height: 8rem; }.envelope-label { padding: .5rem .3rem; }.wax-seal { bottom: .45rem; height: 2rem; right: .45rem; width: 2rem; }.open-label { bottom: .55rem; font-size: .62rem; left: .55rem; }.dialog-shell { width: 96vw; }.voucher-actions { display: grid; grid-template-columns: 1fr; }.voucher-actions a { width: 100%; } }
+  @media (max-width: 25rem) { .envelope-grid { grid-template-columns: 1fr; max-width: 15rem; }.envelope { min-height: 11rem; } }
+  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; scroll-behavior: auto !important; transition-duration: .001ms !important; } }
+</style>
