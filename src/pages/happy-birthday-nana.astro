@@ -1,11 +1,4 @@
 ---
-const hearts = Array.from({ length: 22 })
-const balloonStyles = (count: number, offset = 0) => Array.from({ length: count }, (_, index) => {
-  const value = index + offset
-  return `--left:${(value * 29 + 7) % 96}%;--top:${(value * 43 + 3) % 92}%;--size:${3.1 + (value % 4) * .75}rem;--color:hsl(${(300 + value * 31) % 360} 92% 68%);--delay:-${(value % 7) * 1.1}s;--duration:${7 + (value % 5) * .9}s;`
-})
-const backgroundBalloons = balloonStyles(34)
-const foregroundBalloons = balloonStyles(14, 34)
 ---
 <!doctype html>
 <html lang="en">
@@ -15,111 +8,119 @@ const foregroundBalloons = balloonStyles(14, 34)
     <title>Happy birthday, Nana sayang! &lt;3</title>
     <meta name="robots" content="noindex, nofollow, noarchive" />
     <meta name="googlebot" content="noindex, nofollow, noarchive" />
-    <meta name="theme-color" content="#ff48ae" />
+    <meta name="theme-color" content="#f0f0f0" />
   </head>
   <body>
-    <main class="birthday-card">
-      <div class="glitter" aria-hidden="true"></div>
-      <div class="hearts" aria-hidden="true">
-        {hearts.map((_, index) => <span class="heart" style={`--i:${index}`}>♥</span>)}
-      </div>
-      <div class="balloons balloons-back" aria-hidden="true">
-        {backgroundBalloons.map((style) => <span class="balloon" style={style}><i></i></span>)}
-      </div>
+    <main class="birthday-stage">
+      <article class="birthday-poster" aria-labelledby="birthday-title">
+        <svg class="scribble-border" viewBox="0 0 720 1200" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M54 52 C116 45 181 57 247 50 C320 44 389 56 458 49 C534 42 604 57 664 51 C681 49 679 84 675 116 C668 176 680 231 674 294 C668 360 681 424 674 489 C668 558 680 626 674 694 C668 765 681 832 674 901 C668 968 681 1038 675 1103 C673 1134 681 1155 662 1150 C599 1141 537 1155 469 1148 C398 1142 326 1155 256 1148 C184 1142 119 1155 56 1148 C39 1146 46 1113 48 1081 C54 1018 42 948 49 881 C55 812 42 742 49 675 C55 605 42 537 49 469 C55 401 42 333 49 265 C55 195 41 127 48 70 C49 58 50 53 54 52 Z" />
+        </svg>
 
-      <p class="top-note">☆ .·´¯`·. ☆ nana's birthday web shrine ☆ .·´¯`·. ☆</p>
-      <p class="voucher-banner">★ you made here from voucher 001 ★</p>
-      <div class="sticker sticker-left" aria-hidden="true">✦<br />Super Cutie<br />Nana</div>
-      <div class="sticker sticker-right" aria-hidden="true">100%<br />CUTIE<br />PIE!</div>
+        <div class="ornament ornament-disko reveal" aria-hidden="true">
+          <img src="/images/disko.png" alt="" />
+        </div>
+        <div class="ornament ornament-ribbon reveal" aria-hidden="true">
+          <img src="/images/ily.png" alt="" />
+        </div>
+        <div class="ornament ornament-flower reveal" aria-hidden="true">
+          <img src="/images/flower.png" alt="" />
+        </div>
 
-      <section class="message" aria-labelledby="birthday-title">
-        <p class="eyebrow">♡ a super special message just for you ♡</p>
-        <h1 id="birthday-title">Happy birthday,<br /><span>Nana sayang!</span> &lt;3</h1>
-        <p class="sparkle-line" aria-hidden="true">⋆｡°✩ ⋆｡°✩ ⋆｡°✩ ⋆｡°✩ ⋆｡°✩</p>
-        <p class="wish">today is all about you, the prettiest star in the whole universe ✧</p>
-        <div class="marquee-wrap"><p>★ keep shining · keep smiling · keep being magical · happy birthday nana! ★</p></div>
-      </section>
+        <header class="poster-copy">
+          <p class="invitation">A super special message just for you</p>
+          <h1 id="birthday-title">Happy birthday,<br /><span>Nana sayang!</span></h1>
+          <p class="wish">Today is all about you, the prettiest star in the whole universe.</p>
+        </header>
 
-      <div class="balloons balloons-front" aria-hidden="true">
-        {foregroundBalloons.map((style) => <span class="balloon" style={style}><i></i></span>)}
-      </div>
+        <figure class="portrait reveal">
+          <img
+            class="portrait-photo"
+            src="/images/happy-birthday.jpeg"
+            alt="Nana standing in front of blue patterned tiles with a handwritten happy birthday message"
+          />
+          <span class="party-hat" aria-hidden="true">
+            <img src="/images/topi.png" alt="" />
+          </span>
+        </figure>
 
-      <div class="footer-row">
-        <button class="music-button" type="button" aria-pressed="false" aria-label="Play birthday music"><span aria-hidden="true">♫</span> play the birthday beat</button>
-        <span class="made-with">made with lots &amp; lots of love ♡</span>
-      </div>
+        <footer class="poster-footer">
+          <button class="music-button" type="button" aria-pressed="false">
+            Play the birthday beat
+          </button>
+          <p>Made with lots and lots of love.</p>
+        </footer>
+      </article>
     </main>
 
     <script>
       const button = document.querySelector<HTMLButtonElement>('.music-button')
 
       if (button) {
-      const musicButton = button
-      let context: AudioContext | undefined
-      let compressor: DynamicsCompressorNode | undefined
-      let timer: number | undefined
-      let playing = false
-      const melody: Array<[number, number]> = [
-        [392, .28], [392, .28], [440, .56], [392, .56], [523.25, .56], [493.88, 1],
-        [392, .28], [392, .28], [440, .56], [392, .56], [587.33, .56], [523.25, 1],
-        [392, .28], [392, .28], [783.99, .56], [659.25, .56], [523.25, .56], [493.88, .56], [440, 1],
-      ]
+        const musicButton = button
+        let context: AudioContext | undefined
+        let compressor: DynamicsCompressorNode | undefined
+        let timer: number | undefined
+        let playing = false
+        const melody: Array<[number, number]> = [
+          [392, .28], [392, .28], [440, .56], [392, .56], [523.25, .56], [493.88, 1],
+          [392, .28], [392, .28], [440, .56], [392, .56], [587.33, .56], [523.25, 1],
+          [392, .28], [392, .28], [783.99, .56], [659.25, .56], [523.25, .56], [493.88, .56], [440, 1],
+        ]
 
-      function playNote(frequency: number, start: number, duration: number) {
-        if (!context || !compressor) return
-        const oscillator = context.createOscillator()
-        const gain = context.createGain()
-        oscillator.type = 'triangle'
-        oscillator.frequency.value = frequency
-        gain.gain.setValueAtTime(.0001, start)
-        gain.gain.exponentialRampToValueAtTime(.8, start + .03)
-        gain.gain.exponentialRampToValueAtTime(.0001, start + duration)
-        oscillator.connect(gain).connect(compressor)
-        oscillator.start(start)
-        oscillator.stop(start + duration + .04)
-      }
-
-      function playLoop() {
-        if (!context) return
-        const now = context.currentTime + .06
-        let offset = 0
-        melody.forEach(([frequency, duration]) => {
-          playNote(frequency, now + offset, duration)
-          offset += duration
-        })
-        timer = window.setTimeout(playLoop, (offset + .25) * 1000)
-      }
-
-      async function toggleMusic() {
-        if (playing && context) {
-          window.clearTimeout(timer)
-          await context.close()
-          context = undefined
-          compressor = undefined
-          playing = false
-          musicButton.textContent = '♫ play the birthday beat'
-          musicButton.setAttribute('aria-pressed', 'false')
-          return
+        function playNote(frequency: number, start: number, duration: number) {
+          if (!context || !compressor) return
+          const oscillator = context.createOscillator()
+          const gain = context.createGain()
+          oscillator.type = 'triangle'
+          oscillator.frequency.value = frequency
+          gain.gain.setValueAtTime(.0001, start)
+          gain.gain.exponentialRampToValueAtTime(.8, start + .03)
+          gain.gain.exponentialRampToValueAtTime(.0001, start + duration)
+          oscillator.connect(gain).connect(compressor)
+          oscillator.start(start)
+          oscillator.stop(start + duration + .04)
         }
-        context = new AudioContext()
-        compressor = context.createDynamicsCompressor()
-        compressor.threshold.value = -12
-        compressor.knee.value = 20
-        compressor.ratio.value = 12
-        compressor.attack.value = .003
-        compressor.release.value = .25
-        compressor.connect(context.destination)
-        await context.resume()
-        playing = true
-        musicButton.textContent = '❚❚ pause the birthday beat'
-        musicButton.setAttribute('aria-pressed', 'true')
-        playLoop()
-      }
 
-      musicButton.addEventListener('click', toggleMusic)
-      window.addEventListener('pointerdown', (event) => {
-        if (!musicButton.contains(event.target as Node)) toggleMusic()
-      }, { once: true })
+        function playLoop() {
+          if (!context) return
+          const now = context.currentTime + .06
+          let offset = 0
+          melody.forEach(([frequency, duration]) => {
+            playNote(frequency, now + offset, duration)
+            offset += duration
+          })
+          timer = window.setTimeout(playLoop, (offset + .25) * 1000)
+        }
+
+        async function toggleMusic() {
+          if (playing && context) {
+            window.clearTimeout(timer)
+            await context.close()
+            context = undefined
+            compressor = undefined
+            playing = false
+            musicButton.textContent = 'Play the birthday beat'
+            musicButton.setAttribute('aria-pressed', 'false')
+            return
+          }
+
+          context = new AudioContext()
+          compressor = context.createDynamicsCompressor()
+          compressor.threshold.value = -12
+          compressor.knee.value = 20
+          compressor.ratio.value = 12
+          compressor.attack.value = .003
+          compressor.release.value = .25
+          compressor.connect(context.destination)
+          await context.resume()
+          playing = true
+          musicButton.textContent = 'Pause the birthday beat'
+          musicButton.setAttribute('aria-pressed', 'true')
+          playLoop()
+        }
+
+        musicButton.addEventListener('click', toggleMusic)
       }
     </script>
   </body>
@@ -127,32 +128,317 @@ const foregroundBalloons = balloonStyles(14, 34)
 
 <style>
   :global(*) { box-sizing: border-box; }
-  :global(html) { min-height: 100%; background: #ff52b4; }
-  :global(body) { background: #ff52b4; color: #fff; font-family: 'Comic Sans MS', 'Marker Felt', cursive; margin: 0; min-height: 100vh; overflow-x: hidden; }
-  .birthday-card { align-items: center; background: radial-gradient(circle at 50% 35%, #ffdaf0 0 6%, transparent 30%), linear-gradient(135deg, rgba(255,255,255,.3) 25%, transparent 25%) 0 0 / 18px 18px, linear-gradient(45deg, #ff40a6, #a83cf4 50%, #ff71c3); display: flex; flex-direction: column; isolation: isolate; justify-content: center; min-height: 100vh; overflow: hidden; padding: 4rem 2rem 2rem; position: relative; text-align: center; }
-  .birthday-card::before, .birthday-card::after { border: 8px ridge #ffd8f1; content: ''; inset: 1.1rem; pointer-events: none; position: absolute; z-index: 3; }
-  .birthday-card::after { border-color: #ffeffa #b30072 #b30072 #ffeffa; inset: 1.7rem; }
-  .glitter { background-image: radial-gradient(#fff 1px, transparent 1.8px), radial-gradient(#fff19a 1px, transparent 2px); background-position: 0 0, 17px 21px; background-size: 38px 38px; inset: 0; opacity: .75; pointer-events: none; position: absolute; z-index: -1; animation: twinkle 1.8s steps(2, end) infinite; }
-  .top-note { color: #fffddb; font-family: 'Courier New', monospace; font-size: clamp(.76rem, 2vw, 1rem); font-weight: bold; letter-spacing: .12em; margin: 0 0 1rem; position: relative; text-shadow: 2px 2px #a20071; z-index: 4; }
-  .voucher-banner { background: #fff059; border: 3px outset #fffce1; box-shadow: 3px 4px 0 #7c107f; color: #9a177e; font-family: 'Courier New', monospace; font-size: clamp(.68rem, 1.7vw, .88rem); font-weight: bold; letter-spacing: .09em; margin: 0 0 1.25rem; padding: .5rem 1rem; position: relative; text-transform: uppercase; transform: rotate(1deg); z-index: 4; }
-  .message { background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,215,241,.9)); border: 5px outset #fff; box-shadow: 0 0 0 4px #fe79c2, 0 0 0 8px #8120b9, 11px 12px 0 rgba(90,0,80,.42); color: #9b146c; max-width: 47rem; padding: clamp(2rem, 6vw, 4.8rem) clamp(1.2rem, 7vw, 5.6rem); position: relative; transform: rotate(-1deg); z-index: 2; }
-  .message::before, .message::after { color: #ffe400; content: '✦'; font-family: serif; font-size: 3rem; position: absolute; text-shadow: 2px 2px #e9008c; }
-  .message::before { left: 1rem; top: .3rem; } .message::after { bottom: .3rem; right: 1rem; }
-  .eyebrow { color: #bb2583; font-family: 'Courier New', monospace; font-size: clamp(.68rem, 1.8vw, .92rem); font-weight: bold; letter-spacing: .08em; margin: 0 0 1.2rem; }
-  h1 { color: #fe37aa; font-family: 'Brush Script MT', 'URW Chancery L', cursive; font-size: clamp(3.5rem, 10vw, 7.5rem); font-style: italic; line-height: .78; margin: 0; text-shadow: 2px 2px 0 #fff, 5px 5px 0 #a61794, 8px 8px 0 #5d0c89; transform: rotate(-2deg); }
-  h1 span { color: #8b1fd1; display: inline-block; font-size: 1.08em; text-shadow: 2px 2px 0 #fff, 5px 5px 0 #e8008b, 8px 8px 0 #550786; }
-  .sparkle-line { color: #ffb300; font-size: 1.4rem; letter-spacing: .2em; margin: 1.7rem 0 .8rem; text-shadow: 1px 1px #8c1689; }
-  .wish { color: #8b197c; font-family: 'Courier New', monospace; font-size: clamp(.85rem, 2vw, 1.08rem); font-weight: bold; line-height: 1.5; margin: 0 auto 1.5rem; max-width: 29rem; }
-  .marquee-wrap { background: #7e16aa; border: 3px inset #fbd5ff; color: #fffdd4; font-family: 'Courier New', monospace; font-size: .75rem; font-weight: bold; overflow: hidden; padding: .55rem 0; white-space: nowrap; width: 100%; }
-  .marquee-wrap p { animation: marquee 12s linear infinite; display: inline-block; margin: 0; padding-left: 100%; }
-  .hearts, .balloons { inset: 0; pointer-events: none; position: absolute; z-index: 1; }
-  .heart { animation: float-heart calc(6s + (var(--i) % 5) * 1s) ease-in-out infinite alternate; color: hsl(calc(315 + var(--i) * 11), 100%, 78%); font-family: serif; font-size: calc(1rem + (var(--i) % 4) * .75rem); left: calc((var(--i) * 37) % 97 * 1%); position: absolute; text-shadow: 2px 2px #a70076; top: calc((var(--i) * 53) % 90 * 1%); }
-  .balloon { animation: balloon-rise var(--duration) ease-in-out var(--delay) infinite alternate; background: var(--color); border: 2px solid rgba(255,255,255,.8); border-radius: 50% 50% 47% 47%; box-shadow: inset -8px -9px 0 rgba(123,0,125,.2), 2px 3px 0 #9d137d; height: calc(var(--size) * 1.25); left: var(--left); position: absolute; top: var(--top); transform-origin: bottom center; width: var(--size); }
-  .balloon::before { background: rgba(255,255,255,.65); border-radius: 50%; content: ''; height: .55rem; left: 22%; position: absolute; top: 18%; width: .7rem; } .balloon::after { border-left: .35rem solid transparent; border-right: .35rem solid transparent; border-top: .55rem solid currentColor; bottom: -.52rem; color: inherit; content: ''; left: calc(50% - .35rem); position: absolute; } .balloon i { border-left: 1px solid rgba(104,0,100,.7); height: 7rem; left: 50%; position: absolute; top: 100%; }
-  .balloons-front { z-index: 5; }.balloons-front .balloon { animation-name: balloon-drift; opacity: .88; }.balloons-front .balloon:nth-child(odd) { animation-direction: alternate-reverse; }
-  .sticker { background: #fff45b; border: 4px dotted #f52a9e; box-shadow: 4px 5px 0 #840b8f; color: #8d188e; font-family: 'Courier New', monospace; font-size: .72rem; font-weight: bold; line-height: 1.05; padding: .7rem .5rem; position: absolute; text-shadow: 1px 1px #fff; z-index: 4; }.sticker-left { left: 8%; top: 18%; transform: rotate(-13deg); }.sticker-right { bottom: 19%; right: 8%; transform: rotate(12deg); }
-  .footer-row { align-items: center; display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin-top: 2.4rem; position: relative; z-index: 4; }.music-button { background: linear-gradient(#fff0fd, #ff92d2); border: 3px outset #fff; box-shadow: 3px 4px #750785; color: #851279; cursor: pointer; font-family: 'Courier New', monospace; font-size: .78rem; font-weight: bold; padding: .7rem 1rem; }.music-button:hover, .music-button[aria-pressed='true'] { background: #ffec59; transform: translate(1px, 1px); }.made-with { color: #fff5ce; font-family: 'Courier New', monospace; font-size: .72rem; font-weight: bold; text-shadow: 1px 1px #850078; }
-  @keyframes float-heart { from { transform: translateY(0) rotate(-12deg) scale(.8); } to { transform: translateY(-2.2rem) rotate(15deg) scale(1.18); } } @keyframes balloon-rise { from { transform: translateY(1rem) rotate(-5deg); } to { transform: translateY(-3rem) rotate(8deg); } } @keyframes balloon-drift { from { transform: translate(-1rem, 1rem) rotate(-8deg); } to { transform: translate(2.2rem, -4rem) rotate(11deg); } } @keyframes twinkle { 50% { opacity: .3; } } @keyframes marquee { to { transform: translateX(-100%); } }
-  @media (max-width: 560px) { .birthday-card { padding: 4.5rem 2rem 3rem; }.birthday-card::before { inset: .5rem; }.birthday-card::after { inset: .9rem; }.sticker { font-size: .58rem; }.sticker-left { left: 3%; top: 12%; }.sticker-right { bottom: 13%; right: 3%; }.balloon { height: calc(var(--size) * .9); opacity: .72; width: calc(var(--size) * .72); }.balloons-front .balloon { opacity: .6; }.message { padding-bottom: 2.5rem; }.top-note { max-width: 18rem; }.voucher-banner { max-width: 18rem; }.footer-row { margin-top: 2rem; } }
-  @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; } }
+
+  :global(:root) {
+    --canvas: #f0f0f0;
+    --paper: #fffdf7;
+    --ink: #171717;
+    --burgundy: #a92d35;
+    --mustard: #dfac32;
+    --ease-out: cubic-bezier(.23, 1, .32, 1);
+    --ease-in-out: cubic-bezier(.77, 0, .175, 1);
+  }
+
+  :global(html) {
+    background: var(--canvas);
+    min-height: 100%;
+  }
+
+  :global(body) {
+    background: var(--canvas);
+    color: var(--ink);
+    margin: 0;
+    min-height: 100svh;
+    overflow-x: hidden;
+  }
+
+  :global(button) { font: inherit; }
+
+  .birthday-stage {
+    display: grid;
+    min-height: 100svh;
+    padding: clamp(1rem, 4vw, 3rem);
+    place-items: start center;
+  }
+
+  .birthday-poster {
+    animation: poster-enter 600ms var(--ease-out) both;
+    background: var(--paper);
+    box-shadow: .65rem .75rem 0 rgba(23, 23, 23, .12);
+    isolation: isolate;
+    max-width: 45rem;
+    min-height: 64rem;
+    overflow: hidden;
+    padding: clamp(4.75rem, 10vw, 7rem) clamp(2.25rem, 8vw, 5.5rem) clamp(3rem, 7vw, 5rem);
+    position: relative;
+    text-align: center;
+    width: 100%;
+  }
+
+  .scribble-border {
+    height: 100%;
+    inset: 0;
+    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    z-index: 5;
+  }
+
+  .scribble-border path {
+    fill: none;
+    stroke: var(--mustard);
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 5;
+    vector-effect: non-scaling-stroke;
+  }
+
+  .poster-copy,
+  .portrait,
+  .poster-footer {
+    position: relative;
+    z-index: 2;
+  }
+
+  .invitation {
+    font-family: 'Bradley Hand', 'Marker Felt', 'Comic Sans MS', cursive;
+    font-size: clamp(1rem, 2.8vw, 1.35rem);
+    letter-spacing: .14em;
+    margin: 0 auto 1.5rem;
+    max-width: 26rem;
+  }
+
+  h1 {
+    color: var(--ink);
+    font-family: 'Bradley Hand', 'Marker Felt', 'Comic Sans MS', cursive;
+    font-size: clamp(3rem, 9vw, 5.5rem);
+    font-weight: 700;
+    letter-spacing: -.055em;
+    line-height: .87;
+    margin: 0;
+    transform: rotate(-1.2deg);
+  }
+
+  h1 span {
+    color: var(--burgundy);
+    display: inline-block;
+    margin-top: .35rem;
+  }
+
+  .wish {
+    font-family: 'Bradley Hand', 'Marker Felt', 'Comic Sans MS', cursive;
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.5;
+    margin: 1.6rem auto 2rem;
+    max-width: 27rem;
+  }
+
+  .portrait {
+    animation-delay: 120ms;
+    margin: 0 auto;
+    width: min(72%, 22rem);
+  }
+
+  .portrait::before {
+    background: var(--mustard);
+    content: '';
+    inset: .55rem -.55rem -.55rem .55rem;
+    position: absolute;
+    transform: rotate(1.1deg);
+    z-index: -1;
+  }
+
+  .portrait-photo {
+    border: 2px solid var(--ink);
+    display: block;
+    height: auto;
+    position: relative;
+    width: 100%;
+    z-index: 1;
+  }
+
+.party-hat {
+  left: 23%;
+  position: absolute;
+  top: 41%;
+  transform: rotate(-12deg);
+  width: 12%;
+  z-index: 3;
+}
+
+  .party-hat img,
+  .ornament img {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
+
+  .party-hat img { animation: hat-drift 5.5s var(--ease-in-out) -1.2s infinite alternate; }
+
+  .poster-footer {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: .9rem;
+    margin-top: 2.5rem;
+  }
+
+  .music-button {
+    background: var(--burgundy);
+    border: 2px solid var(--ink);
+    box-shadow: .28rem .3rem 0 var(--ink);
+    color: var(--paper);
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    font-size: .82rem;
+    font-weight: 700;
+    min-height: 2.75rem;
+    padding: .7rem 1rem;
+    text-transform: lowercase;
+    transition: transform 140ms var(--ease-out);
+  }
+
+  .music-button:hover,
+  .music-button[aria-pressed='true'] {
+    background: var(--ink);
+  }
+
+  .music-button:active { transform: scale(.97); }
+
+  .music-button:focus-visible {
+    outline: 3px solid var(--mustard);
+    outline-offset: 5px;
+  }
+
+  .poster-footer p {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: .85rem;
+    font-style: italic;
+    margin: 0;
+  }
+
+  .ornament {
+    pointer-events: none;
+    position: absolute;
+    z-index: 3;
+  }
+
+  .ornament-disko {
+    animation-delay: 180ms;
+    right: 2.2rem;
+    top: 2rem;
+    width: clamp(5rem, 17vw, 8rem);
+  }
+
+  .ornament-disko img { animation: disco-spin 18s linear infinite; }
+
+  .ornament-ribbon {
+    animation-delay: 240ms;
+    left: -.65rem;
+    top: 38%;
+    width: clamp(5rem, 17vw, 8.5rem);
+  }
+
+  .ornament-ribbon img { animation: ribbon-drift 6.5s var(--ease-in-out) -2.4s infinite alternate; }
+
+  .ornament-flower {
+    animation-delay: 300ms;
+    bottom: 4.5rem;
+    right: -.2rem;
+    width: clamp(5.5rem, 19vw, 9.5rem);
+    z-index: 1;
+  }
+
+  .ornament-flower img { animation: flower-drift 7.5s var(--ease-in-out) -4.1s infinite alternate; }
+
+  .reveal {
+    animation-duration: 500ms;
+    animation-fill-mode: both;
+    animation-name: reveal-item;
+    animation-timing-function: var(--ease-out);
+  }
+
+  @keyframes poster-enter {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes reveal-item {
+    from { opacity: 0; transform: translateY(12px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  @keyframes disco-spin {
+    to { transform: rotate(360deg); }
+  }
+
+  @keyframes hat-drift {
+    from { transform: translateY(0) rotate(-1deg); }
+    to { transform: translateY(-6px) rotate(1deg); }
+  }
+
+  @keyframes ribbon-drift {
+    from { transform: translateY(0) rotate(-2deg); }
+    to { transform: translateY(-6px) rotate(2deg); }
+  }
+
+  @keyframes flower-drift {
+    from { transform: translateY(0) rotate(2deg); }
+    to { transform: translateY(-6px) rotate(-2deg); }
+  }
+
+  @media (max-width: 560px) {
+    .birthday-stage { padding: 0; }
+
+    .birthday-poster {
+      box-shadow: none;
+      min-height: 100svh;
+      padding: 5.4rem 2.8rem 4rem;
+    }
+
+    .portrait { width: min(82%, 20rem); }
+
+    .ornament-disko {
+      right: 1.15rem;
+      top: 1.15rem;
+      width: 5.6rem;
+    }
+
+    .ornament-ribbon {
+      left: -.75rem;
+      top: 40%;
+      width: 5.6rem;
+    }
+
+    .ornament-flower {
+      bottom: 4.75rem;
+      right: -.75rem;
+      width: 6rem;
+    }
+  }
+
+  @media (max-width: 380px) {
+    .birthday-poster { padding-inline: 2.3rem; }
+    .invitation { max-width: 14rem; }
+    .portrait { width: 86%; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .birthday-poster,
+    .reveal {
+      animation: reduced-enter 200ms ease both;
+    }
+
+    .party-hat img,
+    .ornament img { animation: none; }
+
+    .music-button { transition: none; }
+    .music-button:active { transform: none; }
+  }
+
+  @keyframes reduced-enter {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
 </style>
