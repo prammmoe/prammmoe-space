@@ -2,15 +2,21 @@
 import '../styles/global.css'
 import { getCollection } from 'astro:content'
 
-const { title = 'prammmoe', description = '', home = false } = Astro.props
-const latestPosts = (await getCollection('blog')).filter((post) => !post.data.draft).sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()).slice(0, 4)
-const featuredProjects = (await getCollection('projects')).filter((project) => !project.data.draft && project.data.featured).sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime()).slice(0, 2)
+const { title = 'prammmoe', description = '' } = Astro.props
+const featuredProjects = (await getCollection('projects'))
+  .filter((project) => !project.data.draft && project.data.featured)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 2)
 const pathname = Astro.url.pathname
-const lastUpdated = new Intl.DateTimeFormat('en-US', {
-  dateStyle: 'short',
-  timeStyle: 'medium',
-  hour12: false,
-  timeZone: 'UTC',
+const navigation = [
+  { href: '/', label: 'About me' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/blog/', label: 'Blog' },
+  { href: '/media/', label: 'Media I consumed' },
+  { href: '/musics/', label: 'Music I listened to' },
+]
+const lastUpdated = new Intl.DateTimeFormat('en-GB', {
+  dateStyle: 'short', timeStyle: 'medium', hour12: false, timeZone: 'UTC',
 }).format(new Date())
 ---
 <!doctype html>
@@ -21,7 +27,7 @@ const lastUpdated = new Intl.DateTimeFormat('en-US', {
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="icon" type="image/png" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#dedede" />
+    <meta name="theme-color" content="#18146C" />
     <link rel="canonical" href={new URL(Astro.url.pathname, import.meta.env.SITE ?? 'https://prammmoe.space').toString()} />
     <meta name="author" content="Pram" />
     <meta property="og:type" content="website" /><meta property="og:site_name" content="prammmoe" />
@@ -30,33 +36,52 @@ const lastUpdated = new Intl.DateTimeFormat('en-US', {
     <meta property="og:image" content="/favicon.svg" /><meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" is:inline>{JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: 'prammmoe', url: import.meta.env.SITE ?? 'https://prammmoe.space', inLanguage: 'id', publisher: { '@type': 'Person', name: 'Pram' } })}</script>
   </head>
-  <body>
+  <body class="kvad-site">
+    <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="page-shell">
       <header class="masthead">
-        <a class="wordmark" href="/" aria-label="prammmoe home"><span class="wordmark-mark">P</span><span><strong>Pramuditha Muhammad Ikhwan</strong><small>Software Engineer · iOS Developer</small></span></a>
-        <a class="header-banner" href="https://ezrakruger.cc/adbank/blob/2cc3590bb05a15ee.gif" target="_blank" rel="noopener noreferrer"><img src="/banners/header.gif" alt="Animated vintage web banner" width="164" height="32" /></a>
+        <img class="hero-art" src="/images/kvad-header.webp" alt="Two white capsule robots on an indigo ornamental landscape" width="1660" height="554" fetchpriority="high" />
+        <svg class="hero-diagonal" viewBox="0 0 830 277" preserveAspectRatio="none" aria-hidden="true"><path d="M116 0H242L56 189V277H0V178L117 62H55Z" fill="white" /></svg>
+        <a class="wordmark" href="/" aria-label="prammmoe home">PRAMMMOE</a>
+        <span class="hero-edition">PERSONAL SPACE / V3.0.0</span>
       </header>
       <div class="site-grid">
         <nav class="section-nav" aria-label="Main navigation">
-          <a class:list={[{ active: pathname === '/' }]} href="/">about me</a>
-          <a class:list={[{ active: pathname.startsWith('/projects') }]} href="/projects/">projects</a>
-          <a class:list={[{ active: pathname.startsWith('/blog') }]} href="/blog/">blog</a>
-          <a class:list={[{ active: pathname.startsWith('/media') }]} href="/media/">media I consumed</a>
-          <a class:list={[{ active: pathname.startsWith('/musics') }]} href="/musics/">music I listened to</a>
-          <section class="nav-links" aria-labelledby="connect-heading"><h2 id="connect-heading">connect</h2><a href="https://linkedin.com/in/ikhwanpramuditha" target="_blank" rel="noopener noreferrer">LinkedIn</a><a href="https://github.com/prammmoe" target="_blank" rel="noopener noreferrer">GitHub</a><a href="https://instagram.com/ikhwanpramuditha" target="_blank" rel="noopener noreferrer">Instagram</a></section>
-          <a class="vintage-banner banner-nav" href="https://www.banner-depot-2000.net/explore" target="_blank" rel="noopener noreferrer"><img src="/banners/banner-1.gif" alt="Animated web banner from Banner Depot 2000" width="468" height="60" loading="lazy" /></a>
-          <a class="vintage-banner banner-nav-extra" href="https://ezrakruger.cc/adbank/blob/fac0ecea34edea59.gif" target="_blank" rel="noopener noreferrer"><img src="/banners/ezrakruger.gif" alt="Animated vintage web banner" width="218" height="213" loading="lazy" /></a>
-          <a class="vintage-banner banner-nav-extra" href="https://ezrakruger.cc/adbank/blob/32e87c4f4a14fa0d.gif" target="_blank" rel="noopener noreferrer"><img src="/banners/connect-extra.gif" alt="Animated vintage web banner" width="236" height="186" loading="lazy" /></a>
+          <h2 class="panel-label menu-label">Menu</h2>
+          <div class="nav-inner">
+            {navigation.map(({ href, label }) => {
+              const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
+              return <a class:list={[{ active }]} href={href} aria-current={active ? 'page' : undefined}>{label}</a>
+            })}
+            <section class="nav-links" aria-labelledby="connect-heading">
+              <h3 id="connect-heading">Connect</h3>
+              <a href="https://linkedin.com/in/ikhwanpramuditha" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+              <a href="https://github.com/prammmoe" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a href="https://instagram.com/ikhwanpramuditha" target="_blank" rel="noopener noreferrer">Instagram</a>
+            </section>
+          </div>
         </nav>
-        <main class="site-content"><slot /></main>
-        <aside class="right-sidebar" aria-label="Highlights">
-          {home ? <slot name="sidebar" /> : <><section class="notice-panel"><p>currently</p><strong>iOS Developer<br />at Arya Noble</strong></section>{featuredProjects.length > 0 && <section class="sidebar-section sidebar-green"><h2>featured projects</h2>{featuredProjects.map((project) => <a href={`/projects/${project.slug}/`}>{project.data.title}</a>)}</section>}{latestPosts.length > 0 && <section class="sidebar-section sidebar-yellow"><h2>latest articles</h2>{latestPosts.map((post) => <a href={`/blog/${post.slug}/`}>{post.data.title}</a>)}</section>}<section class="sidebar-section downloads sidebar-blue"><h2>documents</h2><a href="/resume.pdf" download>Download resume</a><a href="/portfolio.pdf" download>Download portfolio</a></section></>}
+        <main id="main-content" class="site-content" tabindex="-1"><slot /></main>
+        <aside class="feature-panel" aria-label="Profile and featured projects">
+          <h2 class="panel-label">Featured</h2>
+          <div class="feature-inner">
+            <a class="profile-feature bevel-panel" href="/#profile">
+              <img src="/pram.JPG" alt="Pram" width="64" height="72" />
+              <span>Pram<br /><small>Software Engineer<br /></small></span>
+            </a>
+            {featuredProjects.map((project) => <a class="project-feature bevel-panel" href={`/projects/${project.slug}/`}>
+              {project.data.thumbnail && <img src={project.data.thumbnail} alt={project.data.title} width="300" height="225" loading="lazy" />}
+              <span>{project.data.title}</span>
+            </a>)}
+            <section class="feature-note"><h3>Currently</h3><p>iOS Developer<br />at Arya Noble</p></section>
+            <section class="feature-note documents"><h3>Documents</h3><a href="/resume.pdf" download>Download resume</a><a href="/portfolio.pdf" download>Download portfolio</a></section>
+          </div>
         </aside>
       </div>
-      <a class="vintage-banner banner-pokemon" href="https://ezrakruger.cc/adbank/blob/c93dfed240f3da0a.gif" target="_blank" rel="noopener noreferrer"><img src="/banners/pokemon.gif" alt="Animated Pokémon banner" width="468" height="60" loading="lazy" /></a>
-      <p class="last-updated">Last updated: {lastUpdated} UTC</p>
-      <footer class="site-footer"><span>© {new Date().getFullYear()} Pramuditha Muhammad Ikhwan</span><a href="/">home</a><span>|</span><a href="/blog/">blog</a><span>|</span><a href="/projects/">projects</a></footer>
-      <div class="footer-banners"><a class="vintage-banner" href="https://www.banner-depot-2000.net/explore" target="_blank" rel="noopener noreferrer"><img src="/banners/banner-9.gif" alt="Animated web banner from Banner Depot 2000" width="468" height="60" loading="lazy" /></a><a class="vintage-banner" href="https://www.banner-depot-2000.net/explore" target="_blank" rel="noopener noreferrer"><img src="/banners/banner-10.gif" alt="Animated web banner from Banner Depot 2000" width="468" height="60" loading="lazy" /></a></div>
+      <footer class="site-footer">
+        <div class="footer-crossref"><strong>XD</strong><div><a href="https://github.com/prammmoe" target="_blank" rel="noopener noreferrer">link &gt;&gt; GitHub / prammmoe</a><br /><span>Software Engineer · iOS Developer</span></div></div>
+        <div class="footer-floor"><p>© {new Date().getFullYear()} Pramuditha Muhammad Ikhwan<br /><span>Last updated: {lastUpdated} UTC</span></p><a class="footer-mark" href="/" aria-label="prammmoe home"><span aria-hidden="true">↗</span> BACK TO TOP</a></div>
+      </footer>
     </div>
   </body>
 </html>
