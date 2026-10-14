@@ -1,0 +1,254 @@
+[
+  {
+    "url": "http://localhost:50642/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost--2026_10_14_13_07_02.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost--2026_10_14_13_07_02.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost--2026_10_14_13_07_22.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost--2026_10_14_13_07_22.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/blog/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_-2026_10_14_13_07_32.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_-2026_10_14_13_07_32.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/blog/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_-2026_10_14_13_07_51.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_-2026_10_14_13_07_51.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/blog/getting-to-know-server-sent-events-on-ios/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_getting_to_know_server_sent_events_on_ios_-2026_10_14_13_08_01.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_getting_to_know_server_sent_events_on_ios_-2026_10_14_13_08_01.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/blog/getting-to-know-server-sent-events-on-ios/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_getting_to_know_server_sent_events_on_ios_-2026_10_14_13_08_11.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_getting_to_know_server_sent_events_on_ios_-2026_10_14_13_08_11.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/curated-works-2025/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_curated_works_2025_-2026_10_14_13_08_31.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_curated_works_2025_-2026_10_14_13_08_31.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/curated-works-2025/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_curated_works_2025_-2026_10_14_13_08_51.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_curated_works_2025_-2026_10_14_13_08_51.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/erha-buddy/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_erha_buddy_-2026_10_14_13_09_01.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_erha_buddy_-2026_10_14_13_09_01.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/erha-buddy/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_erha_buddy_-2026_10_14_13_09_21.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_erha_buddy_-2026_10_14_13_09_21.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/slng/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_slng_-2026_10_14_13_09_31.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_slng_-2026_10_14_13_09_31.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/slng/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_slng_-2026_10_14_13_09_51.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_slng_-2026_10_14_13_09_51.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/rooted-dbt/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_rooted_dbt_-2026_10_14_13_10_01.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_rooted_dbt_-2026_10_14_13_10_01.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/rooted-dbt/",
+    "isRepresentativeRun": false,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_rooted_dbt_-2026_10_14_13_10_11.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_rooted_dbt_-2026_10_14_13_10_11.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost--2026_10_14_13_07_12.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost--2026_10_14_13_07_12.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/blog/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_-2026_10_14_13_07_41.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_-2026_10_14_13_07_41.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/blog/getting-to-know-server-sent-events-on-ios/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_getting_to_know_server_sent_events_on_ios_-2026_10_14_13_08_21.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-blog_getting_to_know_server_sent_events_on_ios_-2026_10_14_13_08_21.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/curated-works-2025/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_curated_works_2025_-2026_10_14_13_08_41.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_curated_works_2025_-2026_10_14_13_08_41.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/erha-buddy/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_erha_buddy_-2026_10_14_13_09_11.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_erha_buddy_-2026_10_14_13_09_11.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/slng/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_slng_-2026_10_14_13_09_41.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_slng_-2026_10_14_13_09_41.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  },
+  {
+    "url": "http://localhost:50642/projects/rooted-dbt/",
+    "isRepresentativeRun": true,
+    "htmlPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_rooted_dbt_-2026_10_14_13_10_20.report.html",
+    "jsonPath": "/Users/prammmoe/Projects/prammmoe-space/.lighthouseci/reports/localhost-projects_rooted_dbt_-2026_10_14_13_10_20.report.json",
+    "summary": {
+      "performance": 1,
+      "accessibility": 1,
+      "best-practices": 1,
+      "seo": 1
+    }
+  }
+]
