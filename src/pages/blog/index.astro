@@ -1,6 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro'
 import { getCollection } from 'astro:content'
-const posts = (await getCollection('blog')).filter((post) => !post.data.draft).sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+import { formatDate } from '../../data/profile'
+const posts = (await getCollection('blog')).filter((post) => !post.data.draft).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 ---
-<Base title="Blog"><header class="page-header"><p class="page-kicker">notes</p><h1>Blog</h1></header><ul class="listing">{posts.map((post) => <li><a href={`/blog/${post.slug}/`}>{post.data.title}</a><span class="date">{new Date(post.data.pubDate).toLocaleDateString('en-US')}</span></li>)}</ul></Base>
+<Base title="Writing" description="Notes by Pram on iOS development, Swift, networking, and the things he is learning.">
+  <header class="page-header"><h1>Writing</h1><p>Notes on engineering and the things I’m learning.</p></header>
+  <ul class="listing">{posts.map((post) => <li><a href={`/blog/${post.slug}/`} lang={post.data.lang}>{post.data.title}</a><p lang={post.data.lang}>{post.data.description}</p><time class="date" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></li>)}</ul>
+</Base>

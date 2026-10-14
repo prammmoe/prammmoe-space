@@ -2,6 +2,7 @@
 title: "Getting to Know Server-Sent Events (and Actually Implementing It on iOS)"
 description: "Understand the SSE wire format and build an iOS streaming layer with Swift, Alamofire, and RxSwift, including reconnection and lifecycle handling."
 pubDate: 2026-08-15
+featured: true
 tags: ["Swift", "iOS", "Server-Sent Events", "Networking", "RxSwift"]
 coverImage: "/blog/server-sent-events/cover.jpg"
 coverCredit: "Lunyon on Unsplash"
@@ -21,7 +22,9 @@ Imagine an order-tracking screen. An order moves from `PROCESSING` to `SHIPPED` 
 SSE is a standard for keeping an HTTP response open so a server can send text events to a client over time. The client opens one connection; the server sends updates whenever information becomes available.
 
 <figure class="article-figure">
-  <img src="/blog/server-sent-events/one-way-stream.png" alt="The client opens GET /events, then the server sends order-status events and heartbeat comments over the same connection." loading="lazy" />
+
+![The client opens GET /events, then the server sends order-status events and heartbeat comments over the same connection.](../../assets/blog/server-sent-events/one-way-stream.png)
+
   <figcaption>One request opens a stream of server-to-client updates.</figcaption>
 </figure>
 
@@ -97,7 +100,9 @@ SSE fits updates that mostly travel from the server to the app:
 - Moderation and approval status
 
 <figure class="article-figure">
-  <img src="/blog/server-sent-events/transport-comparison.png" alt="Comparison of polling, SSE, WebSocket, and push notifications by direction, best fit, and trade-off." loading="lazy" />
+
+![Comparison of polling, SSE, WebSocket, and push notifications by direction, best fit, and trade-off.](../../assets/blog/server-sent-events/transport-comparison.png)
+
   <figcaption>Choose the transport based on the direction and timing of updates.</figcaption>
 </figure>
 
@@ -523,7 +528,9 @@ The coordinator also needs to respond to connectivity and authentication:
 Retrying every error can drain the battery or repeatedly send invalid credentials. Choose the response based on the reason the stream ended:
 
 <figure class="article-figure">
-  <img src="/blog/server-sent-events/reconnect-policy.png" alt="Reconnect policy: remain disconnected after cancellation, wait while offline, refresh credentials for 401, stop retries for 403, respect Retry-After for 429, and back off after server closure or 5xx." loading="lazy" />
+
+![Reconnect policy: remain disconnected after cancellation, wait while offline, refresh credentials for 401, stop retries for 403, respect Retry-After for 429, and back off after server closure or 5xx.](../../assets/blog/server-sent-events/reconnect-policy.png)
+
   <figcaption>The reconnect decision depends on cancellation, connectivity, and HTTP status.</figcaption>
 </figure>
 

@@ -1,5 +1,15 @@
 # Deploy Astro ke VPS (Non-Docker) + CI/CD
 
+## Portfolio development and verification
+
+`npm run dev` starts the local site. Profile, career history, and external links live in `src/data/profile.ts`. Blog entries marked `featured: true` appear in Engineering writing, newest first, up to three; all non-draft posts remain in `/blog/`.
+
+Run `npm run verify` to check Astro, build, test in a browser, and audit the representative routes in `lighthouserc.cjs` with three mobile Lighthouse runs each. Local Playwright tests use an installed Google Chrome; CI uses its installed Playwright Chromium. If local Chrome is unavailable, install Playwright Chromium and set `CI=1` for the test command. Lighthouse uses installed Chrome. No test browser is shipped to website visitors.
+
+Browser and axe reports are written to `playwright-report/` and `test-results/`; Lighthouse reports are saved under `.lighthouseci/`. CI retains these as artifacts for 14 days and blocks deployment if the quality thresholds in `CONSTRAINTS.md` are not met.
+
+The iOS portfolio is available as readable HTML at `/projects/curated-works-2025/`, linking to ERHA Buddy, SLNG, Paintee, and Rooted DBT case studies. The original PDF still downloads directly; screenshots can be added to the Markdown studies when supplied. The older non-iOS gallery remains available. Public originals remain for existing image links; source copies in `src/assets/` let Astro generate optimized images.
+
 Dokumen ini menjelaskan langkah lengkap untuk menjalankan situs Astro statis di VPS dengan Nginx + TLS Let’s Encrypt, serta pipeline CI/CD menggunakan GitHub Actions yang sudah ada di repo (`.github/workflows/deploy.yml`).
 
 ## Ringkasan Arsitektur

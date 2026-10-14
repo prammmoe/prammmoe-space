@@ -1,0 +1,77 @@
+<dialog class="screenshot-dialog" aria-label="Full-size screenshot" aria-description="Press Escape or tap outside the popup to close.">
+  <img alt="" width="900" height="1803" loading="lazy" />
+  <p class="screenshot-description"></p>
+</dialog>
+<script>
+  const dialog = document.querySelector<HTMLDialogElement>('.screenshot-dialog')!
+  const fullImage = dialog.querySelector('img')!
+  const description = dialog.querySelector<HTMLElement>('.screenshot-description')!
+  dialog.addEventListener('click', (event) => {
+    if (event.target !== dialog) return
+    const rect = dialog.getBoundingClientRect()
+    if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close()
+  })
+  document.querySelectorAll<HTMLElement>('.project-screens').forEach((track) => {
+    const slides = Array.from(track.querySelectorAll<HTMLElement>(':scope > p'))
+    if (slides.length === 0) return
+    const label = track.getAttribute('aria-label') || 'Project screenshots'
+    const gallery = document.createElement('section')
+    gallery.className = 'project-gallery'
+    gallery.setAttribute('aria-label', label)
+    track.before(gallery)
+    gallery.append(track)
+    if (slides.length > 2) track.tabIndex = 0
+    else track.removeAttribute('tabindex')
+    slides.forEach((slide) => {
+      const caption = document.createElement('span')
+      caption.className = 'screen-caption'
+      const image = slide.querySelector('img')!
+      caption.textContent = image.alt
+      const preview = document.createElement('a')
+      preview.href = image.src
+      preview.setAttribute('aria-label', `View full-size screenshot: ${image.alt}`)
+      image.before(preview)
+      preview.append(image)
+      const triggers = [preview]
+      if (slides.length === 1) {
+        const fullSize = document.createElement('a')
+        fullSize.href = image.src
+        fullSize.className = 'screen-full-size'
+        fullSize.textContent = 'View full size'
+        fullSize.setAttribute('aria-label', `View full-size screenshot: ${image.alt}`)
+        caption.append(fullSize)
+        triggers.push(fullSize)
+      }
+      for (const trigger of triggers) {
+        trigger.setAttribute('aria-haspopup', 'dialog')
+        trigger.addEventListener('click', (event) => {
+          event.preventDefault()
+          fullImage.src = image.currentSrc || image.src
+          fullImage.alt = image.alt
+          fullImage.width = image.width
+          fullImage.height = image.height
+          description.textContent = image.alt
+          dialog.showModal()
+        })
+      }
+      slide.append(caption)
+    })
+    const toolbar = document.createElement('div')
+    toolbar.className = 'gallery-toolbar'
+    const title = document.createElement('span')
+    title.textContent = label
+    toolbar.append(title)
+    gallery.prepend(toolbar)
+    if (slides.length <= 2) return
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const step = () => slides.length > 1 ? slides[1].offsetLeft - slides[0].offsetLeft : track.clientWidth
+    const scroll = (left: number) => track.scrollTo({ left, behavior: motion.matches ? 'instant' : 'smooth' })
+    track.addEventListener('keydown', (event) => {
+      if (event.target !== track) return
+      const destinations: Record<string, number> = { ArrowLeft: track.scrollLeft - step(), ArrowRight: track.scrollLeft + step(), Home: 0, End: track.scrollWidth }
+      if (!(event.key in destinations)) return
+      event.preventDefault()
+      scroll(destinations[event.key])
+    })
+  })
+</script>

@@ -1,6 +1,6 @@
 ---
 title: "The Sun, Spacetime, and the Order of Creation"
-description: ""
+description: "Notes on gravity, spacetime, and the order of creation, exploring the relationship between physics and interpretations of scripture."
 pubDate: 2026-08-25
 tags: ["Physics", "Space", "General Relativity", "Tafakkur"]
 coverImage: "/blog/spacetime-curvature.png"
@@ -23,7 +23,9 @@ For everyday calculations, planetary motion, engineering, and countless other pr
 Newton could describe the strength of gravity with incredible accuracy, but the deeper nature of gravity remained mysterious.
 
 <figure class="article-figure article-figure--portrait">
-  <img src="/blog/albert-einstein.png" alt="Albert Einstein" />
+
+![Albert Einstein](../../assets/blog/albert-einstein.png)
+
 </figure>
 
 Centuries later, Albert Einstein changed the question itself.
@@ -137,7 +139,9 @@ To notice.
 To contemplate.
 
 <figure class="article-figure article-figure--wide">
-  <img src="/blog/tafakkur-contemplation.png" alt="A person sitting in contemplation inside a mosque" />
+
+![A person sitting in contemplation inside a mosque](../../assets/blog/tafakkur-contemplation.png)
+
   <figcaption>Credit: <a href="https://mozaik.inilah.com/dakwah/apa-arti-tafakur">Inilah.com</a></figcaption>
 </figure>
 

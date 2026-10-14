@@ -7,6 +7,7 @@ const baseSchema = z.object({
   updatedDate: z.date().optional(),
   tags: z.array(z.string()).default([]),
   draft: z.boolean().default(false),
+  lang: z.enum(['en', 'id']).default('en'),
   coverImage: z.string().optional(),
   coverCredit: z.string().optional(),
   coverCreditUrl: z.string().url().optional(),
@@ -22,13 +23,14 @@ const projectSchema = z.object({
   thumbnail: z.string().optional(),
   github: z.string().optional(),
   demo: z.string().optional(),
+  appStore: z.string().url().optional(),
   techStack: z.array(z.string()).default([]),
   featured: z.boolean().default(false),
 });
 
 const blog = defineCollection({
   type: "content",
-  schema: baseSchema,
+  schema: baseSchema.extend({ featured: z.boolean().default(false) }),
 });
 
 const media = defineCollection({

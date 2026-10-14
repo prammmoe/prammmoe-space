@@ -1,0 +1,16 @@
+---
+import { profile } from '../data/profile'
+---
+<footer class="site-footer">
+  <div class="footer-primary">
+    <p>© {new Date().getFullYear()} {profile.name}</p>
+    <nav aria-label="Connect and personal notes">
+      <a href={profile.links.linkedin}>LinkedIn</a><a href={profile.links.github}>GitHub</a>
+      <a href="/media/">Media</a><a href="/musics/">Music</a>
+    </nav>
+  </div>
+  <nav class="secondary-links" aria-label="Other profiles">
+    <a href={profile.links.medium}>Medium</a><a href={profile.links.leetcode}>LeetCode</a>
+    <a href={profile.links.upwork}>Upwork</a><a href={profile.links.instagram}>Instagram</a>
+  </nav>
+</footer>

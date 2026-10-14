@@ -1,6 +1,7 @@
 ---
 title: "LeetCode #2 — Two Sum"
-description: ""
+description: "Catatan penyelesaian Two Sum di Swift menggunakan brute force dan hash map."
+lang: id
 pubDate: 2025-12-22
 tags: ["Swift", "LeetCode", "DSA"]
 ---

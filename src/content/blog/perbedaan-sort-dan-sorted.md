@@ -1,6 +1,8 @@
 ---
 title: "Perbedaan .sort() dan .sorted() di Swift"
-description: ""
+description: "Perbedaan sort() dan sorted() di Swift, termasuk mutasi array dan pengurutan dengan closure."
+lang: id
+featured: true
 pubDate: 2025-12-22
 tags: ["Swift", "SwiftUI", "Swift Programming"]
 ---

@@ -1,8 +1,22 @@
 ---
 import Base from '../../layouts/Base.astro'
-import { getCollection } from 'astro:content'
-export async function getStaticPaths() { return (await getCollection('blog')).map((post) => ({ params: { slug: post.slug }, props: { post } })) }
+import ContentImage from '../../components/ContentImage.astro'
+import { getCollection, type CollectionEntry } from 'astro:content'
+import { formatDate } from '../../data/profile'
+import katexStyles from 'katex/dist/katex.min.css?url'
+export async function getStaticPaths() { return (await getCollection('blog')).filter((post) => !post.data.draft).map((post) => ({ params: { slug: post.slug }, props: { post } })) }
+interface Props { post: CollectionEntry<'blog'> }
 const { post } = Astro.props
 const { Content } = await post.render()
+const prose = post.body.replace(/```[\s\S]*?```|`[^`\n]*`/g, '')
+const hasMath = /\$\$|\$[^\n$]+\$/.test(prose)
 ---
-<Base title={post.data.title} description={post.data.description}><article class="post blog-post"><a class="back-link" href="/blog/">← back to blog</a><header class="article-header"><p class="page-kicker">blog</p><h1>{post.data.title}</h1>{post.data.description && <p class="article-dek">{post.data.description}</p>}<p class="meta">{new Date(post.data.pubDate).toLocaleDateString('en-US')}</p></header>{post.data.coverImage && <figure class="cover"><img src={post.data.coverImage} alt={`Cover image for ${post.data.title}`} />{post.data.coverCredit && <figcaption>Credit: {post.data.coverCreditUrl ? <a href={post.data.coverCreditUrl}>{post.data.coverCredit}</a> : post.data.coverCredit}</figcaption>}</figure>}<div class="content"><Content /></div></article></Base>
+<Base title={post.data.title} description={post.data.description} lang={post.data.lang} type="article" pubDate={post.data.pubDate} updatedDate={post.data.updatedDate}>
+  {hasMath && <link slot="head" rel="stylesheet" href={katexStyles} />}
+  <article class="post">
+    <a class="back-link" href="/blog/">Back to writing</a>
+    <header class="article-header"><h1>{post.data.title}</h1><p class="description">{post.data.description}</p><p class="meta"><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, post.data.lang)}</time></p></header>
+    {post.data.coverImage && <figure class="cover"><ContentImage src={post.data.coverImage} alt="" eager />{post.data.coverCredit && <figcaption>Credit: {post.data.coverCreditUrl ? <a href={post.data.coverCreditUrl}>{post.data.coverCredit}</a> : post.data.coverCredit}</figcaption>}</figure>}
+    <div class="content"><Content /></div>
+  </article>
+</Base>

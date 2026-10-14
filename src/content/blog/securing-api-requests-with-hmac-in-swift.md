@@ -2,8 +2,9 @@
 title: "Securing API Requests with HMAC in Swift"
 description: "Build an HMAC-SHA256 request signing layer with CryptoKit, Alamofire, and Moya, from canonical requests to server verification."
 pubDate: 2026-10-11
+featured: true
 tags: ["Swift", "iOS", "Security", "CryptoKit", "Networking"]
-coverImage: "https://cdn-images-1.medium.com/max/1600/1*fQp2czz5X66TwcCdfH6whA.jpeg"
+coverImage: "/blog/hmac.jpeg"
 ---
 
 When an iOS app communicates with an API, HTTPS is the first layer of protection. It encrypts traffic in transit and helps the client verify that it is connected to the expected server.

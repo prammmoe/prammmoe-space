@@ -1,6 +1,10 @@
 ---
 import Base from '../../layouts/Base.astro'
 import { getCollection } from 'astro:content'
-const items = (await getCollection('musics')).filter((item) => !item.data.draft).sort((a, b) => new Date(b.data.pubDate).getTime() - new Date(a.data.pubDate).getTime())
+import { formatDate } from '../../data/profile'
+const items = (await getCollection('musics')).filter((item) => !item.data.draft).sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
 ---
-<Base title="Music I Listened To"><header class="page-header"><p class="page-kicker">personal notes</p><h1>Music I Listened To</h1></header><ul class="listing">{items.map((item) => <li><a href={`/musics/${item.slug}/`}>{item.data.title}</a><span class="date">{new Date(item.data.pubDate).toLocaleDateString('en-US')}</span></li>)}</ul></Base>
+<Base title="Music" description="Pram’s personal listening notes and music selections.">
+  <header class="page-header"><h1>Music</h1><p>Personal listening notes.</p></header>
+  {items.length ? <ul class="listing">{items.map((item) => <li><a href={`/musics/${item.slug}/`}>{item.data.title}</a><time class="date" datetime={item.data.pubDate.toISOString()}>{formatDate(item.data.pubDate)}</time></li>)}</ul> : <p class="empty-state">No listening notes published yet.</p>}
+</Base>
