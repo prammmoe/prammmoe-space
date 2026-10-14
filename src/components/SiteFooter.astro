@@ -1,16 +1,32 @@
 ---
 import { profile } from '../data/profile'
+const socialProfiles = [
+  { name: 'LinkedIn', href: profile.links.linkedin, icon: '/social/linkedin.svg' },
+  { name: 'GitHub', href: profile.links.github, icon: '/tech/github.svg' },
+  { name: 'Instagram', href: profile.links.instagram, icon: '/social/instagram.svg' },
+  { name: 'Medium', href: profile.links.medium, icon: '/social/medium.svg' },
+  { name: 'LeetCode', href: profile.links.leetcode, icon: '/social/leetcode.svg' },
+  { name: 'Upwork', href: profile.links.upwork, icon: '/social/upwork.svg' },
+]
 ---
 <footer class="site-footer">
-  <div class="footer-primary">
-    <p>© {new Date().getFullYear()} {profile.name}</p>
-    <nav aria-label="Connect and personal notes">
-      <a href={profile.links.linkedin}>LinkedIn</a><a href={profile.links.github}>GitHub</a>
-      <a href="/media/">Media</a><a href="/musics/">Music</a>
+  <div class="footer-connect">
+    <h2 id="footer-connect-heading">Let’s connect</h2>
+    <nav class="social-links" aria-labelledby="footer-connect-heading">
+      {socialProfiles.map(({ name, href, icon }) => <a href={href} aria-label={name} title={name} target="_blank" rel="noopener noreferrer"><span class="social-icon" style={`--social-icon: url('${icon}')`} aria-hidden="true"></span></a>)}
     </nav>
   </div>
-  <nav class="secondary-links" aria-label="Other profiles">
-    <a href={profile.links.medium}>Medium</a><a href={profile.links.leetcode}>LeetCode</a>
-    <a href={profile.links.upwork}>Upwork</a><a href={profile.links.instagram}>Instagram</a>
-  </nav>
+  <div class="footer-primary">
+    <p>© {new Date().getFullYear()} {profile.name}</p>
+  </div>
 </footer>
+
+<style>
+  .footer-connect { margin-bottom: 28px; }
+  .footer-connect h2 { color: var(--ink); font-size: 20px; margin-bottom: 16px; }
+  .site-footer .social-links { display: grid; grid-template-columns: repeat(6, 52px); gap: 12px; }
+  .social-links a { width: 52px; height: 52px; justify-content: center; border: 1px solid var(--rule); border-radius: 12px; color: var(--muted); text-decoration: none; }
+  .social-links a:hover, .social-links a:focus-visible { background: var(--surface); color: var(--ink); border-color: var(--muted); }
+  .social-icon { display: block; width: 24px; height: 24px; background: currentColor; mask: var(--social-icon) center / contain no-repeat; }
+  @media (max-width: 600px) { .site-footer .social-links { grid-template-columns: repeat(3, 52px); } }
+</style>
