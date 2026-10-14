@@ -1,0 +1,26 @@
+<button type="button" class="theme-control" aria-label="Switch to dark theme" title="Switch to dark theme" hidden>
+  <svg class="theme-sun" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4" fill="currentColor" stroke="none" /><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5" /></svg>
+  <svg class="theme-moon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z" /></svg>
+</button>
+<script>
+  const control = document.querySelector<HTMLButtonElement>('.theme-control')!
+  let theme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+  const apply = () => {
+    document.documentElement.dataset.theme = theme
+    const label = `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`
+    control.setAttribute('aria-label', label)
+    control.title = label
+  }
+  control.addEventListener('click', () => {
+    theme = theme === 'light' ? 'dark' : 'light'
+    try { localStorage.setItem('theme', theme) } catch {}
+    apply()
+  })
+  window.addEventListener('storage', (event) => {
+    if (event.key !== 'theme' && event.key !== null) return
+    theme = event.newValue === 'dark' ? 'dark' : 'light'
+    apply()
+  })
+  apply()
+  control.hidden = false
+</script>

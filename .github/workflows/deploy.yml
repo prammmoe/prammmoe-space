@@ -1,6 +1,7 @@
 name: Deploy Astro to VPS
 
 on:
+  pull_request:
   push:
     branches: ["main"]
     paths:
@@ -13,6 +14,9 @@ on:
       - "tsconfig.json"
       - "src/content/**"
       - ".github/workflows/deploy.yml"
+      - "tests/**"
+      - "playwright.config.ts"
+      - "lighthouserc.cjs"
 
 concurrency:
   group: deploy-${{ github.ref }}
@@ -37,12 +41,36 @@ jobs:
           cache: "npm"
 
       - name: Install deps
-        run: npm install --no-audit --no-fund
+        run: npm ci --no-audit --no-fund
+
+      - name: Check
+        run: npm run check
 
       - name: Build
         run: npm run build
 
+      - name: Install test browser
+        run: npx playwright install --with-deps chromium
+
+      - name: Browser tests
+        run: npm test
+
+      - name: Lighthouse
+        run: npm run audit:lighthouse
+
+      - name: Save quality reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-quality-reports
+          path: |
+            .lighthouseci/
+            test-results/
+            playwright-report/
+          retention-days: 14
+
       - name: Setup SSH
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         run: |
@@ -56,10 +84,13 @@ jobs:
           echo "PORT=$PORT" >> $GITHUB_ENV
 
       - name: Prepare remote directories
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "mkdir -p '$DEPLOY_PATH/releases'"
 
       - name: Rsync release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: rsync -az --delete -e "ssh -p $PORT" ./dist/ "$SSH_USER@$SSH_HOST:$DEPLOY_PATH/releases/${{ github.sha }}/"
 
       - name: Activate release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: ssh -p "$PORT" "$SSH_USER@$SSH_HOST" "ln -sfn '$DEPLOY_PATH/releases/${{ github.sha }}' '$DEPLOY_PATH/current' && (sudo systemctl reload nginx || true)"

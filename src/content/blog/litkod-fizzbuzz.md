@@ -1,6 +1,7 @@
 ---
 title: "#LitKod FizzBuzz Problem in Swift"
-description: "Posting percobaan untuk verifikasi"
+description: "Solusi FizzBuzz di Swift dengan pemeriksaan kelipatan tiga dan lima."
+lang: id
 pubDate: 2025-12-22
 tags: ["Swift", "DSA", "LeetCode"]
 ---

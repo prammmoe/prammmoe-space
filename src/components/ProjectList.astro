@@ -1,0 +1,17 @@
+---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+import type { CollectionEntry } from 'astro:content'
+interface Props { projects: CollectionEntry<'projects'>[] }
+const { projects } = Astro.props
+const images = import.meta.glob<{ default: ImageMetadata }>('../assets/**/*.{jpg,jpeg,png,JPG}', { eager: true })
+---
+<ul class="project-list">
+  {projects.map((project) => {
+    const thumbnail = images[`../assets${project.data.thumbnail}`]?.default
+    return <li class:list={['project-row', { 'project-row--text-only': !thumbnail }]}>
+      <div><h3><a href={`/projects/${project.slug}/`}>{project.data.title}</a></h3><p>{project.data.description}</p></div>
+      {thumbnail && <Image src={thumbnail} alt="" width={288} height={162} loading="lazy" />}
+    </li>
+  })}
+</ul>

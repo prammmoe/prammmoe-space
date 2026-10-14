@@ -1,87 +1,56 @@
 ---
 import '../styles/global.css'
-import { getCollection } from 'astro:content'
-
-const { title = 'prammmoe', description = '' } = Astro.props
-const featuredProjects = (await getCollection('projects'))
-  .filter((project) => !project.data.draft && project.data.featured)
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-  .slice(0, 2)
-const pathname = Astro.url.pathname
-const navigation = [
-  { href: '/', label: 'About me' },
-  { href: '/projects/', label: 'Projects' },
-  { href: '/blog/', label: 'Blog' },
-  { href: '/media/', label: 'Media I consumed' },
-  { href: '/musics/', label: 'Music I listened to' },
-]
-const lastUpdated = new Intl.DateTimeFormat('en-GB', {
-  dateStyle: 'short', timeStyle: 'medium', hour12: false, timeZone: 'UTC',
-}).format(new Date())
+import '../styles/cursors.css'
+import SiteHeader from '../components/SiteHeader.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+import { profile } from '../data/profile'
+interface Props {
+  title?: string
+  description?: string
+  lang?: string
+  type?: 'website' | 'article'
+  image?: string
+  pubDate?: Date
+  updatedDate?: Date
+}
+const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate } = Astro.props
+const site = Astro.site ?? new URL('https://prammmoe.space')
+const canonical = new URL(`${Astro.url.pathname.replace(/\/$/, '')}/`, site).href
+const fullTitle = title === profile.name ? `${title} · Software Engineer` : `${title} · Pram`
+const person = { '@type': 'Person', '@id': new URL('/#person', site).href, name: profile.name, url: site.href, jobTitle: 'Software Engineer', sameAs: [profile.links.linkedin, profile.links.github] }
+const structuredData = {
+  '@context': 'https://schema.org',
+  '@graph': [person, { '@type': 'WebSite', '@id': new URL('/#website', site).href, name: 'Pram', url: site.href, inLanguage: 'en', publisher: { '@id': person['@id'] } },
+    ...(type === 'article' ? [{ '@type': 'BlogPosting', headline: title, description, url: canonical, mainEntityOfPage: canonical, image: new URL(image, site).href, inLanguage: lang, author: { '@id': person['@id'] }, datePublished: pubDate?.toISOString(), dateModified: (updatedDate ?? pubDate)?.toISOString() }] : [])],
+}
 ---
 <!doctype html>
-<html lang="en">
+<html lang={lang} data-theme="light">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title}</title>
-    <meta name="description" content={description} />
-    <link rel="icon" type="image/png" href="/apple-touch-icon.png" />
-    <meta name="theme-color" content="#18146C" />
-    <link rel="canonical" href={new URL(Astro.url.pathname, import.meta.env.SITE ?? 'https://prammmoe.space').toString()} />
-    <meta name="author" content="Pram" />
-    <meta property="og:type" content="website" /><meta property="og:site_name" content="prammmoe" />
-    <meta property="og:title" content={title} /><meta property="og:description" content={description} />
-    <meta property="og:url" content={new URL(Astro.url.pathname, import.meta.env.SITE ?? 'https://prammmoe.space').toString()} />
-    <meta property="og:image" content="/favicon.svg" /><meta name="twitter:card" content="summary_large_image" />
-    <script type="application/ld+json" is:inline>{JSON.stringify({ '@context': 'https://schema.org', '@type': 'WebSite', name: 'prammmoe', url: import.meta.env.SITE ?? 'https://prammmoe.space', inLanguage: 'id', publisher: { '@type': 'Person', name: 'Pram' } })}</script>
+    <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description || profile.description} /><meta name="author" content={profile.name} />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#FAFAFA" />
+    <link rel="icon" type="image/png" href="/favicon-32x32.png" /><link rel="canonical" href={canonical} />
+    <meta property="og:type" content={type} /><meta property="og:site_name" content="Pram" />
+    <meta property="og:title" content={fullTitle} /><meta property="og:description" content={description || profile.description} />
+    <meta property="og:url" content={canonical} /><meta property="og:image" content={new URL(image, site).href} />
+    <meta property="og:image:alt" content={`${profile.name}, Software Engineer focused on iOS`} />
+    <meta name="twitter:card" content="summary_large_image" />
+    {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
+    {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />
+    <script is:inline>
+      try {
+        const theme = localStorage.getItem('theme')
+        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme
+      } catch {}
+    </script>
+    <slot name="head" />
   </head>
-  <body class="kvad-site">
+  <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <div class="page-shell">
-      <header class="masthead">
-        <img class="hero-art" src="/images/kvad-header.webp" alt="Two white capsule robots on an indigo ornamental landscape" width="1660" height="554" fetchpriority="high" />
-        <svg class="hero-diagonal" viewBox="0 0 830 277" preserveAspectRatio="none" aria-hidden="true"><path d="M116 0H242L56 189V277H0V178L117 62H55Z" fill="white" /></svg>
-        <a class="wordmark" href="/" aria-label="prammmoe home">PRAMMMOE</a>
-        <span class="hero-edition">PERSONAL SPACE / V3.0.0</span>
-      </header>
-      <div class="site-grid">
-        <nav class="section-nav" aria-label="Main navigation">
-          <h2 class="panel-label menu-label">Menu</h2>
-          <div class="nav-inner">
-            {navigation.map(({ href, label }) => {
-              const active = href === '/' ? pathname === '/' : pathname.startsWith(href)
-              return <a class:list={[{ active }]} href={href} aria-current={active ? 'page' : undefined}>{label}</a>
-            })}
-            <section class="nav-links" aria-labelledby="connect-heading">
-              <h3 id="connect-heading">Connect</h3>
-              <a href="https://linkedin.com/in/ikhwanpramuditha" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-              <a href="https://github.com/prammmoe" target="_blank" rel="noopener noreferrer">GitHub</a>
-              <a href="https://instagram.com/ikhwanpramuditha" target="_blank" rel="noopener noreferrer">Instagram</a>
-            </section>
-          </div>
-        </nav>
-        <main id="main-content" class="site-content" tabindex="-1"><slot /></main>
-        <aside class="feature-panel" aria-label="Profile and featured projects">
-          <h2 class="panel-label">Featured</h2>
-          <div class="feature-inner">
-            <a class="profile-feature bevel-panel" href="/#profile">
-              <img src="/pram.JPG" alt="Pram" width="64" height="72" />
-              <span>Pram<br /><small>Software Engineer<br /></small></span>
-            </a>
-            {featuredProjects.map((project) => <a class="project-feature bevel-panel" href={`/projects/${project.slug}/`}>
-              {project.data.thumbnail && <img src={project.data.thumbnail} alt={project.data.title} width="300" height="225" loading="lazy" />}
-              <span>{project.data.title}</span>
-            </a>)}
-            <section class="feature-note"><h3>Currently</h3><p>iOS Developer<br />at Arya Noble</p></section>
-            <section class="feature-note documents"><h3>Documents</h3><a href="/resume.pdf" download>Download resume</a><a href="/portfolio.pdf" download>Download portfolio</a></section>
-          </div>
-        </aside>
-      </div>
-      <footer class="site-footer">
-        <div class="footer-crossref"><strong>XD</strong><div><a href="https://github.com/prammmoe" target="_blank" rel="noopener noreferrer">link &gt;&gt; GitHub / prammmoe</a><br /><span>Software Engineer · iOS Developer</span></div></div>
-        <div class="footer-floor"><p>© {new Date().getFullYear()} Pramuditha Muhammad Ikhwan<br /><span>Last updated: {lastUpdated} UTC</span></p><a class="footer-mark" href="/" aria-label="prammmoe home"><span aria-hidden="true">↗</span> BACK TO TOP</a></div>
-      </footer>
-    </div>
+    <div class="page-shell"><SiteHeader /><main id="main-content" tabindex="-1"><slot /></main><SiteFooter /></div>
   </body>
 </html>

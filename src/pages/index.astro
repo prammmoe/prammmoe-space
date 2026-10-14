@@ -1,35 +1,46 @@
 ---
 import Base from '../layouts/Base.astro'
+import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
-const articles = (await getCollection('blog'))
-  .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
-const stamp = (date: Date) => `Y:${date.getUTCFullYear()}.M:${String(date.getUTCMonth() + 1).padStart(2, '0')}.D:${String(date.getUTCDate()).padStart(2, '0')}`
+import ProjectList from '../components/ProjectList.astro'
+import portrait from '../assets/pram.jpg'
+import { profile, formatDate, techStack, technologyLogos } from '../data/profile'
+const articles = (await getCollection('blog')).filter((post) => !post.data.draft && post.data.featured)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime()).slice(0, 3)
+const projects = (await getCollection('projects')).filter((project) => !project.data.draft && project.data.featured)
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime() || a.slug.localeCompare(b.slug)).slice(0, 2)
 ---
-<Base title="Pramuditha Muhammad Ikhwan" description="Portfolio of Pramuditha Muhammad Ikhwan, Software Engineer.">
-  <section class="latest-notes" aria-labelledby="notes-heading">
-    <h2 id="notes-heading" class="panel-label">Latest notes</h2>
-    <ul class="news-list">{articles.map((post) => <li><time datetime={post.data.pubDate.toISOString()}>{stamp(post.data.pubDate)}</time><a href={`/blog/${post.slug}/`}>{post.data.title}</a></li>)}</ul>
-    <a class="archive-link" href="/blog/">View all articles &gt;&gt;</a>
-  </section>
-  <article id="profile" class="home-profile">
-    <p class="page-kicker">About me</p>
-    <h1>Pramuditha Muhammad Ikhwan</h1>
-    <p class="role">Software Engineer</p>
-    <p>Hello, I’m Pram. I build apps and keep notes on work, technology, and the things I enjoy.</p>
-    <p class="quick-links"><a href="https://leetcode.com/prammmoe" target="_blank" rel="noopener noreferrer">LeetCode</a> · <a href="https://medium.com/@prammmoe" target="_blank" rel="noopener noreferrer">Medium</a> · <a href="https://www.upwork.com/freelancers/prammmoe" target="_blank" rel="noopener noreferrer">Upwork</a></p>
-    <div class="profile-columns">
-      <section><h2 class="panel-label">Experience</h2><dl class="side-timeline">
-        <div><dt>Arya Noble</dt><dd>iOS Developer<br /><span>2026 — present</span></dd></div>
-        <div><dt>4TITU PTE LTD</dt><dd>Full Stack Developer<br /><span>2025 — 2026</span></dd></div>
-        <div><dt>Apple Developer Academy</dt><dd>iOS Developer<br /><span>2025</span></dd></div>
-        <div><dt>PT Widya Inovasi</dt><dd>System Analyst<br /><span>2023</span></dd></div>
-      </dl></section>
-      <section><h2 class="panel-label">Education</h2><dl class="side-timeline">
-        <div><dt>Apple Developer Academy</dt><dd>Learner, Cohort 6<br /><span>2025</span></dd></div>
-        <div><dt>Universitas Negeri Yogyakarta</dt><dd>Information Technology<br /><span>2021 — 2025</span></dd></div>
-        <div><dt>Bangkit Academy</dt><dd>Mobile Development<br /><span>2024 — 2025</span></dd></div>
-      </dl></section>
+<Base>
+  <section id="profile" aria-labelledby="profile-heading">
+    <div class="profile-intro">
+      <div><h1 id="profile-heading">{profile.name}</h1><p class="role">{profile.role}</p></div>
+      <Image class="portrait" src={portrait} alt="Pramuditha Muhammad Ikhwan" width={288} height={288} fit="cover" loading="eager" />
     </div>
-  </article>
+    <p class="intro-copy">{profile.introduction}</p>
+    <div class="profile-links"><a class="button-link" href="/resume.pdf" download>Download resume</a><a href={profile.links.linkedin}>LinkedIn</a></div>
+  </section>
+  <section class="home-section" aria-labelledby="projects-heading">
+    <div class="section-heading"><h2 id="projects-heading">Projects</h2><a href="/projects/">All projects</a></div>
+    <ProjectList projects={projects} />
+    <div class="profile-links"><a href="/portfolio.pdf" download>Download portfolio</a></div>
+  </section>
+  <section class="home-section" id="writing" aria-labelledby="writing-heading">
+    <div class="section-heading"><h2 id="writing-heading">Writing</h2><a href="/blog/">All writing</a></div>
+    <ul class="listing">{articles.map((post) => <li><a href={`/blog/${post.slug}/`} lang={post.data.lang}>{post.data.title}</a><time class="date" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></li>)}</ul>
+  </section>
+  <section class="home-section" aria-labelledby="experience-heading">
+    <h2 id="experience-heading">Experience</h2>
+    <ul class="timeline">{profile.experience.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
+  </section>
+  <section class="home-section" id="tech-stack" aria-labelledby="tech-stack-heading">
+    <h2 id="tech-stack-heading">Tech stack</h2>
+    <dl class="technology-list">{techStack.map((group) => <div class="technology-group">
+      <dt>{group.category}</dt>
+      <dd><ul>{group.technologies.map((technology) => <li>{technologyLogos[technology] && <img src={`/tech/${technologyLogos[technology]}.svg`} alt="" width="24" height="24" loading="lazy" />}<span>{technology}</span></li>)}</ul></dd>
+    </div>)}</dl>
+  </section>
+  <section class="home-section" aria-labelledby="education-heading">
+    <h2 id="education-heading">Education</h2>
+    <ul class="timeline">{profile.education.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
+  </section>
 </Base>

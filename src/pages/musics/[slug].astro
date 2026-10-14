@@ -1,8 +1,12 @@
 ---
 import Base from '../../layouts/Base.astro'
-import { getCollection } from 'astro:content'
-export async function getStaticPaths() { return (await getCollection('musics')).map((item) => ({ params: { slug: item.slug }, props: { item } })) }
+import { getCollection, type CollectionEntry } from 'astro:content'
+import { formatDate } from '../../data/profile'
+export async function getStaticPaths() { return (await getCollection('musics')).filter((item) => !item.data.draft).map((item) => ({ params: { slug: item.slug }, props: { item } })) }
+interface Props { item: CollectionEntry<'musics'> }
 const { item } = Astro.props
 const { Content } = await item.render()
 ---
-<Base title={item.data.title} description={item.data.description}><article class="post"><a class="back-link" href="/musics/">← back to music</a><header class="article-header"><p class="page-kicker">music</p><h1>{item.data.title}</h1><p class="meta">{new Date(item.data.pubDate).toLocaleDateString('en-US')}</p></header><div class="content"><Content /></div></article></Base>
+<Base title={item.data.title} description={item.data.description || `Listening notes: ${item.data.title}.`} lang={item.data.lang}>
+  <article class="post"><a class="back-link" href="/musics/">Back to music</a><header class="article-header"><h1>{item.data.title}</h1><p class="meta"><time datetime={item.data.pubDate.toISOString()}>{formatDate(item.data.pubDate, item.data.lang)}</time></p></header><div class="content"><Content /></div></article>
+</Base>
