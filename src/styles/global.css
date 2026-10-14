@@ -551,9 +551,6 @@ pre code {
   min-height: 44px;
   align-items: center;
 }
-.secondary-links {
-  margin-top: 4px;
-}
 @media (max-width: 600px) {
   .site-header {
     flex-wrap: wrap;

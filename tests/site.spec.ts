@@ -14,11 +14,13 @@ const routes = ['/', '/blog/', '/projects/', '/media/', '/musics/',
 test('career comes first and engineering writing is curated', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pramuditha Muhammad Ikhwan')
-  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education'])
+  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education', 'Services', 'Contact me'])
   await expect(page.locator('#writing li')).toHaveCount(3)
   await expect(page.locator('#writing')).not.toContainText('The Sun, Spacetime')
   await expect(page.locator('header nav')).not.toContainText('Media')
   await expect(page.getByRole('link', { name: 'Download resume', exact: true })).toHaveAttribute('href', '/resume.pdf')
+  await expect(page.locator('#services dt')).toHaveText(['Native iOS apps & MVPs', 'Features & integrations', 'Bug fixes, maintenance & releases', 'Websites & web applications', 'Data annotation', 'Computer vision & YOLO training'])
+  await expect(page.getByRole('link', { name: 'Send email', exact: true })).toHaveAttribute('href', 'mailto:ikhwanpramuditha05@gmail.com?subject=Freelance%20project%20inquiry')
 })
 
 test('single theme button defaults to light and persists explicit choices', async ({ page }) => {
@@ -41,6 +43,63 @@ test('single theme button defaults to light and persists explicit choices', asyn
   await expect(page.locator('.theme-sun')).toBeVisible()
   await page.reload()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+})
+
+test('freelance gradient runs automatically and respects visibility and reduced motion', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+  const card = page.locator('.freelance-card')
+  await expect(card).toHaveAttribute('data-motion', 'paused')
+  await card.scrollIntoViewIfNeeded()
+  await expect(card).toHaveAttribute('data-motion', 'running')
+  const initialTransform = await card.evaluate((element) => getComputedStyle(element, '::before').transform)
+  await expect.poll(() => card.evaluate((element) => getComputedStyle(element, '::before').transform)).not.toBe(initialTransform)
+  const initialX = await card.evaluate((element) => new DOMMatrix(getComputedStyle(element, '::before').transform).m41)
+  await expect.poll(() => card.evaluate((element) => new DOMMatrix(getComputedStyle(element, '::before').transform).m41)).toBeGreaterThan(initialX)
+  expect(await card.evaluate((element) => getComputedStyle(element, '::before').animationName)).toBe('card-shimmer')
+  await expect(card.getByRole('button')).toHaveCount(0)
+  await expect(card.getByRole('link', { name: 'View my Upwork profile' })).toHaveCount(0)
+  await page.evaluate(() => {
+    Object.defineProperty(document, 'hidden', { value: true, configurable: true })
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  await expect(card).toHaveAttribute('data-motion', 'paused')
+  await page.evaluate(() => {
+    Reflect.deleteProperty(document, 'hidden')
+    document.dispatchEvent(new Event('visibilitychange'))
+  })
+  await expect(card).toHaveAttribute('data-motion', 'running')
+  await page.evaluate(() => window.scrollTo(0, 0))
+  await expect(card).toHaveAttribute('data-motion', 'paused')
+  await card.scrollIntoViewIfNeeded()
+  await expect(card).toHaveAttribute('data-motion', 'running')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await expect(card).toHaveAttribute('data-motion', 'paused')
+  expect(await card.evaluate((element) => getComputedStyle(element, '::before').animationName)).toBe('none')
+})
+
+test('footer connects to real profiles with labelled icon links', async ({ page, request }) => {
+  await page.goto('/')
+  const links = page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link')
+  await expect(links).toHaveCount(6)
+  const profiles = [
+    ['LinkedIn', 'https://linkedin.com/in/ikhwanpram', '/social/linkedin.svg'],
+    ['GitHub', 'https://github.com/prammmoe', '/tech/github.svg'],
+    ['Instagram', 'https://instagram.com/ikhwanpramuditha', '/social/instagram.svg'],
+    ['Medium', 'https://medium.com/@prammmoe', '/social/medium.svg'],
+    ['LeetCode', 'https://leetcode.com/prammmoe', '/social/leetcode.svg'],
+    ['Upwork', 'https://www.upwork.com/freelancers/prammmoe', '/social/upwork.svg'],
+  ]
+  for (const [name, href, icon] of profiles) {
+    const link = page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link', { name, exact: true })
+    await expect(link).toHaveAttribute('href', href)
+    await expect(link).toHaveAttribute('title', name)
+    expect(await link.evaluate((element) => ({ width: element.getBoundingClientRect().width, height: element.getBoundingClientRect().height }))).toEqual({ width: 52, height: 52 })
+    expect((await request.get(icon)).status()).toBe(200)
+  }
+  await page.goto('/blog/')
+  await expect(page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link')).toHaveCount(6)
+  await expect(page.locator('.freelance-card')).toHaveCount(0)
 })
 
 for (const width of [320, 375, 768, 1024, 1440]) {
@@ -75,8 +134,8 @@ test('keyboard skip link and navigation work', async ({ page }) => {
   await expect(page.locator('header nav a[aria-current="page"]')).toHaveText('Writing')
   await page.getByRole('link', { name: 'Projects', exact: true }).click()
   await expect(page.locator('header nav a[aria-current="page"]')).toHaveText('Projects')
-  await page.getByRole('link', { name: 'ERHA Buddy: Production iOS Engineering' }).click()
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('ERHA Buddy: Production iOS Engineering')
+  await page.getByRole('link', { name: 'ERHA Buddy: Evolving and Securing a Production iOS App at Scale' }).click()
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('ERHA Buddy: Evolving and Securing a Production iOS App at Scale')
   await page.getByRole('link', { name: 'Back to projects' }).click()
   await expect(page).toHaveURL('/projects/')
 })
@@ -104,8 +163,11 @@ test('capture desktop and mobile previews in both themes', async ({ page }, test
       await page.addInitScript((value) => localStorage.setItem('theme', value), theme)
       await page.goto('/')
       if (await page.locator('html').getAttribute('data-theme') !== theme) await page.locator('.theme-control').click()
+      await page.evaluate(() => (document.activeElement as HTMLElement)?.blur())
       await page.locator('#tech-stack').screenshot({ path: testInfo.outputPath(`tech-stack-${width}-${theme}.png`) })
       await page.locator('.site-header').screenshot({ path: testInfo.outputPath(`header-${width}-${theme}.png`) })
+      await page.locator('.freelance-card').screenshot({ path: testInfo.outputPath(`freelance-${width}-${theme}.png`), animations: 'disabled' })
+      await page.locator('.site-footer').screenshot({ path: testInfo.outputPath(`footer-${width}-${theme}.png`) })
       await page.screenshot({ path: testInfo.outputPath(`home-${width}-${theme}.png`), fullPage: true })
     }
   }
@@ -129,6 +191,7 @@ test('blocked storage and disabled JavaScript keep the website usable', async ({
   const staticPage = await noScript.newPage()
   await staticPage.goto('http://127.0.0.1:4321/')
   await expect(staticPage.locator('.theme-control')).toBeHidden()
+  await expect(staticPage.locator('.motion-control')).toBeHidden()
   expect(await staticPage.locator('body').evaluate((body) => getComputedStyle(body).backgroundColor)).toBe('rgb(250, 250, 250)')
   await staticPage.getByRole('link', { name: 'Writing', exact: true }).click()
   await expect(staticPage.getByRole('heading', { level: 1 })).toHaveText('Writing')

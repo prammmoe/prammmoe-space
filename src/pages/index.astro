@@ -43,4 +43,117 @@ const projects = (await getCollection('projects')).filter((project) => !project.
     <h2 id="education-heading">Education</h2>
     <ul class="timeline">{profile.education.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
   </section>
+  <div class="freelance-card">
+  <section id="services" aria-labelledby="services-heading">
+    <h2 id="services-heading">Services</h2>
+    <p class="intro-copy">Have an app idea or a product that needs extra hands? I’m available for freelance iOS and web development, data annotation, and computer vision projects.</p>
+    <dl class="service-list">
+      <div><dt>Native iOS apps &amp; MVPs</dt><dd>Build your iPhone or iPad app with Swift, SwiftUI, and UIKit, from an early idea to a working product.</dd></div>
+      <div><dt>Features &amp; integrations</dt><dd>Add interfaces, API and Firebase integrations, authentication, notifications, and checkout or other transactional flows.</dd></div>
+      <div><dt>Bug fixes, maintenance &amp; releases</dt><dd>Investigate crashes, improve performance, refactor existing code, and get help with TestFlight and App Store releases.</dd></div>
+      <div><dt>Websites &amp; web applications</dt><dd>Create a portfolio, landing page, or web application tailored to your business needs.</dd></div>
+      <div><dt>Data annotation</dt><dd>Label images and annotate objects to prepare datasets for computer vision training and evaluation.</dd></div>
+      <div><dt>Computer vision &amp; YOLO training</dt><dd>Prepare datasets, train YOLO object detection models, and evaluate their performance for your use case.</dd></div>
+    </dl>
+  </section>
+  <section class="card-contact" id="contact" aria-labelledby="contact-heading">
+    <h2 id="contact-heading">Contact me</h2>
+    <p class="contact-invitation">Tell me what you’re building.</p>
+    <p class="intro-copy">Send me a brief overview of your project, what you need help with, and your timeline. We can discuss the next steps over email.</p>
+    <div class="profile-links"><a class="button-link" href="mailto:ikhwanpramuditha05@gmail.com?subject=Freelance%20project%20inquiry">Send email</a><span class="contact-address">ikhwanpramuditha05@gmail.com</span></div>
+  </section>
+  </div>
 </Base>
+
+<style>
+  .freelance-card {
+    --ink: #f5f5f5;
+    --muted: #bdbdbd;
+    --rule: #383838;
+    --accent: #b4c9bd;
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 32px;
+    margin-top: 56px;
+    padding: 36px;
+    border: 1px solid var(--rule);
+    border-radius: 20px;
+    background: #252d29;
+    color: var(--ink);
+    box-shadow: 0 16px 40px rgb(0 0 0 / .12), 0 2px 6px rgb(0 0 0 / .08);
+  }
+  .freelance-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 70%;
+    z-index: -2;
+    background: linear-gradient(90deg, transparent, #789c89 35%, #b4c9bd 50%, #789c89 65%, transparent);
+    transform: translateX(-110%);
+    animation: card-shimmer 4.5s linear infinite paused;
+    pointer-events: none;
+  }
+  .freelance-card::after {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    z-index: -1;
+    border-radius: 18px;
+    background: linear-gradient(145deg, rgb(12 16 13 / .78), rgb(16 16 16 / .9));
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / .05);
+    pointer-events: none;
+  }
+  .freelance-card[data-motion="running"]::before { animation-play-state: running; }
+  .freelance-card > section { min-width: 0; }
+  .card-contact { padding-top: 32px; border-top: 1px solid var(--rule); }
+  .card-contact h2 { color: var(--muted); font-size: 17px; font-weight: 550; letter-spacing: 0; }
+  .freelance-card .button-link { background: var(--ink); border-color: var(--ink); color: #101010; }
+  .freelance-card .button-link:hover { background: #dedede; border-color: #dedede; text-decoration: underline; }
+  .service-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 28px 0 0; }
+  .service-list > div { min-width: 0; padding: 20px 0; }
+  .service-list > div:nth-child(-n+2) { padding-top: 0; }
+  .service-list > div:nth-last-child(-n+2) { padding-bottom: 0; }
+  .service-list > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .service-list dt { font-size: 17px; font-weight: 600; }
+  .service-list dd { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+  .contact-invitation { font-size: clamp(28px, 3vw, 36px); line-height: 1.2; letter-spacing: -1px; max-width: 24ch; }
+  .card-contact .profile-links { gap: 16px 24px; margin-top: 32px; }
+  .contact-address { min-width: 0; overflow-wrap: anywhere; color: var(--muted); }
+  @keyframes card-shimmer {
+    from { transform: translateX(-110%); }
+    to { transform: translateX(160%); }
+  }
+  @media (prefers-reduced-motion: reduce) { .freelance-card::before { animation: none; } }
+  @media (max-width: 760px) {
+    .freelance-card { padding: 24px; }
+    .service-list { grid-template-columns: minmax(0, 1fr); }
+    .service-list > div:nth-child(2) { padding-top: 20px; border-top: 1px solid var(--rule); }
+    .service-list > div:nth-last-child(2) { padding-bottom: 20px; }
+    .contact-invitation { max-width: 20ch; }
+  }
+  @media (max-width: 600px) { .freelance-card { margin-top: 40px; } }
+</style>
+
+<script>
+  const card = document.querySelector<HTMLElement>('.freelance-card')
+  if (card && 'IntersectionObserver' in window) {
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let visible = false
+    const updateMotion = () => {
+      const running = visible && !reducedMotion.matches && !document.hidden
+      card.dataset.motion = running ? 'running' : 'paused'
+    }
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting
+      updateMotion()
+    }).observe(card)
+    reducedMotion.addEventListener('change', updateMotion)
+    document.addEventListener('visibilitychange', updateMotion)
+    updateMotion()
+  }
+</script>
