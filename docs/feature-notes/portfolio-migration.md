@@ -138,3 +138,7 @@ Added the user-supplied, verified Apple App Store URL to ERHA Buddy’s header a
 ## 2026-10-14: ERHA Buddy App Store campaign banner
 
 Presented the verified store link as a restrained campaign banner after the project cover: ERHA Buddy identity, iPhone availability, factual skincare/treatment/appointment summary, and View on App Store action. Uses theme tokens with a small orange brand accent, adapts vertically on mobile, and replaces the duplicate header store link.
+
+## 2026-10-16: Remove Projects introduction
+
+Removed the introductory sentence below the Projects heading at the user's request. Static build and `git diff --check` passed.

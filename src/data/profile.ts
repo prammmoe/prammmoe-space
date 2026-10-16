@@ -63,16 +63,31 @@ export const formatDate = (date: Date, lang = "en") =>
   }).format(date);
 
 export const techStack = [
-  { category: 'Languages & iOS SDK', technologies: ['Swift', 'UIKit', 'SwiftUI', 'SnapKit', 'Lottie', 'SkeletonView', 'XIB'] },
+  { category: 'Mobile Development', technologies: ['Swift', 'UIKit', 'SwiftUI', 'SnapKit', 'Lottie', 'SkeletonView', 'XIB', 'Alamofire', 'Moya', 'RxSwift', 'UserDefaults', 'RxMoya', 'RxReachability', 'ObjectMapper', 'Firebase Crashlytics', 'Firebase Remote Config', 'MoEngage', 'Qiscus', 'Push Notifications', 'Deep Links', 'Apple App Attest', 'DeviceCheck', 'Keychain', 'HMAC Request Signing', 'RSA Encryption', 'Certificate Pinning', 'Android Development', 'Kotlin'] },
+  { category: 'Database', technologies: ['PostgreSQL', 'MySQL', 'SQLite', 'Realm DB', 'Realtime Database'] },
+  { category: 'Backend', technologies: ['Go', 'Gin', 'Node.js', 'NestJS', 'FastAPI', 'Next.js Server Side', 'Express.js'] },
+  { category: 'DevOps & Infra', technologies: ['Docker', 'Linux (Previously using Ubuntu for 3+ years)', 'Bash Scripting', 'CI/CD', 'GitHub Actions'] },
   { category: 'Architecture & design', technologies: ['MVVM', 'Clean Architecture', 'Modularization', 'SOLID Principles'] },
-  { category: 'Networking & data', technologies: ['REST APIs', 'Alamofire', 'Moya', 'Server-Sent Events', 'RxSwift', 'Realm', 'UserDefaults', 'RxMoya', 'RxReachability', 'ObjectMapper'] },
-  { category: 'Platform & integrations', technologies: ['Firebase Crashlytics', 'Firebase Remote Config', 'MoEngage', 'Qiscus', 'Push Notifications', 'Deep Links', 'Realtime Database'] },
-  { category: 'Security', technologies: ['Apple App Attest', 'DeviceCheck', 'Keychain', 'HMAC Request Signing', 'RSA Encryption', 'Certificate Pinning'] },
-  { category: 'Tools & delivery', technologies: ['Git', 'GitHub', 'Bitbucket', 'GitHub Actions', 'Postman', 'Docker', 'Figma', 'GitKraken', 'FLEX', 'Netfox', 'App Store Connect', 'TestFlight'] },
+  { category: 'Networking & data', technologies: ['REST APIs', 'Server-Sent Events'] },
+  { category: 'Tools & delivery', technologies: ['Git', 'GitHub', 'Bitbucket', 'Postman', 'Figma', 'GitKraken', 'FLEX', 'Netfox', 'App Store Connect', 'TestFlight'] },
 ]
 
 export const technologyLogos: Record<string, string> = {
   Swift: 'swift',
+  'Android Development': 'android',
+  Kotlin: 'kotlin',
+  PostgreSQL: 'postgresql',
+  MySQL: 'mysql',
+  SQLite: 'sqlite',
+  'Realm DB': 'realm',
+  Go: 'go',
+  'Node.js': 'nodejs',
+  NestJS: 'nestjs',
+  FastAPI: 'fastapi',
+  'Next.js Server Side': 'nextjs',
+  'Express.js': 'express',
+  'Linux (Previously using Ubuntu for 3+ years)': 'linux',
+  'Bash Scripting': 'bash',
   'Firebase Crashlytics': 'firebase',
   'Firebase Remote Config': 'firebase',
   Git: 'git',

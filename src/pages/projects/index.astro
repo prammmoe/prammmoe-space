@@ -20,7 +20,7 @@ const picsweepScreens = await Promise.all([
 const projects = (await getCollection('projects')).filter((project) => !project.data.draft && project.slug !== 'curated-works-2025').sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.pubDate.getTime() - a.data.pubDate.getTime() || a.slug.localeCompare(b.slug))
 ---
 <Base title="Projects" description="Selected iOS development, web, design, and computer vision work by Pramuditha Muhammad Ikhwan.">
-  <header class="page-header"><h1>Projects</h1><p>Case studies in production iOS engineering, app development, and earlier work in web and design.</p></header>
+  <header class="page-header"><h1>Projects</h1></header>
   <ProjectList projects={projects} />
   <section class="home-section" aria-labelledby="other-projects-heading">
     <h2 id="other-projects-heading">Other Projects</h2>
