@@ -3,6 +3,7 @@ import '../styles/global.css'
 import '../styles/cursors.css'
 import SiteHeader from '../components/SiteHeader.astro'
 import SiteFooter from '../components/SiteFooter.astro'
+import ScrollReveal from '../components/ScrollReveal.astro'
 import { profile } from '../data/profile'
 interface Props {
   title?: string
@@ -52,5 +53,6 @@ const structuredData = {
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <div class="page-shell"><SiteHeader /><main id="main-content" tabindex="-1"><slot /></main><SiteFooter /></div>
+    <ScrollReveal />
   </body>
 </html>

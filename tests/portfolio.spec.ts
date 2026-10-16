@@ -175,7 +175,7 @@ test('capture readable portfolio previews', async ({ page }, testInfo) => {
   for (const width of [375, 1440]) {
     await page.setViewportSize({ width, height: 1000 })
     for (const theme of ['light', 'dark'] as const) {
-      await page.emulateMedia({ colorScheme: theme })
+      await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' })
       await page.addInitScript((value) => localStorage.setItem('theme', value), theme)
       for (const slug of ['erha-buddy', 'slng', 'rooted-dbt', 'paintee', 'curated-works-2025']) {
         await page.goto(`/projects/${slug}/`)

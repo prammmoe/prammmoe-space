@@ -1,0 +1,56 @@
+import { test, expect } from '@playwright/test'
+
+test('content reveals gently once as it enters the viewport', async ({ page }, testInfo) => {
+  await page.setViewportSize({ width: 375, height: 700 })
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveCSS('opacity', '1')
+  const block = page.locator('#tech-stack .technology-group').last()
+  await expect(block).toHaveAttribute('data-scroll-reveal', 'pending')
+  await expect(block).toHaveCSS('opacity', '0')
+  await block.scrollIntoViewIfNeeded()
+  await expect(block).toHaveAttribute('data-scroll-reveal', 'revealed')
+  await expect(block).toHaveCSS('transition-duration', '0.8s, 0.8s')
+  await expect.poll(() => block.evaluate((element) => getComputedStyle(element).opacity)).toBe('1')
+  await page.evaluate(() => scrollTo(0, 0))
+  await block.scrollIntoViewIfNeeded()
+  await expect(block).toHaveAttribute('data-scroll-reveal', 'revealed')
+  await expect(block).toHaveCSS('opacity', '1')
+  await block.screenshot({ path: testInfo.outputPath('revealed-content.png') })
+  expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+})
+
+test('focus, anchors, reduced motion, and printing keep content readable', async ({ page, browser }) => {
+  await page.setViewportSize({ width: 375, height: 700 })
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.goto('/')
+  const footer = page.locator('.site-footer')
+  await expect(footer).toHaveAttribute('data-scroll-reveal', 'pending')
+  await footer.getByRole('link').first().focus()
+  await expect(footer).toHaveCSS('opacity', '1')
+  await page.goto('/')
+  await page.evaluate(() => { location.hash = 'services' })
+  await expect(page.locator('#services h2')).toHaveCSS('opacity', '1')
+  await page.goto('/')
+  await page.emulateMedia({ media: 'print' })
+  await expect(footer).toHaveCSS('opacity', '1')
+  await page.emulateMedia({ media: 'screen', reducedMotion: 'reduce' })
+  await expect(page.locator('[data-scroll-reveal]')).toHaveCount(0)
+  await page.reload()
+  await expect(page.locator('[data-scroll-reveal]')).toHaveCount(0)
+  const noScript = await browser.newContext({ javaScriptEnabled: false })
+  const fallback = await noScript.newPage()
+  await fallback.goto('http://127.0.0.1:4321/')
+  await expect(fallback.locator('#tech-stack')).toHaveCSS('opacity', '1')
+  await expect(fallback.locator('[data-scroll-reveal]')).toHaveCount(0)
+  await noScript.close()
+})
+
+test('reveal is included on every built page, including standalone pages', async ({ request }) => {
+  const routes = ['/', '/projects/', '/projects/erha-buddy/', '/blog/', '/blog/getting-to-know-server-sent-events-on-ios/', '/media/', '/musics/', '/e-voucher/', '/decode-the-puzzle/', '/happy-birthday-nana/', '/matcha-round-the-globe/', '/wishes-for-nana/']
+  for (const route of routes) {
+    const response = await request.get(route)
+    expect(response.ok(), route).toBe(true)
+    expect(await response.text(), route).toContain('dataset.scrollReveal')
+  }
+})

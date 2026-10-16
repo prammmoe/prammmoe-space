@@ -159,7 +159,7 @@ test('capture desktop and mobile previews in both themes', async ({ page }, test
   for (const width of [375, 1440]) {
     await page.setViewportSize({ width, height: 1000 })
     for (const theme of ['light', 'dark'] as const) {
-      await page.emulateMedia({ colorScheme: theme })
+      await page.emulateMedia({ colorScheme: theme, reducedMotion: 'reduce' })
       await page.addInitScript((value) => localStorage.setItem('theme', value), theme)
       await page.goto('/')
       if (await page.locator('html').getAttribute('data-theme') !== theme) await page.locator('.theme-control').click()

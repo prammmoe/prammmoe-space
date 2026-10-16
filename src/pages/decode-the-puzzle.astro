@@ -1,4 +1,5 @@
 ---
+import ScrollReveal from '../components/ScrollReveal.astro'
 const artifacts = [
   { id: 'polaroid', asset: 'polaroid', name: 'Polaroid', cipher: 'FS', mark: 'I' },
   { id: 'clock', asset: 'clock', name: 'Clock', cipher: 'GX', mark: 'II' },
@@ -154,6 +155,7 @@ const artifacts = [
       document.querySelector('[data-restart]').addEventListener('click', reset)
       update()
     </script>
+    <ScrollReveal />
   </body>
 </html>
 <style>

@@ -1,4 +1,5 @@
 ---
+import ScrollReveal from '../components/ScrollReveal.astro'
 const archivedWishGroups = [
   [
     'Four years with you still feels like my favorite lucky streak, Nana.',
@@ -608,6 +609,7 @@ if (wishes.length !== 200) throw new Error(`Expected 200 wishes, received ${wish
         })
       }
     </script>
+    <ScrollReveal />
   </body>
 </html>
 

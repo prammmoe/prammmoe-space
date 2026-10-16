@@ -1,4 +1,5 @@
 ---
+import ScrollReveal from '../components/ScrollReveal.astro'
 const vouchers = [
   { number: '001', image: '/images/e-vouchers/001.png' },
   { number: '002', image: '/images/e-vouchers/002.png' },
@@ -140,6 +141,7 @@ const vouchers = [
         if (event.target === dialog) dialog.close()
       })
     </script>
+    <ScrollReveal />
   </body>
 </html>
 

@@ -1,4 +1,5 @@
 ---
+import ScrollReveal from '../components/ScrollReveal.astro'
 const stops = [
   ['Asha Tea House', 'San Francisco', 'United States', 'sf'], ['Black Bird Bookstore', 'San Francisco', 'United States', 'sf'], ['Kiss of Matcha', 'San Francisco', 'United States', 'sf'], ['Best Boy Electric', 'San Francisco', 'United States', 'sf'], ['Postscript', 'San Francisco', 'United States', 'sf'], ['Little Sweet', 'San Francisco', 'United States', 'sf'], ['Wake Cup', 'San Francisco', 'United States', 'sf'], ['Binge Coffee House', 'San Francisco', 'United States', 'sf'], ['Tadaima', 'San Francisco', 'United States', 'sf'], ['Nagomi', 'San Francisco', 'United States', 'sf'], ['Home Coffee Roasters', 'San Francisco', 'United States', 'sf'], ['Maruwu Seicha', 'San Francisco', 'United States', 'sf'], ['Sōhn', 'San Francisco', 'United States', 'sf'], ['Capital One Café', 'San Francisco', 'United States', 'sf'], ['Komeya No Bento', 'San Francisco', 'United States', 'sf'], ['Sightglass Coffee', 'San Francisco', 'United States', 'sf'], ['Stonemill Matcha', 'San Francisco', 'United States', 'sf'], ['Pixlcat Coffee', 'San Francisco', 'United States', 'sf'],
   ['12 Matcha', 'New York City', 'United States', 'nyc'], ['Cha Cha Matcha', 'New York City', 'United States', 'nyc'], ['Nana’s Green Tea', 'New York City', 'United States', 'nyc'], ['Isshiki Matcha', 'New York City', 'United States', 'nyc'], ['Brioche NYC', 'New York City', 'United States', 'nyc'], ['King’s Coffee', 'New York City', 'United States', 'nyc'], ['Matchaful', 'New York City', 'United States', 'nyc'], ['Mika’s Direction', 'New York City', 'United States', 'nyc'], ['Mori Coffee', 'New York City', 'United States', 'nyc'],
@@ -81,6 +82,7 @@ if (destinations.length < 60 || new Set(destinations.map(({ cafe, city }) => `${
       search?.addEventListener('input', () => document.querySelectorAll('.cafe-list li').forEach((item) => { item.hidden = !item.dataset.search.includes(search.value.toLowerCase().trim()) }))
       void startMusic().then((started) => { if (!started) window.addEventListener('pointerdown', () => void startMusic(), { once: true }) })
     </script>
+    <ScrollReveal />
   </body>
 </html>
 <style>
