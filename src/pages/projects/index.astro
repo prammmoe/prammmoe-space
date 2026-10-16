@@ -1,11 +1,52 @@
 ---
 import Base from '../../layouts/Base.astro'
 import ProjectList from '../../components/ProjectList.astro'
+import ScreenshotDeck from '../../components/ScreenshotDeck.astro'
 import { getCollection } from 'astro:content'
+import { Image, getImage } from 'astro:assets'
+import nyarisTerkenal from '../../assets/projects/nyaris-terkenal/preview.png'
+import onboarding from '../../assets/projects/picsweep/onboarding.png'
+import home from '../../assets/projects/picsweep/home.png'
+import similarCollections from '../../assets/projects/picsweep/similar-collections.png'
+import bestShot from '../../assets/projects/picsweep/best-shot.png'
+import cleanupResult from '../../assets/projects/picsweep/cleanup-result.png'
+const picsweepScreens = await Promise.all([
+  { src: onboarding, alt: 'PicSweep onboarding and photo access' },
+  { src: home, alt: 'PicSweep home with photos ready to review' },
+  { src: similarCollections, alt: 'PicSweep collection of similar photos' },
+  { src: bestShot, alt: 'PicSweep best-shot recommendation and deletion selection' },
+  { src: cleanupResult, alt: 'PicSweep cleanup result after deleting selected photos' },
+].map(async (screen) => ({ ...screen, fullSize: await getImage({ src: screen.src, width: 922, format: 'webp' }) })))
 const projects = (await getCollection('projects')).filter((project) => !project.data.draft && project.slug !== 'curated-works-2025').sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || b.data.pubDate.getTime() - a.data.pubDate.getTime() || a.slug.localeCompare(b.slug))
 ---
 <Base title="Projects" description="Selected iOS development, web, design, and computer vision work by Pramuditha Muhammad Ikhwan.">
   <header class="page-header"><h1>Projects</h1><p>Case studies in production iOS engineering, app development, and earlier work in web and design.</p></header>
   <ProjectList projects={projects} />
+  <section class="home-section" aria-labelledby="other-projects-heading">
+    <h2 id="other-projects-heading">Other Projects</h2>
+    <ul class="project-slider" tabindex="0" aria-label="Other project previews">
+      <li class="project-slide">
+        <a class="project-preview" href="https://nyaris-terkenal.vercel.app/" aria-label="Visit Nyaris Terkenal">
+          <Image src={nyarisTerkenal} alt="Nyaris Terkenal game setup with players, round settings, and category selection." widths={[320, 640, 880]} sizes="(max-width: 400px) calc(100vw - 40px), 360px" format="webp" loading="lazy" />
+        </a>
+        <h3><a href="https://nyaris-terkenal.vercel.app/">Nyaris Terkenal</a></h3>
+        <p>A browser-based party game where friends guess entries in top-100 lists across different categories.</p>
+      </li>
+      <li class="project-slide">
+        <ScreenshotDeck screens={picsweepScreens} />
+        <h3>PicSweep</h3>
+        <p>Android app that helps users find similar photos, keep the best shot, and safely free up storage space.</p>
+      </li>
+    </ul>
+  </section>
   <div class="profile-links"><a href="/portfolio.pdf" download>Download portfolio</a></div>
 </Base>
+
+<style>
+  .project-slider { display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; overscroll-behavior-x: contain; list-style: none; margin: -6px; padding: 6px; scrollbar-width: thin; }
+  .project-slide { flex: 0 0 min(360px, 100%); min-width: 0; scroll-snap-align: start; scroll-margin-inline: 6px; }
+  .project-preview { display: block; margin-bottom: 20px; }
+  .project-preview img { display: block; width: 100%; height: auto; border-radius: 4px; }
+  .project-slide h3 { margin: 0 0 8px; font-size: 19px; }
+  .project-slide p { margin: 0; color: var(--muted); font-size: 15px; }
+</style>

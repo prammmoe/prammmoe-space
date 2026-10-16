@@ -1,0 +1,143 @@
+---
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+interface Props { screens: { src: ImageMetadata; alt: string; fullSize: { src: string } }[] }
+const { screens } = Astro.props
+---
+<div class="screenshot-deck" role="group" aria-label="PicSweep screenshots">
+  <div class="deck-stage">
+    {screens.map((screen) => <a class="deck-card" href={screen.fullSize.src} aria-label={`View full-size screenshot: ${screen.alt}`}>
+      <Image src={screen.src} alt={screen.alt} widths={[240, 420]} sizes="210px" width={420} format="webp" loading="lazy" draggable="false" />
+    </a>)}
+  </div>
+  <div class="deck-controls" hidden>
+    <button type="button" data-step="-1" aria-label="Previous PicSweep screenshot">←</button>
+    <span class="deck-position" aria-live="polite" aria-atomic="true">1 / {screens.length}</span>
+    <button type="button" data-step="1" aria-label="Next PicSweep screenshot">→</button>
+  </div>
+</div>
+
+<style>
+  .screenshot-deck { margin-bottom: 20px; }
+  .deck-stage { display: grid; gap: 16px; width: min(210px, calc(100% - 64px)); margin: 24px auto 40px; }
+  .deck-card { display: block; border-radius: 20px; background: #fff; transform-origin: 50% 80%; }
+  .deck-card img { display: block; width: 100%; height: auto; border-radius: inherit; }
+  [data-ready] .deck-stage { position: relative; display: block; aspect-ratio: 922 / 2048; isolation: isolate; }
+  [data-ready] .deck-card { position: absolute; inset: 0; touch-action: pan-y; cursor: grab; user-select: none; box-shadow: 0 2px 10px rgb(0 0 0 / .12); }
+  [data-ready] .deck-card:active { cursor: grabbing; }
+  .deck-controls { display: flex; align-items: center; justify-content: center; gap: 20px; }
+  .deck-controls[hidden] { display: none; }
+  .deck-controls button { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid var(--rule); border-radius: 50%; color: var(--ink); background: var(--canvas); font: inherit; cursor: pointer; }
+  .deck-controls button:active { background: var(--surface); }
+  .deck-position { min-width: 40px; text-align: center; color: var(--muted); font-size: 14px; font-variant-numeric: tabular-nums; }
+</style>
+
+<script>
+  document.querySelectorAll<HTMLElement>('.screenshot-deck').forEach((deck) => {
+    const stage = deck.querySelector<HTMLElement>('.deck-stage')!
+    const cards = Array.from(deck.querySelectorAll<HTMLAnchorElement>('.deck-card'))
+    const position = deck.querySelector<HTMLElement>('.deck-position')!
+    const motion = matchMedia('(prefers-reduced-motion: reduce)')
+    let index = 0
+    let revision = 0
+    let animations: Animation[] = []
+    let drag: { id: number; x: number; time: number; distance: number; base: string } | undefined
+    let suppressClick = false
+    const depth = (i: number) => (i - index + cards.length) % cards.length
+    const transform = (i: number) => {
+      const level = depth(i)
+      return `translateY(${level * 8}px) scale(${1 - level * .045}) rotate(${level === 0 ? 0 : level % 2 ? -4 : 4}deg)`
+    }
+    const stop = () => {
+      animations.forEach((animation) => { animation.commitStyles(); animation.cancel() })
+      animations = []
+    }
+    const animate = async (card: HTMLElement, from: string, to: string, duration: number) => {
+      card.style.transform = to
+      const animation = card.animate([{ transform: from }, { transform: to }], { duration, easing: 'cubic-bezier(.22, 1, .36, 1)' })
+      animations.push(animation)
+      await animation.finished.catch(() => {})
+    }
+    const render = () => {
+      cards.forEach((card, i) => {
+        const level = depth(i)
+        card.style.transform = transform(i)
+        card.style.zIndex = String(cards.length - level)
+        card.style.opacity = level < 3 ? '1' : '0'
+        card.inert = level !== 0
+        card.setAttribute('aria-hidden', String(level !== 0))
+      })
+      position.textContent = `${index + 1} / ${cards.length}`
+    }
+    const shuffle = async (step: number, keyboard = false) => {
+      const turn = ++revision
+      stop()
+      const outgoing = cards[index]
+      const starts = cards.map((card) => getComputedStyle(card).transform)
+      const restoreFocus = outgoing === document.activeElement
+      index = (index + step + cards.length) % cards.length
+      render()
+      if (restoreFocus) cards[index].focus({ preventScroll: true })
+      if (motion.matches || keyboard) return
+      cards.forEach((card, i) => {
+        if (card !== outgoing) void animate(card, starts[i], transform(i), 240)
+      })
+      const exit = `translateX(${-step * stage.clientWidth * .85}px) rotate(${-step * 18}deg) scale(.97)`
+      const oldIndex = cards.indexOf(outgoing)
+      outgoing.style.zIndex = String(cards.length + 1)
+      outgoing.style.opacity = '1'
+      await animate(outgoing, starts[oldIndex], exit, 130)
+      if (turn !== revision) return
+      outgoing.style.zIndex = String(cards.length - depth(oldIndex))
+      await animate(outgoing, exit, transform(oldIndex), 170)
+      if (turn === revision) render()
+    }
+    deck.dataset.ready = ''
+    deck.querySelector<HTMLElement>('.deck-controls')!.hidden = false
+    render()
+    deck.querySelectorAll<HTMLButtonElement>('[data-step]').forEach((button) => {
+      button.addEventListener('click', (event) => void shuffle(Number(button.dataset.step), event.detail === 0))
+    })
+    deck.addEventListener('keydown', (event) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+      event.preventDefault()
+      void shuffle(event.key === 'ArrowRight' ? 1 : -1, true)
+    })
+    stage.addEventListener('dragstart', (event) => event.preventDefault())
+    stage.addEventListener('pointerdown', (event) => {
+      if (!event.isPrimary || event.button !== 0 || drag) return
+      ++revision
+      stop()
+      const card = cards[index]
+      suppressClick = false
+      drag = { id: event.pointerId, x: event.clientX, time: event.timeStamp, distance: 0, base: getComputedStyle(card).transform }
+      card.setPointerCapture(event.pointerId)
+    })
+    stage.addEventListener('pointermove', (event) => {
+      if (!drag || drag.id !== event.pointerId) return
+      drag.distance = event.clientX - drag.x
+      if (!motion.matches) cards[index].style.transform = `${drag.base} translateX(${drag.distance}px) rotate(${drag.distance / 16}deg)`
+    })
+    const release = (event: PointerEvent) => {
+      if (!drag || drag.id !== event.pointerId) return
+      const { distance, time } = drag
+      drag = undefined
+      suppressClick = Math.abs(distance) > 6
+      const velocity = Math.abs(distance) / Math.max(1, event.timeStamp - time)
+      if (event.type !== 'pointercancel' && (Math.abs(distance) > stage.clientWidth * .2 || (Math.abs(distance) > 12 && velocity > .45))) {
+        void shuffle(distance < 0 ? 1 : -1)
+      } else {
+        const card = cards[index]
+        const from = getComputedStyle(card).transform
+        render()
+        if (!motion.matches) void animate(card, from, transform(index), 180)
+      }
+    }
+    stage.addEventListener('pointerup', release)
+    stage.addEventListener('pointercancel', release)
+    stage.addEventListener('click', (event) => {
+      if (suppressClick && event.detail > 0) { event.preventDefault(); suppressClick = false }
+    })
+    motion.addEventListener('change', () => { ++revision; stop(); render() })
+  })
+</script>

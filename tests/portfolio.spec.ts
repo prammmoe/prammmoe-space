@@ -1,5 +1,130 @@
 import { test, expect } from '@playwright/test'
 
+test('other projects slider links directly to Nyaris Terkenal without a case study', async ({ page }, testInfo) => {
+  const destination = 'https://nyaris-terkenal.vercel.app/'
+  await page.route(destination, (route) => route.fulfill({ contentType: 'text/html', body: '<title>Nyaris Terkenal</title>' }))
+  await page.goto('/projects/')
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate((value) => localStorage.setItem('theme', value), theme)
+    for (const width of [375, 1440]) {
+      await page.setViewportSize({ width, height: 1000 })
+      await page.goto('/projects/')
+      await expect(page.locator('html')).toHaveAttribute('data-theme', theme)
+      const section = page.getByRole('region', { name: 'Other Projects', exact: true })
+      const slider = section.getByRole('list', { name: 'Other project previews' })
+      await expect(slider.getByRole('listitem')).toHaveCount(2)
+      const nyaris = slider.getByRole('listitem').filter({ has: page.getByRole('heading', { name: 'Nyaris Terkenal', exact: true }) })
+      expect(await slider.evaluate((element) => ({ display: getComputedStyle(element).display, overflow: getComputedStyle(element).overflowX, snap: getComputedStyle(element).scrollSnapType }))).toEqual({ display: 'flex', overflow: 'auto', snap: 'x mandatory' })
+      await expect(section).toContainText('A browser-based party game where friends guess entries in top-100 lists across different categories.')
+      const image = nyaris.getByRole('img')
+      await image.scrollIntoViewIfNeeded()
+      await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+      await expect(image).toHaveAttribute('src', /\/_astro\/.*\.webp/)
+      await expect(nyaris.getByRole('link')).toHaveCount(2)
+      for (const link of await nyaris.getByRole('link').all()) {
+        await expect(link).toHaveAttribute('href', destination)
+        await expect(link).not.toHaveAttribute('target', '_blank')
+      }
+      const preview = section.getByRole('link', { name: 'Visit Nyaris Terkenal' })
+      await preview.focus()
+      await page.keyboard.press('Tab')
+      const title = section.getByRole('link', { name: 'Nyaris Terkenal', exact: true })
+      await expect(title).toBeFocused()
+      expect(await title.evaluate((element) => getComputedStyle(element).outlineStyle)).toBe('solid')
+      await title.blur()
+      await section.screenshot({ path: testInfo.outputPath(`other-projects-${width}-${theme}.png`) })
+    }
+  }
+  for (const name of ['Visit Nyaris Terkenal', 'Nyaris Terkenal']) {
+    await page.goto('/projects/')
+    await page.getByRole('region', { name: 'Other Projects', exact: true }).getByRole('link', { name, exact: true }).click()
+    await expect(page).toHaveURL(destination)
+  }
+  await page.goto('/')
+  await expect(page.getByRole('heading', { name: 'Other Projects', exact: true })).toHaveCount(0)
+})
+
+test('PicSweep stacks five screenshots and keeps the active card accessible', async ({ page, request, browser }, testInfo) => {
+  await page.goto('/projects/')
+  for (const theme of ['light', 'dark']) {
+    await page.evaluate((value) => localStorage.setItem('theme', value), theme)
+    for (const width of [375, 1440]) {
+      await page.setViewportSize({ width, height: 1000 })
+      await page.goto('/projects/')
+      const slider = page.getByRole('list', { name: 'Other project previews' })
+      const card = slider.getByRole('listitem').filter({ has: page.getByRole('heading', { name: 'PicSweep', exact: true }) })
+      await expect(card).toContainText('Android app that helps users find similar photos, keep the best shot, and safely free up storage space.')
+      await expect(card.getByRole('heading')).toHaveText('PicSweep')
+      const screenshots = card.getByRole('group', { name: 'PicSweep screenshots' })
+      await expect(screenshots.locator('img')).toHaveCount(5)
+      await expect(screenshots.getByRole('img')).toHaveCount(1)
+      await screenshots.getByRole('link').focus()
+      await expect(screenshots.getByRole('link')).toBeInViewport()
+      if (width === 375) expect(await slider.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0)
+      for (let i = 0; i < 5; i++) {
+        const image = screenshots.getByRole('img')
+        await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+        await expect(image).toHaveAttribute('src', /\/_astro\/.*\.webp/)
+        await expect(screenshots.locator('.deck-position')).toHaveText(`${i + 1} / 5`)
+        await page.keyboard.press('ArrowRight')
+      }
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+      await screenshots.getByRole('link').blur()
+      await page.getByRole('region', { name: 'Other Projects', exact: true }).screenshot({ path: testInfo.outputPath(`picsweep-${width}-${theme}.png`) })
+    }
+  }
+  for (const link of await page.getByRole('group', { name: 'PicSweep screenshots' }).locator('.deck-card').all()) {
+    const response = await request.get((await link.getAttribute('href'))!)
+    expect(response.ok()).toBe(true)
+    expect(response.headers()['content-type']).toContain('image/webp')
+  }
+  const first = page.getByRole('group', { name: 'PicSweep screenshots' }).getByRole('link').first()
+  const destination = await first.getAttribute('href')
+  await first.click()
+  await expect(page).toHaveURL(destination!)
+  const noScript = await browser.newContext({ javaScriptEnabled: false })
+  const fallback = await noScript.newPage()
+  await fallback.goto('http://127.0.0.1:4321/projects/')
+  const fallbackDeck = fallback.getByRole('group', { name: 'PicSweep screenshots' })
+  await expect(fallbackDeck.getByRole('img')).toHaveCount(5)
+  await expect(fallbackDeck.getByRole('button')).toHaveCount(0)
+  await noScript.close()
+})
+
+test('PicSweep deck shuffles on swipe, handles repeated input, and respects reduced motion', async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 1000 })
+  await page.goto('/projects/')
+  const deck = page.getByRole('group', { name: 'PicSweep screenshots' })
+  const movementCount = () => deck.evaluate((element) => element.getAnimations({ subtree: true }).filter((animation) => (animation.effect as KeyframeEffect).getKeyframes().some((frame) => 'transform' in frame)).length)
+  const counter = deck.locator('.deck-position')
+  const next = deck.getByRole('button', { name: 'Next PicSweep screenshot' })
+  await next.click()
+  await expect(counter).toHaveText('2 / 5')
+  await next.click()
+  await expect(counter).toHaveText('3 / 5')
+  await expect.poll(movementCount).toBe(0)
+  const active = deck.getByRole('link')
+  const bounds = await active.boundingBox()
+  if (!bounds) throw new Error('Active screenshot is not visible')
+  await page.mouse.move(bounds.x + bounds.width * .7, bounds.y + bounds.height / 2)
+  await page.mouse.down()
+  await page.mouse.move(bounds.x + bounds.width * .2, bounds.y + bounds.height / 2, { steps: 6 })
+  await page.mouse.up()
+  await expect(counter).toHaveText('4 / 5')
+  await expect(page).toHaveURL('/projects/')
+  await expect.poll(movementCount).toBe(0)
+  await deck.getByRole('button', { name: 'Previous PicSweep screenshot' }).click()
+  await expect(counter).toHaveText('3 / 5')
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await next.click()
+  await expect(counter).toHaveText('4 / 5')
+  expect(await movementCount()).toBe(0)
+  await next.focus()
+  await page.keyboard.press('ArrowLeft')
+  await expect(counter).toHaveText('3 / 5')
+  expect(await movementCount()).toBe(0)
+})
+
 test('portfolio index connects the PDF narrative to readable case studies', async ({ page }) => {
   await page.goto('/projects/curated-works-2025/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('iOS Engineering Portfolio')

@@ -17,8 +17,6 @@ Since March 2026, I have worked as an iOS Developer at Arya Noble, developing an
 
 My responsibilities include feature implementation, technical design, sprint planning, estimation, code reviews, release preparation, and post-release monitoring.
 
-The figures below reflect the production observations recorded in my portfolio.
-
 ## Registration simplification: shopping before signing in
 
 I reworked the shopping journey so users could browse products and treatments, build a guest cart, select an address, and review their order before authentication became necessary at checkout.
