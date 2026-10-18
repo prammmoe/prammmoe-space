@@ -1,12 +1,6 @@
 ---
 import ThemeControl from './ThemeControl.astro'
-const path = Astro.url.pathname
-const navigation = [{ href: '/', label: 'Home' }, { href: '/projects/', label: 'Projects' }, { href: '/blog/', label: 'Writing' }]
 ---
 <header class="site-header" id="top">
-  <a class="wordmark" href="/" aria-label="Pram home">Pram<span aria-hidden="true">.</span></a>
-  <nav aria-label="Main navigation">
-    {navigation.map(({ href, label }) => <a href={href} aria-current={(href === '/' ? path === '/' : path.startsWith(href)) ? 'page' : undefined}>{label}</a>)}
-  </nav>
   <ThemeControl />
 </header>
