@@ -1,6 +1,6 @@
 ---
 title: "ERHA Buddy: Evolving and Securing a Production iOS App at Scale"
-description: "Shipping shopping features, strengthening API security, and maintaining ERHA Buddy within a two-person iOS team at Arya Noble."
+description: "Shipping features, strengthening API security, and maintaining ERHA Buddy."
 thumbnail: "/projects/covers/erha-buddy.png"
 pubDate: 2026-10-14
 tags: ["iOS", "Networking", "Security", "Checkout"]
@@ -8,8 +8,6 @@ techStack: ["iOS", "SSE", "HMAC", "App Attest", "Keychain"]
 appStore: "https://apps.apple.com/id/app/erha-buddy/id1507965731"
 featured: true
 ---
-
-ERHA Buddy simplifies access to ERHA skincare, beauty, and healthcare services. My work focuses on evolving and securing a production iOS app while keeping its shopping and checkout journeys reliable.
 
 ## Context and responsibilities
 

@@ -2,5 +2,6 @@
 import ThemeControl from './ThemeControl.astro'
 ---
 <header class="site-header" id="top">
+  {Astro.url.pathname !== '/' && <a class="site-home-link" href="/">Back to home</a>}
   <ThemeControl />
 </header>

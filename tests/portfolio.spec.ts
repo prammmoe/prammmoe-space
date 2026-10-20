@@ -162,7 +162,10 @@ test('SLNG historical metrics and remaining case studies render as text', async 
 test('case study section navigation supports keyboard and anchors', async ({ page }) => {
   await page.goto('/projects/erha-buddy/')
   const contents = page.locator('details.article-contents')
+  await expect(contents).toHaveAttribute('open', '')
   await contents.locator('summary').focus()
+  await page.keyboard.press('Enter')
+  await expect(contents).not.toHaveAttribute('open')
   await page.keyboard.press('Enter')
   await expect(contents).toHaveAttribute('open', '')
   await contents.getByRole('link', { name: 'App Attest: handling verification failures' }).click()

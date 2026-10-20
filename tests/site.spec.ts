@@ -11,6 +11,20 @@ const routes = ['/', '/blog/', '/projects/', '/media/', '/musics/',
   '/projects/curated-works-2025/', '/projects/old-portfolio/',
   '/projects/erha-buddy/', '/projects/slng/', '/projects/paintee/', '/projects/rooted-dbt/']
 
+test('every portfolio subpage links directly back to home', async ({ page }) => {
+  test.setTimeout(120_000)
+  for (const route of routes.filter((route) => route !== '/')) {
+    await page.goto(route)
+    const home = page.locator('.site-header').getByRole('link', { name: 'Back to home', exact: true })
+    await expect(home).toBeVisible()
+    await expect(home).toHaveAttribute('href', '/')
+    await home.focus()
+    await expect(home).toBeFocused()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL('/')
+  }
+})
+
 test('career comes first and engineering writing is curated', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pramuditha Muhammad Ikhwan')
@@ -82,6 +96,31 @@ test('freelance gradient runs automatically and respects visibility and reduced 
   expect(await card.evaluate((element) => getComputedStyle(element, '::before').animationName)).toBe('none')
 })
 
+test('footer exposes crawlable portfolio sections and the requested copyright', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  const sections = [
+    ['Projects', '/projects/', 'Projects'],
+    ['Writing', '/blog/', 'Writing'],
+    ['Experience', '/#experience', 'Experience'],
+    ['Tech stack', '/#tech-stack', 'Tech stack'],
+    ['Education', '/#education', 'Education'],
+    ['Services', '/#services', 'Services'],
+    ['Contact me', '/#contact', 'Contact me'],
+  ]
+  for (const [label, href, heading] of sections) {
+    await page.goto('/projects/')
+    await expect(page.locator('.footer-primary')).toHaveText('© 2026 Prammmoe')
+    const navigation = page.getByRole('navigation', { name: 'Portfolio sections', exact: true })
+    await expect(navigation.getByRole('link')).toHaveCount(sections.length)
+    const link = navigation.getByRole('link', { name: label, exact: true })
+    await expect(link).toHaveAttribute('href', href)
+    await link.focus()
+    await page.keyboard.press('Enter')
+    await expect(page).toHaveURL(href)
+    await expect(page.getByRole('heading', { name: heading, exact: true, level: href.includes('#') ? 2 : 1 })).toBeInViewport()
+  }
+})
+
 test('footer connects to real profiles with labelled icon links', async ({ page, request }) => {
   await page.goto('/')
   const links = page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link')
@@ -120,6 +159,14 @@ for (const width of [320, 375, 768, 1024, 1440]) {
         expect(response?.status()).toBe(200)
         await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1)
         expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), route).toBe(true)
+        if (route !== '/') {
+          const home = await page.locator('.site-header a').boundingBox()
+          const theme = await page.locator('.theme-control').boundingBox()
+          expect(home).not.toBeNull()
+          expect(theme).not.toBeNull()
+          expect(home!.height).toBeGreaterThanOrEqual(44)
+          expect(home!.x + home!.width).toBeLessThanOrEqual(theme!.x)
+        }
         expect(await page.locator('img').evaluateAll((images) => images.every((image) => image.hasAttribute('width') && image.hasAttribute('height')))).toBe(true)
         expect(await page.locator('img:not([loading="lazy"])').evaluateAll((images) => images.every((image) => (image as HTMLImageElement).naturalWidth > 0)), route).toBe(true)
       }
@@ -229,6 +276,7 @@ test('SEO, sitemap, draft exclusion, math CSS, and PDF downloads', async ({ page
     await page.goto(route)
     await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', /\S.{20,}/)
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://prammmoe.space${route}`)
+    await expect(page.locator('.footer-primary')).toHaveText('© 2026 Prammmoe')
     await expect(page.locator('meta[property="og:image"]')).toHaveAttribute('content', 'https://prammmoe.space/social-card.png')
   }
   await page.goto('/blog/perbedaan-sort-dan-sorted/')

@@ -8,6 +8,15 @@ const socialProfiles = [
   { name: 'LeetCode', href: profile.links.leetcode, icon: '/social/leetcode.svg' },
   { name: 'Upwork', href: profile.links.upwork, icon: '/social/upwork.svg' },
 ]
+const sections = [
+  { name: 'Projects', href: '/projects/' },
+  { name: 'Writing', href: '/blog/' },
+  { name: 'Experience', href: '/#experience' },
+  { name: 'Tech stack', href: '/#tech-stack' },
+  { name: 'Education', href: '/#education' },
+  { name: 'Services', href: '/#services' },
+  { name: 'Contact me', href: '/#contact' },
+]
 ---
 <footer class="site-footer">
   <div class="footer-connect">
@@ -16,12 +25,16 @@ const socialProfiles = [
       {socialProfiles.map(({ name, href, icon }) => <a href={href} aria-label={name} title={name} target="_blank" rel="noopener noreferrer"><span class="social-icon" style={`--social-icon: url('${icon}')`} aria-hidden="true"></span></a>)}
     </nav>
   </div>
+  <nav class="footer-sections" aria-label="Portfolio sections">
+    {sections.map(({ name, href }) => <a href={href}>{name}</a>)}
+  </nav>
   <div class="footer-primary">
-    <p>© {new Date().getFullYear()} {profile.name}</p>
+    <p>© 2026 Prammmoe</p>
   </div>
 </footer>
 
 <style>
+  .footer-sections { margin-bottom: 20px; }
   .footer-connect { margin-bottom: 28px; }
   .footer-connect h2 { color: var(--ink); font-size: 20px; margin-bottom: 16px; }
   .site-footer .social-links { display: grid; grid-template-columns: repeat(6, 52px); gap: 12px; }

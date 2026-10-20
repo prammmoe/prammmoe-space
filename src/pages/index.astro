@@ -19,7 +19,7 @@ const projects = (await getCollection('projects')).filter((project) => !project.
     <p class="intro-copy">{profile.introduction}</p>
     <div class="profile-links"><a class="button-link" href="/resume.pdf" download>Download resume</a><a href={profile.links.linkedin}>LinkedIn</a></div>
   </section>
-  <section class="home-section" aria-labelledby="projects-heading">
+  <section class="home-section" id="projects" aria-labelledby="projects-heading">
     <div class="section-heading"><h2 id="projects-heading">Projects</h2><a href="/projects/">All projects</a></div>
     <ProjectList projects={projects} />
     <div class="profile-links"><a href="/portfolio.pdf" download>Download portfolio</a></div>
@@ -28,7 +28,7 @@ const projects = (await getCollection('projects')).filter((project) => !project.
     <div class="section-heading"><h2 id="writing-heading">Writing</h2><a href="/blog/">All writing</a></div>
     <ul class="listing">{articles.map((post) => <li><a href={`/blog/${post.slug}/`} lang={post.data.lang}>{post.data.title}</a><time class="date" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></li>)}</ul>
   </section>
-  <section class="home-section" aria-labelledby="experience-heading">
+  <section class="home-section" id="experience" aria-labelledby="experience-heading">
     <h2 id="experience-heading">Experience</h2>
     <ul class="timeline">{profile.experience.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
   </section>
@@ -39,7 +39,7 @@ const projects = (await getCollection('projects')).filter((project) => !project.
       <dd><ul>{group.technologies.map((technology) => <li>{technologyLogos[technology] && <img src={`/tech/${technologyLogos[technology]}.svg`} alt="" width="24" height="24" loading="lazy" />}<span>{technology}</span></li>)}</ul></dd>
     </div>)}</dl>
   </section>
-  <section class="home-section" aria-labelledby="education-heading">
+  <section class="home-section" id="education" aria-labelledby="education-heading">
     <h2 id="education-heading">Education</h2>
     <ul class="timeline">{profile.education.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
   </section>
