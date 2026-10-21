@@ -11,7 +11,7 @@ const { Content } = await post.render()
 const prose = post.body.replace(/```[\s\S]*?```|`[^`\n]*`/g, '')
 const hasMath = /\$\$|\$[^\n$]+\$/.test(prose)
 ---
-<Base title={post.data.title} description={post.data.description} lang={post.data.lang} type="article" pubDate={post.data.pubDate} updatedDate={post.data.updatedDate}>
+<Base title={post.data.title} description={post.data.description} lang={post.data.lang} type="article" pubDate={post.data.pubDate} updatedDate={post.data.updatedDate} motion={false}>
   {hasMath && <link slot="head" rel="stylesheet" href={katexStyles} />}
   <article class="post">
     <a class="back-link" href="/blog/">Back to writing</a>

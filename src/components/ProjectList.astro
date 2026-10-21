@@ -11,7 +11,7 @@ const images = import.meta.glob<{ default: ImageMetadata }>('../assets/**/*.{jpg
     const thumbnail = images[`../assets${project.data.thumbnail}`]?.default
     return <li class:list={['project-row', { 'project-row--text-only': !thumbnail }]}>
       <div><h3><a href={`/projects/${project.slug}/`}>{project.data.title}</a></h3><p>{project.data.description}</p></div>
-      {thumbnail && <Image src={thumbnail} alt="" width={576} height={324} loading="lazy" />}
+      {thumbnail && <div class="project-thumbnail" data-parallax><div class="parallax-frame"><Image src={thumbnail} alt="" width={576} height={324} loading="lazy" /></div></div>}
     </li>
   })}
 </ul>

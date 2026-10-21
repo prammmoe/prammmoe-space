@@ -14,7 +14,7 @@ const projects = (await getCollection('projects')).filter((project) => !project.
   <section id="profile" aria-labelledby="profile-heading">
     <div class="profile-intro">
       <div><h1 id="profile-heading">{profile.name}</h1><p class="role">{profile.role}</p></div>
-      <Image class="portrait" src={portrait} alt="Pramuditha Muhammad Ikhwan" width={288} height={288} fit="cover" loading="eager" />
+      <div class="portrait-motion" data-parallax><div class="parallax-frame"><Image class="portrait" src={portrait} alt="Pramuditha Muhammad Ikhwan" width={288} height={288} fit="cover" loading="eager" /></div></div>
     </div>
     <p class="intro-copy">{profile.introduction}</p>
     <div class="profile-links"><a class="button-link" href="/resume.pdf" download>Download resume</a><a href={profile.links.linkedin}>LinkedIn</a></div>
