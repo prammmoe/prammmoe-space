@@ -15,8 +15,9 @@ interface Props {
   pubDate?: Date
   updatedDate?: Date
   motion?: boolean
+  showSiteChrome?: boolean
 }
-const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate, motion = true } = Astro.props
+const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate, motion = true, showSiteChrome = true } = Astro.props
 const site = Astro.site ?? new URL('https://prammmoe.space')
 const canonical = new URL(`${Astro.url.pathname.replace(/\/$/, '')}/`, site).href
 const fullTitle = title === profile.name ? `${title} · Software Engineer` : `${title} · Pram`
@@ -55,7 +56,7 @@ const structuredData = {
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <div class="page-shell"><SiteHeader /><main id="main-content" tabindex="-1"><slot /></main><SiteFooter /></div>
+    <div class="page-shell">{showSiteChrome && <SiteHeader />}<main id="main-content" tabindex="-1"><slot /></main>{showSiteChrome && <SiteFooter />}</div>
     {motion && <><ScrollReveal /><PortfolioMotion /></>}
   </body>
 </html>

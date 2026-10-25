@@ -1,0 +1,59 @@
+---
+import Base from '../../layouts/Base.astro'
+
+const developer = 'Prammmoe Labs'
+const email = 'ikhwanpramuditha05@gmail.com'
+---
+
+<Base
+  title="Cubbl Privacy Policy"
+  description="How Prammmoe Labs handles information in Cubbl, including saved scores, preferences, Android backups, and data deletion."
+  motion={false}
+  showSiteChrome={false}
+>
+  <article class="post" aria-labelledby="policy-title">
+    <header class="article-header">
+      <h1 id="policy-title">Cubbl Privacy Policy</h1>
+      <p class="meta">Effective date: <time datetime="2026-10-25">25 October 2026</time></p>
+    </header>
+
+    <div class="content">
+      <p>This Privacy Policy explains how {developer} handles information in Cubbl, the Android game with package name <code>com.prammmoelabs.cubbl</code>.</p>
+
+      <h2>Information used by the game</h2>
+      <p>Cubbl does not require an account or ask you to provide your name, email address, location, contacts, photos, or payment information. The current version does not send gameplay information to servers operated by the developer and does not include advertising, analytics, or third-party crash-reporting services.</p>
+
+      <h2>Information stored on your device</h2>
+      <p>Cubbl saves your highest score, sound preference, vibration preference, and tutorial completion status in the app's local storage. This information is used to remember your progress and settings between play sessions.</p>
+
+      <h2>Android backup and device transfer</h2>
+      <p>Android may back up, restore, or transfer the app's saved information depending on your device, backup provider, and system settings. These processes are managed by Android and your backup provider, rather than by a Cubbl server. You can manage available backup options in your device settings.</p>
+
+      <h2>Permissions</h2>
+      <p>Cubbl uses the device's vibration feature for gameplay feedback. You can turn vibration off in the game's settings. Cubbl does not request access to your location, camera, microphone, or contacts.</p>
+
+      <h2>Sharing and sale of information</h2>
+      <p>The developer does not receive, sell, or share your locally saved gameplay information. System-managed backups and device transfers are described above.</p>
+
+      <h2>Retention and deletion</h2>
+      <p>Your score and preferences remain in the app's storage until that storage is cleared or the app is uninstalled. To remove the local data, open Android Settings, select Apps, then Cubbl, then Storage, and choose Clear storage or Clear data. The exact labels may differ by device. This resets your saved score and preferences.</p>
+      <p>Removing local data does not necessarily remove a system backup. Backup copies and restoration are controlled by your device and backup provider; saved data may return if you restore a backup. The developer does not operate a server copy of your gameplay data.</p>
+
+      <h2>Children’s privacy</h2>
+      <p>Cubbl is intended for players of all ages. It does not ask players to submit personal information and does not include account registration, advertising, or analytics in its current version. If you believe a child has provided personal information to the developer through a support message, please contact us using the address below.</p>
+
+      <h2>External websites and support</h2>
+      <p>If you open an external website, that website's privacy practices apply. If you email us for support or a privacy question, we receive your email address and the information you choose to include in your message so we can respond to your request. These messages are handled through Gmail, our email provider, and are separate from the information saved by the game.</p>
+      <p>We retain support messages as a record of your request and our response until you ask us to delete them. You can request deletion of information you have sent us by emailing <a href={`mailto:${email}`}>{email}</a>. Gmail's handling of information is described in <a href="https://policies.google.com/privacy">Google’s Privacy Policy</a>.</p>
+
+      <h2>Visiting this website</h2>
+      <p>This policy describes the Cubbl game. Visiting this page is separate from playing Cubbl: your browser sends technical information, including your IP address and the requested URL, to the website's hosting server to load the page. The website stores your light or dark theme preference in your browser's local storage. You can remove that preference by clearing this site's browser data.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>We may update this policy when the app's features or information practices change. The effective date above identifies the current policy.</p>
+
+      <h2>Contact</h2>
+      <p>For privacy questions about Cubbl, contact {developer} at <a href={`mailto:${email}`}>{email}</a>.</p>
+    </div>
+  </article>
+</Base>
