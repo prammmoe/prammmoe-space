@@ -1,0 +1,181 @@
+<style is:global>
+  html[data-motion="cinematic"] {
+    --motion-interaction: 160ms;
+    --motion-dialog: 240ms;
+    --motion-entrance: 700ms;
+    --ease-out: cubic-bezier(.22, 1, .36, 1);
+  }
+  .portrait-motion { width: 144px; height: 144px; }
+  .portrait-motion img { display: block; }
+  .project-thumbnail { width: 240px; max-width: 100%; min-width: 0; }
+  .parallax-frame { width: 100%; }
+  @media (max-width: 600px) {
+    .portrait-motion { width: 88px; height: 88px; }
+    .project-thumbnail { width: 112px; }
+  }
+  html[data-theme-transition] body {
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+  html[data-motion="cinematic"][data-theme-transition] :where(.button-link, .theme-track) {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease, scale var(--motion-interaction) var(--ease-out);
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    ::view-transition-old(root), ::view-transition-new(root) {
+      animation-duration: 200ms;
+      animation-timing-function: ease;
+    }
+    html[data-motion="cinematic"] [data-scroll-reveal] {
+      transition: opacity var(--motion-entrance) var(--ease-out), translate var(--motion-entrance) var(--ease-out);
+    }
+    html[data-motion="cinematic"] [data-scroll-reveal="pending"] {
+      translate: 0 24px;
+      transition: none;
+    }
+    html[data-motion="cinematic"] [data-scroll-reveal="pending"]:has(:focus-visible) {
+      opacity: 1;
+      translate: none;
+      transition: none;
+    }
+    [data-entrance] {
+      animation: portfolio-enter var(--motion-entrance) var(--ease-out) both;
+      animation-delay: var(--entrance-delay, 0ms);
+    }
+    [data-entrance="0"] { animation-name: portfolio-title; }
+    html[data-motion="cinematic"] .theme-track::before { transition: transform var(--motion-interaction) var(--ease-out); }
+    html[data-motion="cinematic"] .theme-control svg {
+      transition: transform var(--motion-interaction) var(--ease-out), opacity var(--motion-interaction) ease;
+    }
+    html[data-motion="cinematic"] .theme-moon { opacity: .5; transform: rotate(-15deg) scale(.9); }
+    :root[data-motion="cinematic"][data-theme="dark"] .theme-moon { opacity: 1; transform: none; }
+    :root[data-motion="cinematic"][data-theme="dark"] .theme-sun { opacity: .5; transform: rotate(30deg) scale(.9); }
+    html[data-motion="cinematic"] :where(.button-link, .deck-controls button, .theme-control) {
+      transition: scale var(--motion-interaction) var(--ease-out), color var(--motion-interaction) ease;
+    }
+    html[data-motion="cinematic"] :where(.button-link, .deck-controls button, .theme-control):active { scale: .97; }
+    @supports (transition-behavior: allow-discrete) and (overlay: auto) {
+      .screenshot-dialog {
+        opacity: 0;
+        transform: scale(.97);
+        transition: opacity var(--motion-interaction) var(--ease-out), transform var(--motion-interaction) var(--ease-out), display var(--motion-interaction) allow-discrete, overlay var(--motion-interaction) allow-discrete;
+      }
+      .screenshot-dialog[open] { opacity: 1; transform: none; transition-duration: var(--motion-dialog); }
+      .screenshot-dialog::backdrop {
+        opacity: 0;
+        transition: opacity var(--motion-interaction) ease, display var(--motion-interaction) allow-discrete, overlay var(--motion-interaction) allow-discrete;
+      }
+      .screenshot-dialog[open]::backdrop { opacity: 1; transition-duration: var(--motion-dialog); }
+      @starting-style {
+        .screenshot-dialog[open] { opacity: 0; transform: scale(.97); }
+        .screenshot-dialog[open]::backdrop { opacity: 0; }
+      }
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+    .project-thumbnail img, .project-preview img {
+      transition: transform var(--motion-interaction) var(--ease-out);
+    }
+    .project-row:hover .project-thumbnail img, .project-preview:hover img { transform: scale(1.025); }
+  }
+  @keyframes portfolio-title {
+    from { transform: translateY(24px); }
+    to { transform: none; }
+  }
+  @keyframes portfolio-enter {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce), print {
+    @view-transition { navigation: none; }
+    ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none; }
+    html[data-motion="cinematic"] [data-scroll-reveal] { opacity: 1; translate: none; transition: none; }
+    [data-entrance] { animation: none; }
+    .parallax-frame { transform: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html[data-theme-transition] .button-link { transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease; }
+  }
+</style>
+
+<script>
+  if (document.documentElement.dataset.motion === 'cinematic') {
+    const motion = matchMedia('(prefers-reduced-motion: reduce)')
+    const desktop = matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)')
+    const navigation = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined
+    const intro = document.querySelector('.profile-intro')
+    const entrances = intro
+      ? [intro.firstElementChild, intro.querySelector('.portrait-motion'), document.querySelector('#profile > .intro-copy'), document.querySelector('#profile > .profile-links')]
+      : Array.from(document.querySelectorAll('.page-header > *, .article-header > *')).slice(0, 4)
+    if (!motion.matches && !location.hash && !scrollY && navigation?.type !== 'back_forward') {
+      entrances.forEach((element, index) => {
+        if (!(element instanceof HTMLElement) || element.getBoundingClientRect().top >= innerHeight) return
+        element.dataset.entrance = String(index)
+        element.style.setProperty('--entrance-delay', `${Math.min(index * 70, 210)}ms`)
+      })
+    }
+    const showEntrances = (target: Element | null = null) => {
+      entrances.forEach((element) => {
+        if (!(element instanceof HTMLElement) || (target && !element.contains(target))) return
+        delete element.dataset.entrance
+        element.style.removeProperty('--entrance-delay')
+      })
+    }
+    document.addEventListener('focusin', (event) => {
+      const target = event.target as Element
+      if (target.matches(':focus-visible')) showEntrances(target)
+    })
+    addEventListener('hashchange', () => showEntrances())
+    addEventListener('pageshow', (event) => {
+      if (event.persisted || scrollY > 0 || navigation?.type === 'back_forward') showEntrances()
+    })
+
+    const images = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'))
+    const visible = new Set<HTMLElement>()
+    let frame = 0
+    const enabled = () => !motion.matches && desktop.matches && !document.hidden
+    const update = () => {
+      frame = 0
+      if (!enabled()) return
+      const positions = Array.from(visible, (element) => {
+        const rect = element.getBoundingClientRect()
+        const offset = Math.max(-12, Math.min(12, ((rect.top + rect.height / 2) / innerHeight - .5) * -24))
+        return { image: element.querySelector<HTMLElement>('.parallax-frame')!, offset }
+      })
+      positions.forEach(({ image, offset }) => { image.style.transform = `translateY(${offset}px)` })
+    }
+    const schedule = () => {
+      if (!frame && visible.size && enabled()) frame = requestAnimationFrame(update)
+    }
+    const observer = 'IntersectionObserver' in window ? new IntersectionObserver((entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) visible.add(target as HTMLElement)
+        else visible.delete(target as HTMLElement)
+      })
+      schedule()
+    }) : null
+    const reset = () => {
+      cancelAnimationFrame(frame)
+      frame = 0
+      observer?.disconnect()
+      visible.clear()
+      images.forEach((element) => {
+        element.querySelector<HTMLElement>('.parallax-frame')!.style.removeProperty('transform')
+        if (enabled()) observer?.observe(element)
+      })
+    }
+    motion.addEventListener('change', () => {
+      if (motion.matches) showEntrances()
+      reset()
+    })
+    desktop.addEventListener('change', reset)
+    document.addEventListener('visibilitychange', reset)
+    addEventListener('scroll', schedule, { passive: true })
+    addEventListener('resize', schedule, { passive: true })
+    addEventListener('pagehide', () => {
+      cancelAnimationFrame(frame)
+      frame = 0
+      observer?.disconnect()
+    })
+    addEventListener('pageshow', reset)
+    reset()
+  }
+</script>

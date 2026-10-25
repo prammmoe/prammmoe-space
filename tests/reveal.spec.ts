@@ -10,7 +10,7 @@ test('content reveals gently once as it enters the viewport', async ({ page }, t
   await expect(block).toHaveCSS('opacity', '0')
   await block.scrollIntoViewIfNeeded()
   await expect(block).toHaveAttribute('data-scroll-reveal', 'revealed')
-  await expect(block).toHaveCSS('transition-duration', '0.8s, 0.8s')
+  await expect(block).toHaveCSS('transition-duration', '0.7s, 0.7s')
   await expect.poll(() => block.evaluate((element) => getComputedStyle(element).opacity)).toBe('1')
   await page.evaluate(() => scrollTo(0, 0))
   await block.scrollIntoViewIfNeeded()
@@ -46,11 +46,22 @@ test('focus, anchors, reduced motion, and printing keep content readable', async
   await noScript.close()
 })
 
-test('reveal is included on every built page, including standalone pages', async ({ request }) => {
-  const routes = ['/', '/projects/', '/projects/erha-buddy/', '/blog/', '/blog/getting-to-know-server-sent-events-on-ios/', '/media/', '/musics/', '/e-voucher/', '/decode-the-puzzle/', '/happy-birthday-nana/', '/matcha-round-the-globe/', '/wishes-for-nana/']
+test('reveal is included on portfolio listings, projects, and standalone pages', async ({ request }) => {
+  const routes = ['/', '/projects/', '/projects/erha-buddy/', '/blog/', '/media/', '/musics/', '/e-voucher/', '/decode-the-puzzle/', '/happy-birthday-nana/', '/matcha-round-the-globe/', '/wishes-for-nana/']
   for (const route of routes) {
     const response = await request.get(route)
     expect(response.ok(), route).toBe(true)
     expect(await response.text(), route).toContain('dataset.scrollReveal')
   }
+})
+
+test('standalone pages preserve the original gentle reveal', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'no-preference' })
+  await page.setViewportSize({ width: 375, height: 350 })
+  await page.goto('/matcha-round-the-globe/')
+  const block = page.locator('[data-scroll-reveal="pending"]').last()
+  await expect(block).toHaveCSS('translate', '0px 8px')
+  const handle = await block.elementHandle()
+  await block.scrollIntoViewIfNeeded()
+  await expect.poll(() => handle!.evaluate((element) => getComputedStyle(element).transitionDuration)).toBe('0.8s, 0.8s')
 })

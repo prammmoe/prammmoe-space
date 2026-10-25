@@ -4,6 +4,7 @@ import '../styles/cursors.css'
 import SiteHeader from '../components/SiteHeader.astro'
 import SiteFooter from '../components/SiteFooter.astro'
 import ScrollReveal from '../components/ScrollReveal.astro'
+import PortfolioMotion from '../components/PortfolioMotion.astro'
 import { profile } from '../data/profile'
 interface Props {
   title?: string
@@ -13,8 +14,10 @@ interface Props {
   image?: string
   pubDate?: Date
   updatedDate?: Date
+  motion?: boolean
+  showSiteChrome?: boolean
 }
-const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate } = Astro.props
+const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate, motion = true, showSiteChrome = true } = Astro.props
 const site = Astro.site ?? new URL('https://prammmoe.space')
 const canonical = new URL(`${Astro.url.pathname.replace(/\/$/, '')}/`, site).href
 const fullTitle = title === profile.name ? `${title} · Software Engineer` : `${title} · Pram`
@@ -26,7 +29,7 @@ const structuredData = {
 }
 ---
 <!doctype html>
-<html lang={lang} data-theme="light">
+<html lang={lang} data-theme="light" data-motion={motion ? 'cinematic' : 'none'}>
   <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
@@ -49,10 +52,11 @@ const structuredData = {
       } catch {}
     </script>
     <slot name="head" />
+    {motion && <style is:inline>@media (prefers-reduced-motion: no-preference) { @view-transition { navigation: auto; } }</style>}
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <div class="page-shell"><SiteHeader /><main id="main-content" tabindex="-1"><slot /></main><SiteFooter /></div>
-    <ScrollReveal />
+    <div class="page-shell">{showSiteChrome && <SiteHeader />}<main id="main-content" tabindex="-1"><slot /></main>{showSiteChrome && <SiteFooter />}</div>
+    {motion && <><ScrollReveal /><PortfolioMotion /></>}
   </body>
 </html>

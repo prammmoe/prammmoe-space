@@ -14,6 +14,7 @@
     control.title = label
   }
   control.addEventListener('click', () => {
+    if (document.documentElement.dataset.motion === 'cinematic') document.documentElement.dataset.themeTransition = ''
     theme = theme === 'light' ? 'dark' : 'light'
     try { localStorage.setItem('theme', theme) } catch {}
     apply()

@@ -41,6 +41,7 @@ const { screens } = Astro.props
     let index = 0
     let revision = 0
     let animations: Animation[] = []
+    const easing = getComputedStyle(deck).getPropertyValue('--ease-out').trim() || 'cubic-bezier(.22, 1, .36, 1)'
     let drag: { id: number; x: number; time: number; distance: number; base: string } | undefined
     let suppressClick = false
     const depth = (i: number) => (i - index + cards.length) % cards.length
@@ -49,12 +50,15 @@ const { screens } = Astro.props
       return `translateY(${level * 8}px) scale(${1 - level * .045}) rotate(${level === 0 ? 0 : level % 2 ? -4 : 4}deg)`
     }
     const stop = () => {
-      animations.forEach((animation) => { animation.commitStyles(); animation.cancel() })
+      animations.forEach((animation) => {
+        if (animation.playState !== 'idle') animation.commitStyles()
+        animation.cancel()
+      })
       animations = []
     }
     const animate = async (card: HTMLElement, from: string, to: string, duration: number) => {
       card.style.transform = to
-      const animation = card.animate([{ transform: from }, { transform: to }], { duration, easing: 'cubic-bezier(.22, 1, .36, 1)' })
+      const animation = card.animate([{ transform: from }, { transform: to }], { duration, easing })
       animations.push(animation)
       await animation.finished.catch(() => {})
     }
