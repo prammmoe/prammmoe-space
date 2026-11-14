@@ -95,6 +95,8 @@ I handled failure paths such as invalid or unknown keys, failed native assertion
 
 Recovery distinguishes safe requests from mutating operations, avoiding automatic repetition of business actions when the server provides no idempotency guarantee.
 
+Read the [App Attest implementation guide](/blog/apple-app-attest-on-ios/).
+
 ## Calculate Order: removing redundant requests
 
 I optimized the Calculate Order flow by changing when calculations are triggered and coordinating requests with equivalent inputs.
