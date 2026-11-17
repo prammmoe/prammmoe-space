@@ -41,11 +41,11 @@ test('parallax is bounded, independent from reveal, and stops for reduced motion
 test('theme colors transition only after interaction', async ({ page }) => {
   await page.goto('/')
   await expect(page.locator('html')).not.toHaveAttribute('data-theme-transition')
-  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await page.getByRole('button', { name: 'Switch to light theme' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   await expect(page.locator('body')).toHaveCSS('transition-duration', '0.2s, 0.2s')
   await page.reload()
-  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
   await expect(page.locator('html')).not.toHaveAttribute('data-theme-transition')
 })
 

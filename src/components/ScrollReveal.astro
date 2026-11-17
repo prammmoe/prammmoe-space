@@ -18,7 +18,7 @@
   if (document.documentElement.dataset.motion !== 'none' && !motion.matches && 'IntersectionObserver' in window) {
     const selector = 'main h1, main h2, main h3, main h4, main p, main li, main figure, main blockquote, main pre, main table, main dt, main dd, main .technology-group, main .project-gallery, main .project-screens, main .profile-links, main .article-contents, main .project-actions, main .app-campaign, .site-footer' + (cinematic ? ', main .section-heading, main .service-list > div' : '')
     const candidates = Array.from(document.querySelectorAll<HTMLElement>(selector)).filter((element) =>
-      !element.parentElement?.closest('dialog, .screenshot-deck, .project-screens, .project-gallery, [hidden], [aria-hidden="true"]')
+      element.id !== 'profile-heading' && !element.parentElement?.closest('dialog, .screenshot-deck, .project-screens, .project-gallery, [hidden], [aria-hidden="true"]')
     )
     const targets = candidates.filter((element) => !element.parentElement?.closest(selector))
     const observer = new IntersectionObserver((entries) => {

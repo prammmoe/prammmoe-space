@@ -29,13 +29,13 @@ const structuredData = {
 }
 ---
 <!doctype html>
-<html lang={lang} data-theme="light" data-motion={motion ? 'cinematic' : 'none'}>
+<html lang={lang} data-theme="dark" data-motion={motion ? 'cinematic' : 'none'}>
   <head>
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description || profile.description} /><meta name="author" content={profile.name} />
-    <meta name="color-scheme" content="light dark" />
-    <meta name="theme-color" content="#FAFAFA" />
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#0d1722" />
     <link rel="icon" type="image/png" href="/favicon-32x32.png" /><link rel="canonical" href={canonical} />
     <meta property="og:type" content={type} /><meta property="og:site_name" content="Pram" />
     <meta property="og:title" content={fullTitle} /><meta property="og:description" content={description || profile.description} />
@@ -48,7 +48,10 @@ const structuredData = {
     <script is:inline>
       try {
         const theme = localStorage.getItem('theme')
-        if (theme === 'light' || theme === 'dark') document.documentElement.dataset.theme = theme
+        if (theme === 'light') {
+          document.documentElement.dataset.theme = theme
+          document.querySelector('meta[name="theme-color"]').content = '#fafafa'
+        }
       } catch {}
     </script>
     <slot name="head" />

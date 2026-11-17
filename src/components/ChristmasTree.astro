@@ -1,0 +1,172 @@
+<christmas-tree hidden aria-hidden="true">
+  <div class="scene">
+    <canvas role="img" aria-label="ASCII Christmas tree with falling snow, lights, ornaments, and gifts"></canvas>
+  </div>
+</christmas-tree>
+
+<style>
+  :global(body:has(christmas-tree:not([hidden]))) {
+    container-type: inline-size;
+  }
+
+  :global(main:has(christmas-tree[data-reveal="opening"])) {
+    overflow-anchor: none;
+  }
+
+  christmas-tree {
+    display: grid;
+    grid-template-rows: 0fr;
+    margin-inline: calc((100% - 100cqw) / 2);
+    margin-bottom: 0;
+    opacity: 0;
+    transition: grid-template-rows 750ms ease, opacity 700ms ease, margin-bottom 750ms ease;
+  }
+
+  christmas-tree[data-reveal] {
+    grid-template-rows: 1fr;
+    margin-bottom: 32px;
+    opacity: 1;
+  }
+
+  .scene {
+    min-height: 0;
+    overflow: hidden;
+    background: radial-gradient(ellipse at center, #162b3e 0%, transparent 72%), var(--night-canvas);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    christmas-tree { transition: none; }
+  }
+
+  canvas {
+    display: block;
+    width: 100%;
+    height: clamp(340px, 52vw, 540px);
+  }
+</style>
+
+<script>
+  import { createChristmasScene, introDuration } from './christmas-scene'
+
+  const start = Date.parse('2026-11-17T00:00:00+07:00')
+  const end = Date.parse('2027-02-01T00:00:00+07:00')
+  const frameInterval = 1000 / 24
+  const panel = document.querySelector<HTMLElement>('christmas-tree')
+  const canvas = panel?.querySelector('canvas')
+  const now = Date.now()
+
+  if (panel && canvas && now >= start && now < end) {
+    const context = canvas.getContext('2d')
+
+    if (context) {
+      const drawScene = createChristmasScene(context)
+      const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
+      const listeners = new AbortController()
+      const options = { signal: listeners.signal }
+      let visible = false
+      let request: number | undefined
+      let lastFrame: number | undefined
+      let elapsed = 0
+      let sizeChanged = true
+      let expiryTimer: number
+
+      panel.hidden = false
+
+      const draw = (time: number) => {
+        if (sizeChanged) {
+          const ratio = Math.min(window.devicePixelRatio || 1, 2)
+          canvas.width = Math.max(1, Math.round(canvas.clientWidth * ratio))
+          canvas.height = Math.max(1, Math.round(canvas.clientHeight * ratio))
+          sizeChanged = false
+        }
+        drawScene(time)
+      }
+
+      const tick = (timestamp: number) => {
+        if (lastFrame === undefined) {
+          lastFrame = timestamp
+        } else {
+          const steps = Math.floor((timestamp - lastFrame) / frameInterval)
+          if (steps > 0) {
+            const delta = steps * frameInterval
+            lastFrame += delta
+            elapsed += Math.min(delta, 100)
+            draw(elapsed)
+          }
+        }
+        request = requestAnimationFrame(tick)
+      }
+
+      const update = () => {
+        const still = motion.matches || !intersection
+        const canDraw = !panel.hidden && !!panel.dataset.reveal && (visible || !intersection) && !document.hidden
+        const running = canDraw && !still
+        if (!running && request !== undefined) {
+          cancelAnimationFrame(request)
+          request = undefined
+          lastFrame = undefined
+        }
+        if (canDraw && (sizeChanged || still)) {
+          draw(still ? introDuration : elapsed)
+        }
+        if (running && request === undefined) request = requestAnimationFrame(tick)
+      }
+
+      const intersection = typeof IntersectionObserver === 'function' && new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting
+        update()
+      })
+      const resize = typeof ResizeObserver === 'function' && new ResizeObserver(() => {
+        sizeChanged = true
+        update()
+      })
+
+      const checkExpiry = () => {
+        window.clearTimeout(expiryTimer)
+        const remaining = end - Date.now()
+        if (remaining <= 0) {
+          visible = false
+          panel.hidden = true
+          update()
+          listeners.abort()
+          if (intersection) intersection.disconnect()
+          if (resize) resize.disconnect()
+          return
+        }
+        expiryTimer = window.setTimeout(checkExpiry, Math.min(remaining, 2_147_483_647))
+      }
+
+      const settleReveal = (event: TransitionEvent) => {
+        if (event.propertyName === 'grid-template-rows' && panel.dataset.reveal === 'opening') {
+          panel.dataset.reveal = 'shown'
+        }
+      }
+      panel.addEventListener('transitionend', settleReveal, options)
+      panel.addEventListener('transitioncancel', settleReveal, options)
+
+      const revealOnScroll = () => {
+        const { top } = panel.getBoundingClientRect()
+        if (top < -Math.min(innerHeight / 2, 240)) return
+        removeEventListener('scroll', revealOnScroll)
+        panel.removeAttribute('aria-hidden')
+        panel.dataset.reveal = motion.matches ? 'shown' : 'opening'
+        update()
+      }
+      addEventListener('scroll', revealOnScroll, { ...options, passive: true })
+
+      motion.addEventListener('change', () => {
+        if (motion.matches && panel.dataset.reveal === 'opening') panel.dataset.reveal = 'shown'
+        sizeChanged = true
+        update()
+      }, options)
+      document.addEventListener('visibilitychange', () => {
+        checkExpiry()
+        update()
+      }, options)
+      if (intersection) intersection.observe(panel)
+      if (resize) resize.observe(canvas)
+      checkExpiry()
+      update()
+    }
+  }
+</script>

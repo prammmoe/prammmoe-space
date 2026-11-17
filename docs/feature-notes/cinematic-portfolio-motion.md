@@ -25,3 +25,11 @@ Branch: `codex/cinematic-portfolio-motion`
 ### Browser behavior
 - Page transitions and dialog entry/exit enhance native navigation and dialog semantics where supported; unsupported browsers keep their native behavior.
 - Blog article pages explicitly disable motion. The shared theme control and existing cursor behavior remain available while reading.
+
+## 2026-11-17
+
+- Added a homepage-only ASCII Christmas animation between the theme control and profile for 17 November 2026 through 31 January 2027 in Jakarta. Canvas renders the staged tree, garland, ornaments, star, gifts, and snow.
+- The panel reaches both viewport edges and scales from 340 to 540 px tall. Motion pauses offscreen or in a hidden tab and shows a still frame for reduced motion. Playwright covers the dates, layout, and motion behavior.
+- Increased glyph density, added layered gold garland and shaded gifts, and rotated the full scene geometry together. The homepage title stays readable below the taller seasonal panel.
+- The collapsed panel opens on scroll near the top of the page. Eight colored gift boxes join the rotating scene.
+- Dark mode is the default across the shared layout. The page and tree share a deep blue base, and near snowflakes fall faster than the flakes behind the tree.
