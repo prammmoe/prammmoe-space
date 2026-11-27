@@ -59,7 +59,7 @@ const structuredData = {
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <div class="page-shell">{showSiteChrome && <SiteHeader />}<main id="main-content" tabindex="-1"><slot /></main>{showSiteChrome && <SiteFooter />}</div>
+    <div class="page-shell">{showSiteChrome && <SiteHeader />}<main id="main-content" tabindex="-1"><slot /></main>{showSiteChrome && <SiteFooter />}<slot name="after-footer" /></div>
     {motion && <><ScrollReveal /><PortfolioMotion /></>}
   </body>
 </html>

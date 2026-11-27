@@ -1,22 +1,19 @@
 <christmas-tree hidden aria-hidden="true">
   <div class="scene">
-    <canvas role="img" aria-label="ASCII Christmas tree with falling snow, lights, ornaments, and gifts"></canvas>
+    <canvas role="img" aria-label="Animated ASCII Christmas scene: Santa in a sleigh, four reindeer flying from left to right with a large banner reading tis the season, a Christmas tree, gifts, a snowy village, and twinkling lights"></canvas>
   </div>
 </christmas-tree>
 
 <style>
-  :global(body:has(christmas-tree:not([hidden]))) {
-    container-type: inline-size;
-  }
-
-  :global(main:has(christmas-tree[data-reveal="opening"])) {
+  :global(body:has(christmas-tree[data-reveal="opening"])) {
     overflow-anchor: none;
   }
 
   christmas-tree {
     display: grid;
     grid-template-rows: 0fr;
-    margin-inline: calc((100% - 100cqw) / 2);
+    width: 100%;
+    margin-left: auto;
     margin-bottom: 0;
     opacity: 0;
     transition: grid-template-rows 750ms ease, opacity 700ms ease, margin-bottom 750ms ease;
@@ -28,7 +25,12 @@
     opacity: 1;
   }
 
+  :global(:root[data-theme="light"]) christmas-tree {
+    display: none;
+  }
+
   .scene {
+    position: relative;
     min-height: 0;
     overflow: hidden;
     background: radial-gradient(ellipse at center, #162b3e 0%, transparent 72%), var(--night-canvas);
@@ -41,7 +43,7 @@
   canvas {
     display: block;
     width: 100%;
-    height: clamp(340px, 52vw, 540px);
+    height: clamp(480px, 52vw, 660px);
   }
 </style>
 
@@ -79,7 +81,7 @@
           canvas.height = Math.max(1, Math.round(canvas.clientHeight * ratio))
           sizeChanged = false
         }
-        drawScene(time)
+        drawScene(time, motion.matches || !intersection)
       }
 
       const tick = (timestamp: number) => {
@@ -107,7 +109,7 @@
           lastFrame = undefined
         }
         if (canDraw && (sizeChanged || still)) {
-          draw(still ? introDuration : elapsed)
+          draw(motion.matches || !intersection ? introDuration : elapsed)
         }
         if (running && request === undefined) request = requestAnimationFrame(tick)
       }
@@ -146,7 +148,7 @@
 
       const revealOnScroll = () => {
         const { top } = panel.getBoundingClientRect()
-        if (top < -Math.min(innerHeight / 2, 240)) return
+        if (top > innerHeight || top < -Math.min(innerHeight / 2, 240)) return
         removeEventListener('scroll', revealOnScroll)
         panel.removeAttribute('aria-hidden')
         panel.dataset.reveal = motion.matches ? 'shown' : 'opening'
