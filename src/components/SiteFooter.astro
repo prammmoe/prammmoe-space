@@ -5,6 +5,7 @@ const socialProfiles = [
   { name: 'GitHub', href: profile.links.github, icon: '/tech/github.svg' },
   { name: 'Instagram', href: profile.links.instagram, icon: '/social/instagram.svg' },
   { name: 'Medium', href: profile.links.medium, icon: '/social/medium.svg' },
+  { name: 'DEV Community', href: profile.links.devto, icon: '/social/devto.svg' },
   { name: 'LeetCode', href: profile.links.leetcode, icon: '/social/leetcode.svg' },
   { name: 'Upwork', href: profile.links.upwork, icon: '/social/upwork.svg' },
 ]
@@ -14,6 +15,7 @@ const sections = [
   { name: 'Experience', href: '/#experience' },
   { name: 'Tech stack', href: '/#tech-stack' },
   { name: 'Education', href: '/#education' },
+  { name: 'Recommendations', href: '/#recommendations' },
   { name: 'Services', href: '/services/' },
   { name: 'Contact me', href: '/#contact' },
 ]
@@ -37,7 +39,7 @@ const sections = [
   .footer-sections { margin-bottom: 20px; }
   .footer-connect { margin-bottom: 28px; }
   .footer-connect h2 { color: var(--ink); font-size: 20px; margin-bottom: 16px; }
-  .site-footer .social-links { display: grid; grid-template-columns: repeat(6, 52px); gap: 12px; }
+  .site-footer .social-links { display: grid; grid-template-columns: repeat(7, 52px); gap: 12px; }
   .social-links a { width: 52px; height: 52px; justify-content: center; border: 1px solid var(--rule); border-radius: 12px; color: var(--muted); text-decoration: none; }
   .social-links a:hover, .social-links a:focus-visible { background: var(--surface); color: var(--ink); border-color: var(--muted); }
   .social-icon { display: block; width: 24px; height: 24px; background: currentColor; mask: var(--social-icon) center / contain no-repeat; }

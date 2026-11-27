@@ -11,6 +11,7 @@ export const profile = {
     github: "https://github.com/prammmoe",
     instagram: "https://instagram.com/ikhwanpramuditha",
     medium: "https://medium.com/@prammmoe",
+    devto: "https://dev.to/prammmoe",
     leetcode: "https://leetcode.com/prammmoe",
     upwork: "https://www.upwork.com/freelancers/prammmoe",
   },
@@ -19,21 +20,43 @@ export const profile = {
       organization: "Arya Noble (ERHA Buddy)",
       role: "iOS Developer",
       period: "Mar 2026 – present",
+      highlights: [
+        "Develop and maintain Erha Buddy within a 2-person iOS team, supporting an average of 39.98K monthly active users, while contributing to technical design, sprint planning, estimation, code reviews, and cross-functional collaboration with Product, Business Analyst, Design, QA, and Backend teams.",
+        "Re-engineered registration and guest-user journeys by enabling guest cart, address, checkout, and telemedicine access; adding context-aware login gating; and streamlining account creation with centralized validation, phone-number handling, and optional KTP scan/autofill. Post-release analytics showed a 98.1% quarter-over-quarter increase in average daily cart checkout intent.",
+        "Implemented layered API integrity protection across 223 eligible internal app API endpoints, combining HMAC request signing (canonical paths, query parameters, payloads, nonce, timestamp, and signature headers) with Apple App Attest (backend challenges, Keychain-backed device keys, and per-request assertions), including version-gated rollout and HMAC fallback for unsupported devices.",
+        "Redesigned checkout across 3 flows: combined product and treatment orders, teleconsultation, and Flash Sale, using server-issued quoteId submission to reduce client-side price tampering; added real-time SSE updates, deep-link routing, stock-aware quantity validation, promotional pricing, cart synchronization, and analytics tracking.",
+        "Ensure stable and reliable iOS releases while maintaining 99.82% crash-free users through Firebase Crashlytics, App Store Connect analytics, TestFlight, phased releases, and post-release performance tracking.",
+      ],
     },
     {
       organization: "4TITU PTE LTD",
       role: "Full Stack Developer",
       period: "Aug 2025 – Feb 2026",
+      highlights: [
+        "Engineered an end-to-end order management system with intelligent email automation, cutting manual processing time by ~80% for multi-outlet restaurants.",
+        "Built a 3-level unit-of-measure (UOM) conversion engine (Package, Secondary, Base units) to ensure accurate stock tracking across operational contexts.",
+        "Delivered internationalization feature (i18n) supporting three languages (English, Chinese, Malay), enabling system adoption across Southeast Asia (Singapore, Indonesia, Malaysia).",
+      ],
     },
     {
       organization: "Apple Developer Academy @ Infinite Learning Batam",
       role: "iOS Developer",
       period: "Feb 2025 - Dec 2025",
+      highlights: [
+        "Developed 6 iOS applications in a 10-month intensive program across 6 cross-functional teams, integrating with various APIs, including 2 App Store releases for Paintee (beginner-friendly face painting guidance) and SLNG (Indonesian slang translator for foreigners, 100+ downloads).",
+        "Performed iterative usability testing directly with 50+ users across low-fidelity, mid-fidelity, and MVP prototypes, validating interaction flows and usability assumptions.",
+        "Unified data management across 4 app extensions using App Groups and SwiftData, leading to a 40% reduction in code duplication and improved code maintainability across projects.",
+      ],
     },
     {
-      organization: "PT Widya Inovasi Indonesia",
+      organization: "Widya Robotics (PT Widya Inovasi Indonesia)",
       role: "System Analyst",
       period: "Aug 2023 - Dec 2023",
+      highlights: [
+        "Designed the backend systems architecture for a Vehicle Counting System for a state-owned company client, saving 5% of computation time. Participated in three key meetings and presented the design to the client, including the company’s Head of Technology.",
+        "Conducted research on new methods to develop an automatic gate opening system using facial recognition technology which leads to enhancement of 2x more accurate recognition.",
+        "Re-labeled 1,000 images to enhance the effectiveness of the face detection system. Additionally, analyzed and optimized camera type, heights, focal points, and lenses, improving the model accuracy by 2%.",
+      ],
     },
   ],
   education: [

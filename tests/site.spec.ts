@@ -28,7 +28,7 @@ test('every portfolio subpage links directly back to home', async ({ page }) => 
 test('career comes first and engineering writing is curated', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pramuditha Muhammad Ikhwan')
-  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education', 'Contact me'])
+  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education', 'Recommendations', 'Contact me'])
   await expect(page.locator('#writing li')).toHaveCount(3)
   await expect(page.locator('#writing')).not.toContainText('The Sun, Spacetime')
   await expect(page.locator('header nav, header a')).toHaveCount(0)
@@ -47,6 +47,47 @@ test('services has its own page with the complete offering and contact links', a
   await page.locator('main').getByRole('link', { name: 'Contact me', exact: true }).click()
   await expect(page).toHaveURL('/#contact')
   await expect(page.locator('#contact')).toBeInViewport()
+})
+
+test('work highlights and sourced recommendation cards are readable', async ({ page }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await expect(page.locator('#projects .project-contribution')).toHaveCount(0)
+  await expect(page.locator('#experience .timeline > li')).toHaveCount(4)
+  const jobs = page.locator('#experience .timeline > li')
+  for (const [index, count] of [5, 3, 3, 3].entries()) {
+    await expect(jobs.nth(index).locator('.experience-highlights > li')).toHaveCount(count)
+  }
+  await expect(page.locator('#experience')).toContainText('~80%')
+  await expect(page.locator('#experience')).toContainText('223 eligible internal app API endpoints')
+  await expect(page.locator('#experience')).toContainText('99.82% crash-free users')
+  await expect(page.locator('#experience')).toContainText('Widya Robotics (PT Widya Inovasi Indonesia)')
+  await expect(page.locator('#experience')).toContainText('saving 5% of computation time')
+  await expect(page.locator('#experience')).toContainText('2x more accurate recognition')
+  await expect(page.locator('#experience')).toContainText('1,000 images')
+  await expect(page.locator('#experience')).toContainText('model accuracy by 2%')
+  const recommendations = page.getByRole('region', { name: 'Recommendations', exact: true })
+  await expect(recommendations.locator('blockquote')).toHaveCount(2)
+  await expect(recommendations.locator('figcaption strong')).toHaveText(['Guntur Wahyu Ramadhan', 'Hajran Azbytama'])
+  await expect(recommendations.locator('time')).toHaveText(['Jun 27, 2023', 'Jun 27, 2023'])
+  await expect(recommendations).not.toContainText('Excerpts from colleagues')
+  expect(await page.locator('#education').evaluate((education) => education.nextElementSibling?.id)).toBe('recommendations')
+  await expect(recommendations.locator('.recommendation')).toHaveCount(2)
+  await expect(recommendations).not.toContainText('third-year undergraduate')
+  for (const quote of await recommendations.locator('blockquote').all()) {
+    await expect(quote).toHaveAttribute('cite', 'https://linkedin.com/in/ikhwanpram')
+  }
+  await expect(recommendations.getByRole('link', { name: 'View on LinkedIn' })).toHaveAttribute('href', 'https://linkedin.com/in/ikhwanpram')
+  const desktopCards = await recommendations.locator('.recommendation').evaluateAll((cards) => cards.map((card) => ({ left: card.getBoundingClientRect().left, top: card.getBoundingClientRect().top })))
+  expect(desktopCards[1].left).toBeGreaterThan(desktopCards[0].left)
+  expect(desktopCards[1].top).toBe(desktopCards[0].top)
+  await recommendations.screenshot({ path: testInfo.outputPath('recommendations-desktop.png') })
+  await page.setViewportSize({ width: 375, height: 900 })
+  const mobileCards = await recommendations.locator('.recommendation').evaluateAll((cards) => cards.map((card) => ({ top: card.getBoundingClientRect().top, bottom: card.getBoundingClientRect().bottom })))
+  expect(mobileCards[1].top).toBeGreaterThan(mobileCards[0].bottom)
+  await recommendations.screenshot({ path: testInfo.outputPath('recommendations-mobile.png') })
+  await page.goto('/projects/')
+  await expect(page.locator('.project-contribution')).toHaveCount(0)
 })
 
 test('single theme button defaults to dark and persists explicit choices', async ({ page }) => {
@@ -118,6 +159,7 @@ test('footer exposes crawlable portfolio sections and the requested copyright', 
     ['Experience', '/#experience', 'Experience'],
     ['Tech stack', '/#tech-stack', 'Tech stack'],
     ['Education', '/#education', 'Education'],
+    ['Recommendations', '/#recommendations', 'Recommendations'],
     ['Services', '/services/', 'Services'],
     ['Contact me', '/#contact', 'Contact me'],
   ]
@@ -138,12 +180,13 @@ test('footer exposes crawlable portfolio sections and the requested copyright', 
 test('footer connects to real profiles with labelled icon links', async ({ page, request }) => {
   await page.goto('/')
   const links = page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link')
-  await expect(links).toHaveCount(6)
+  await expect(links).toHaveCount(7)
   const profiles = [
     ['LinkedIn', 'https://linkedin.com/in/ikhwanpram', '/social/linkedin.svg'],
     ['GitHub', 'https://github.com/prammmoe', '/tech/github.svg'],
     ['Instagram', 'https://instagram.com/ikhwanpramuditha', '/social/instagram.svg'],
     ['Medium', 'https://medium.com/@prammmoe', '/social/medium.svg'],
+    ['DEV Community', 'https://dev.to/prammmoe', '/social/devto.svg'],
     ['LeetCode', 'https://leetcode.com/prammmoe', '/social/leetcode.svg'],
     ['Upwork', 'https://www.upwork.com/freelancers/prammmoe', '/social/upwork.svg'],
   ]
@@ -155,7 +198,7 @@ test('footer connects to real profiles with labelled icon links', async ({ page,
     expect((await request.get(icon)).status()).toBe(200)
   }
   await page.goto('/blog/')
-  await expect(page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link')).toHaveCount(6)
+  await expect(page.getByRole('navigation', { name: 'Let’s connect' }).getByRole('link')).toHaveCount(7)
   await expect(page.locator('.freelance-card')).toHaveCount(0)
 })
 

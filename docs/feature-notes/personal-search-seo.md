@@ -29,3 +29,15 @@ Branch: `codex/cinematic-portfolio-motion`
 - First completed browser run was 53/54 and exposed the pre-existing featured-writing mismatch; source behavior was corrected without weakening its test. Full browser and Lighthouse verification passed after this change.
 - Public DNS fetch failed in this environment. Production headers, redirects, indexing, rankings and field Core Web Vitals remain unverified.
 - Skill installed at `/Users/prammmoe/.codex/skills/seo`; no push, deployment, server changes, DNS changes or Search Console submission performed.
+
+## 2026-11-28 - DEV Community profile
+
+### Changed
+- Added `https://dev.to/prammmoe` to profile links, the shared footer, and the Person schema's automatically generated `sameAs` list.
+- Added a local DEV text icon and expanded the desktop footer to seven columns; mobile retains three columns.
+- Updated existing social-link and SEO checks for seven profiles and the dev.to URL.
+
+### Verification
+- Build, four static SEO tests, and `git diff --check` pass.
+- Three focused browser tests pass: seven footer profile links and 320px layouts in light and dark themes.
+- Not deployed.
