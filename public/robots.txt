@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://prammmoe.space/sitemap-index.xml
+Sitemap: https://prammmoe.com/sitemap-index.xml

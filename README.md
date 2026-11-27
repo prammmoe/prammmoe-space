@@ -6,6 +6,8 @@
 
 Run `npm run verify` to check Astro, build, test in a browser, and audit the representative routes in `lighthouserc.cjs` with three mobile Lighthouse runs each. Local Playwright tests use an installed Google Chrome; CI uses its installed Playwright Chromium. If local Chrome is unavailable, install Playwright Chromium and set `CI=1` for the test command. Lighthouse uses installed Chrome. No test browser is shipped to website visitors.
 
+The canonical domain is `https://prammmoe.com`. `npm run test:seo` checks generated HTML and sitemap after a build and also runs in CI. See [the SEO launch guide](docs/seo-launch.md) for domain redirects, real HTTP 404 responses, Search Console submission, and query tracking.
+
 Browser and axe reports are written to `playwright-report/` and `test-results/`; Lighthouse reports are saved under `.lighthouseci/`. CI retains these as artifacts for 14 days and blocks deployment if the quality thresholds in `CONSTRAINTS.md` are not met.
 
 The iOS portfolio is available as readable HTML at `/projects/curated-works-2025/`, linking to ERHA Buddy, SLNG, Paintee, and Rooted DBT case studies. The original PDF still downloads directly; screenshots can be added to the Markdown studies when supplied. The older non-iOS gallery remains available. Public originals remain for existing image links; source copies in `src/assets/` let Astro generate optimized images.
@@ -44,8 +46,11 @@ Dokumen ini menjelaskan langkah lengkap untuk menjalankan situs Astro statis di 
      index index.html;
 
      location / {
-       try_files $uri $uri/ /index.html;
+       try_files $uri $uri/ =404;
      }
+
+     error_page 404 /404.html;
+     location = /404.html { internal; }
 
      # Cache aset
      location ~* \.(css|js|png|jpg|jpeg|gif|ico|svg|webp|woff|woff2)$ {

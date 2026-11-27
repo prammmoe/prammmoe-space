@@ -9,8 +9,9 @@
     "preview": "astro preview",
     "check": "astro check",
     "test": "playwright test",
+    "test:seo": "node --test test/seo.test.mjs",
     "audit:lighthouse": "lhci autorun",
-    "verify": "npm run check && npm run build && npm test && npm run audit:lighthouse"
+    "verify": "npm run check && npm run build && npm run test:seo && npm test && npm run audit:lighthouse"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.5",

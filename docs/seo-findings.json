@@ -1,0 +1,42 @@
+[
+  {
+    "severity": "Warning",
+    "confidence": "Confirmed",
+    "finding": "Canonical domain was still prammmoe.space in source configuration",
+    "evidence": "Original astro.config.mjs site, Base.astro fallback, and public/robots.txt referenced .space; generated sitemap and canonical output now use .com.",
+    "fix": "Implemented .com origin and output regression checks; deploy and configure host redirects.",
+    "source": "source inspection and npm run test:seo"
+  },
+  {
+    "severity": "Warning",
+    "confidence": "Confirmed",
+    "finding": "Alias identity and article authorship were incomplete",
+    "evidence": "Original homepage introduction only named Pram; Person lacked alternateName; article header had date without author.",
+    "fix": "Implemented visible aliases, linked article bylines, ProfilePage, Person alternateName and six existing sameAs profiles.",
+    "source": "source inspection and npm run test:seo"
+  },
+  {
+    "severity": "Warning",
+    "confidence": "Likely",
+    "finding": "Documented Nginx fallback could serve the homepage for missing URLs",
+    "evidence": "README originally recommended try_files $uri $uri/ /index.html; active server configuration is unavailable.",
+    "fix": "Added noindex 404 artifact and corrected documented server configuration; verify HTTP 404 on deployment.",
+    "source": "README and docs/seo-launch.md"
+  },
+  {
+    "severity": "Pass",
+    "confidence": "Confirmed",
+    "finding": "Generated sitemap excludes private pages and 404",
+    "evidence": "test:seo checks all 20 sitemap URLs and five private noindex pages plus 404.html.",
+    "fix": "Retain regression checks and keep private URLs crawlable so noindex remains visible.",
+    "source": "npm run test:seo"
+  },
+  {
+    "severity": "Info",
+    "confidence": "Hypothesis",
+    "finding": "Production indexing, rankings, host redirects and field Core Web Vitals remain unknown",
+    "evidence": "Public fetch failed DNS resolution in this session; no Search Console or CrUX evidence is available.",
+    "fix": "Verify deployment, Search Console selected canonical and indexing; collect field data and track query groups after release.",
+    "source": "network attempt and account access limitation"
+  }
+]

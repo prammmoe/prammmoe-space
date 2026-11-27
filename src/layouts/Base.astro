@@ -6,6 +6,7 @@ import SiteFooter from '../components/SiteFooter.astro'
 import ScrollReveal from '../components/ScrollReveal.astro'
 import PortfolioMotion from '../components/PortfolioMotion.astro'
 import { profile } from '../data/profile'
+import portrait from '../assets/pram.jpg'
 interface Props {
   title?: string
   description?: string
@@ -16,16 +17,33 @@ interface Props {
   updatedDate?: Date
   motion?: boolean
   showSiteChrome?: boolean
+  noindex?: boolean
 }
-const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate, motion = true, showSiteChrome = true } = Astro.props
-const site = Astro.site ?? new URL('https://prammmoe.space')
+const { title = profile.name, description = profile.description, lang = 'en', type = 'website', image = '/social-card.png', pubDate, updatedDate, motion = true, showSiteChrome = true, noindex = false } = Astro.props
+const site = Astro.site ?? new URL('https://prammmoe.com')
 const canonical = new URL(`${Astro.url.pathname.replace(/\/$/, '')}/`, site).href
-const fullTitle = title === profile.name ? `${title} · Software Engineer` : `${title} · Pram`
-const person = { '@type': 'Person', '@id': new URL('/#person', site).href, name: profile.name, url: site.href, jobTitle: 'Software Engineer', sameAs: [profile.links.linkedin, profile.links.github] }
+const fullTitle = title === profile.name ? `${title} (Prammmoe) | iOS Developer` : `${title} | Prammmoe`
+const person = {
+  '@type': 'Person', '@id': new URL('/#person', site).href,
+  name: profile.name, alternateName: profile.alternateNames, url: site.href,
+  description: profile.description, jobTitle: ['Software Engineer', 'iOS Developer'],
+  image: new URL(portrait.src, site).href,
+  sameAs: Object.values(profile.links),
+}
+const pageId = `${canonical}#webpage`
 const structuredData = {
   '@context': 'https://schema.org',
-  '@graph': [person, { '@type': 'WebSite', '@id': new URL('/#website', site).href, name: 'Pram', url: site.href, inLanguage: 'en', publisher: { '@id': person['@id'] } },
-    ...(type === 'article' ? [{ '@type': 'BlogPosting', headline: title, description, url: canonical, mainEntityOfPage: canonical, image: new URL(image, site).href, inLanguage: lang, author: { '@id': person['@id'] }, datePublished: pubDate?.toISOString(), dateModified: (updatedDate ?? pubDate)?.toISOString() }] : [])],
+  '@graph': [person, {
+    '@type': 'WebSite', '@id': new URL('/#website', site).href,
+    name: 'Prammmoe', alternateName: ['Pram', profile.name], url: site.href,
+    inLanguage: ['en', 'id'], publisher: { '@id': person['@id'] },
+  }, {
+    '@type': Astro.url.pathname === '/' ? 'ProfilePage' : 'WebPage',
+    '@id': pageId, url: canonical, name: fullTitle, description, inLanguage: lang,
+    isPartOf: { '@id': new URL('/#website', site).href },
+    ...(Astro.url.pathname === '/' ? { mainEntity: { '@id': person['@id'] } } : {}),
+  },
+    ...(type === 'article' ? [{ '@type': 'BlogPosting', '@id': `${canonical}#article`, headline: title, description, url: canonical, mainEntityOfPage: { '@id': pageId }, image: new URL(image, site).href, inLanguage: lang, author: { '@id': person['@id'] }, publisher: { '@id': person['@id'] }, datePublished: pubDate?.toISOString(), dateModified: (updatedDate ?? pubDate)?.toISOString() }] : [])],
 }
 ---
 <!doctype html>
@@ -34,14 +52,17 @@ const structuredData = {
     <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description || profile.description} /><meta name="author" content={profile.name} />
+    <meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large'} />
     <meta name="color-scheme" content="dark light" />
     <meta name="theme-color" content="#0d1722" />
     <link rel="icon" type="image/png" href="/favicon-32x32.png" /><link rel="canonical" href={canonical} />
-    <meta property="og:type" content={type} /><meta property="og:site_name" content="Pram" />
+    <meta property="og:type" content={type} /><meta property="og:site_name" content="Prammmoe" />
     <meta property="og:title" content={fullTitle} /><meta property="og:description" content={description || profile.description} />
     <meta property="og:url" content={canonical} /><meta property="og:image" content={new URL(image, site).href} />
     <meta property="og:image:alt" content={`${profile.name}, Software Engineer focused on iOS`} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} /><meta name="twitter:description" content={description || profile.description} />
+    <meta name="twitter:image" content={new URL(image, site).href} /><meta name="twitter:image:alt" content={`${profile.name}, Software Engineer focused on iOS`} />
     {pubDate && <meta property="article:published_time" content={pubDate.toISOString()} />}
     {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} />}
     <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')} />
