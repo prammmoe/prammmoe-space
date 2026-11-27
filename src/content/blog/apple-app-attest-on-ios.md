@@ -2,6 +2,7 @@
 title: "Did That Request Really Come from Your iOS App? A Practical Guide to Apple App Attest"
 description: "Register an App Attest key, sign a voucher checkout request in Swift, and verify the assertion on your backend."
 pubDate: 2026-11-14
+featured: true
 lang: "en"
 tags: ["iOS", "Security", "iOS App Development", "Networking", "Apple App Attest"]
 coverImage: "/blog/apple-app-attest/cover.jpeg"

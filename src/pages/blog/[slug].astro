@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro'
 import ContentImage from '../../components/ContentImage.astro'
 import { getCollection, type CollectionEntry } from 'astro:content'
-import { formatDate } from '../../data/profile'
+import { formatDate, profile } from '../../data/profile'
 import katexStyles from 'katex/dist/katex.min.css?url'
 export async function getStaticPaths() { return (await getCollection('blog')).filter((post) => !post.data.draft).map((post) => ({ params: { slug: post.slug }, props: { post } })) }
 interface Props { post: CollectionEntry<'blog'> }
@@ -15,7 +15,7 @@ const hasMath = /\$\$|\$[^\n$]+\$/.test(prose)
   {hasMath && <link slot="head" rel="stylesheet" href={katexStyles} />}
   <article class="post">
     <a class="back-link" href="/blog/">Back to writing</a>
-    <header class="article-header"><h1>{post.data.title}</h1><p class="description">{post.data.description}</p><p class="meta"><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, post.data.lang)}</time></p></header>
+    <header class="article-header"><h1>{post.data.title}</h1><p class="description">{post.data.description}</p><p class="meta">By <a href="/" rel="author">{profile.name} (Prammmoe)</a> · <time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate, post.data.lang)}</time></p></header>
     {post.data.coverImage && <figure class="cover"><ContentImage src={post.data.coverImage} alt="" eager />{post.data.coverCredit && <figcaption>Credit: {post.data.coverCreditUrl ? <a href={post.data.coverCreditUrl}>{post.data.coverCredit}</a> : post.data.coverCredit}</figcaption>}</figure>}
     <div class="content"><Content /></div>
   </article>

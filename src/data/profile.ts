@@ -1,10 +1,11 @@
 export const profile = {
   name: "Pramuditha Muhammad Ikhwan",
-  role: "Software Engineer",
+  alternateNames: ["Prammmoe", "prammmoe", "Ikhwan Pramuditha", "Pram"],
+  role: "Software Engineer, iOS",
   description:
-    "Software engineer focused on iOS, currently at Arya Noble. Experience in mobile development, full stack development, and system analysis.",
+    "Pramuditha Muhammad Ikhwan (Prammmoe), software engineer and iOS developer at Arya Noble. Explore Swift, UIKit, SwiftUI projects and engineering articles.",
   introduction:
-    "Hello, I’m Pram. I build apps and keep notes on work, technology, and the things I enjoy.",
+    "Hello, I’m Pram, also known as Prammmoe and Ikhwan Pramuditha. I’m a software engineer focused on iOS development, currently building ERHA Buddy at Arya Noble with Swift, UIKit, and SwiftUI.",
   links: {
     linkedin: "https://linkedin.com/in/ikhwanpram",
     github: "https://github.com/prammmoe",
