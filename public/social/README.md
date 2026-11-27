@@ -9,3 +9,5 @@ https://github.com/simple-icons/simple-icons/blob/develop/icons/upwork.svg
 Simple Icons distributes its SVG assets under CC0. Brand names and logos remain subject to their respective trademark rights.
 
 GitHub reuses the existing `/public/tech/github.svg` asset.
+
+DEV Community uses a local typographic `DEV` label in `devto.svg`.

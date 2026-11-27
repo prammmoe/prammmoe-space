@@ -4,6 +4,7 @@ import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 import ChristmasTree from '../components/ChristmasTree.astro'
 import ProjectList from '../components/ProjectList.astro'
+import Recommendations from '../components/Recommendations.astro'
 import portrait from '../assets/pram.jpg'
 import { profile, formatDate, techStack, technologyLogos } from '../data/profile'
 const articles = (await getCollection('blog')).filter((post) => !post.data.draft && post.data.featured)
@@ -33,7 +34,13 @@ const projects = (await getCollection('projects')).filter((project) => !project.
   </section>
   <section class="home-section" id="experience" aria-labelledby="experience-heading">
     <h2 id="experience-heading">Experience</h2>
-    <ul class="timeline">{profile.experience.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
+    <ul class="timeline experience-timeline">{profile.experience.map((item) => <li>
+      <div class="experience-heading">
+        <div><h3>{item.organization}</h3><p>{item.role}</p></div>
+        <span class="period">{item.period}</span>
+      </div>
+      <ul class="experience-highlights">{item.highlights.map((highlight) => <li>{highlight}</li>)}</ul>
+    </li>)}</ul>
   </section>
   <section class="home-section" id="tech-stack" aria-labelledby="tech-stack-heading">
     <h2 id="tech-stack-heading">Tech stack</h2>
@@ -46,6 +53,7 @@ const projects = (await getCollection('projects')).filter((project) => !project.
     <h2 id="education-heading">Education</h2>
     <ul class="timeline">{profile.education.map((item) => <li><div><h3>{item.organization}</h3><p>{item.role}</p></div><span class="period">{item.period}</span></li>)}</ul>
   </section>
+  <Recommendations />
   <div class="freelance-card">
   <section class="card-contact" id="contact" aria-labelledby="contact-heading">
     <h2 id="contact-heading">Contact me</h2>
