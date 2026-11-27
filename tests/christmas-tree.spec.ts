@@ -12,7 +12,7 @@ test('the tree appears only on the homepage during the Jakarta season', async ({
     const tree = page.locator('christmas-tree')
     await expect(tree).toHaveCount(1)
     await expect(tree).toBeHidden()
-    await page.evaluate(() => window.scrollBy(0, 60))
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
     if (visible) await expect(tree).toHaveAttribute('data-reveal', 'shown')
     else await expect(tree).toHaveAttribute('hidden', /.*/)
   }
@@ -22,7 +22,7 @@ test('the tree appears only on the homepage during the Jakarta season', async ({
   await expect(page.locator('christmas-tree')).toHaveCount(0)
 })
 
-test('the tree spans the viewport and pauses for visibility and reduced motion', async ({ page }) => {
+test('the tree sits below the footer on the right and pauses for visibility and reduced motion', async ({ page }) => {
   await page.clock.setFixedTime(start)
   await page.goto('/')
   const tree = page.locator('christmas-tree')
@@ -30,19 +30,20 @@ test('the tree spans the viewport and pauses for visibility and reduced motion',
   const frame = () => canvas.evaluate((element: HTMLCanvasElement) => element.toDataURL())
   await expect(tree).toHaveAttribute('aria-hidden', 'true')
   await expect(tree).toBeHidden()
-  await page.evaluate(() => window.scrollBy(0, 60))
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
   await expect(tree).toHaveAttribute('data-reveal', 'shown')
   const toggle = page.getByRole('button', { name: 'Switch to light theme' })
+  await expect(page.getByRole('link', { name: 'Cubbl Privacy Policy' })).toHaveCount(0)
 
   for (const width of [320, 375, 1440]) {
     await page.setViewportSize({ width, height: 900 })
     await expect(tree).toBeVisible()
     const panel = (await tree.boundingBox())!
-    expect(panel.y).toBeGreaterThanOrEqual((await toggle.boundingBox())!.y + (await toggle.boundingBox())!.height)
-    expect(panel.y + panel.height).toBeLessThanOrEqual((await page.locator('#profile').boundingBox())!.y)
-    expect(panel.x).toBeCloseTo(0)
-    expect(panel.width).toBeCloseTo(width)
-    expect(panel.height).toBeGreaterThanOrEqual(340)
+    const footer = (await page.locator('footer').boundingBox())!
+    expect(panel.y).toBeGreaterThanOrEqual(footer.y + footer.height)
+    expect(panel.x + panel.width).toBeCloseTo(footer.x + footer.width)
+    expect(panel.width).toBeCloseTo(footer.width)
+    expect(panel.height).toBeGreaterThanOrEqual(420)
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(width)
   }
 
@@ -51,6 +52,16 @@ test('the tree spans the viewport and pauses for visibility and reduced motion',
   await expect(tree.locator('.scene')).toHaveCSS('background-color', darkBackground)
   await toggle.click()
   await expect(page.locator('html')).toHaveAttribute('data-theme', 'light')
+  await expect(tree).toBeHidden()
+  await expect.poll(async () => {
+    const before = await frame()
+    await page.waitForTimeout(150)
+    return (await frame()) === before
+  }).toBe(true)
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
+  await tree.scrollIntoViewIfNeeded()
+  await expect(tree).toBeVisible()
+  await expect(canvas).toHaveAccessibleName(/Santa.*four reindeer.*tis the season/)
   await expect(tree.getByRole('button')).toHaveCount(0)
   const initial = await frame()
   await expect.poll(frame).not.toBe(initial)
@@ -67,7 +78,7 @@ test('the tree spans the viewport and pauses for visibility and reduced motion',
   })
   await expect.poll(frame).not.toBe(hidden)
 
-  await page.locator('footer').scrollIntoViewIfNeeded()
+  await page.locator('#profile').scrollIntoViewIfNeeded()
   await expect.poll(async () => {
     const before = await frame()
     await page.waitForTimeout(150)
@@ -84,15 +95,28 @@ test('the tree spans the viewport and pauses for visibility and reduced motion',
   expect((await frame()) === still).toBe(true)
 })
 
-test('the colored ornaments change position as the tree rotates', async ({ page }) => {
+test('a saved light theme hides the scene until dark mode is selected', async ({ page }) => {
+  await page.clock.setFixedTime(start)
+  await page.addInitScript(() => localStorage.setItem('theme', 'light'))
+  await page.goto('/')
+  const tree = page.locator('christmas-tree')
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+  await expect(tree).toBeHidden()
+  expect(await tree.evaluate((element) => element.getBoundingClientRect().height)).toBe(0)
+  await page.getByRole('button', { name: 'Switch to dark theme' }).click()
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+  await expect(tree).toBeVisible()
+})
+
+test('the colored ornaments change position as the tree rotates', async ({ page }, testInfo) => {
   await page.clock.install({ time: new Date(start) })
   await page.goto('/')
   const tree = page.locator('christmas-tree')
   const canvas = tree.locator('canvas')
   const ornaments = () => canvas.evaluate((element: HTMLCanvasElement) => {
-    const width = Math.floor(element.width / 3)
+    const width = Math.floor(element.width * 0.45)
     const height = Math.floor(element.height * 0.7)
-    const pixels = element.getContext('2d')!.getImageData(width, 0, width, height).data
+    const pixels = element.getContext('2d')!.getImageData(element.width - width, 0, width, height).data
     const positions: number[] = []
     for (let i = 0; i < pixels.length; i += 4) {
       if (pixels[i] > 200 && pixels[i + 1] < 110 && pixels[i + 2] < 100 && pixels[i + 3] > 150) positions.push(i)
@@ -100,7 +124,8 @@ test('the colored ornaments change position as the tree rotates', async ({ page 
     return positions.join(',')
   })
 
-  await page.evaluate(() => window.scrollBy(0, 60))
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight))
+  await tree.scrollIntoViewIfNeeded()
   await expect(tree).toHaveAttribute('data-reveal', 'shown')
   await expect.poll(() => canvas.evaluate((element: HTMLCanvasElement) => element.width)).toBeGreaterThan(300)
   await page.clock.runFor(6500)
@@ -118,4 +143,10 @@ test('the colored ornaments change position as the tree rotates', async ({ page 
   expect(second).not.toBe('')
   expect(second === first).toBe(false)
   expect(await snowfall()).not.toBe(firstSnow)
+  await page.clock.runFor(6000)
+  await tree.screenshot({ path: testInfo.outputPath('christmas-parade-desktop.png') })
+  await page.setViewportSize({ width: 375, height: 900 })
+  await tree.scrollIntoViewIfNeeded()
+  await page.clock.runFor(100)
+  await tree.screenshot({ path: testInfo.outputPath('christmas-parade-mobile.png') })
 })

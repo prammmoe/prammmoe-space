@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro'
+---
+<Base title="Services" description="Freelance iOS, Android, and web development, data annotation, and computer vision services by Pramuditha Muhammad Ikhwan.">
+  <header class="page-header">
+    <h1>Services</h1>
+    <p class="intro-copy">Have an app idea or a product that needs extra hands? I’m available for freelance iOS, Android, and web development, data annotation, and computer vision projects.</p>
+  </header>
+  <dl class="service-list">
+    <div><dt>Native iOS apps &amp; MVPs</dt><dd>Build your iPhone or iPad app with Swift, SwiftUI, and UIKit, from an early idea to a working product.</dd></div>
+    <div><dt>Android development</dt><dd>Build Android apps and MVPs, from an early idea to a working product.</dd></div>
+    <div><dt>Features &amp; integrations</dt><dd>Add interfaces, API and Firebase integrations, authentication, notifications, and checkout or other transactional flows.</dd></div>
+    <div><dt>Bug fixes, maintenance &amp; releases</dt><dd>Investigate crashes, improve performance, refactor existing code, and get help with TestFlight and App Store releases.</dd></div>
+    <div><dt>Websites &amp; web applications</dt><dd>Create a portfolio, landing page, or web application tailored to your business needs.</dd></div>
+    <div><dt>Data annotation</dt><dd>Label images and annotate objects to prepare datasets for computer vision training and evaluation.</dd></div>
+    <div><dt>Computer vision &amp; YOLO training</dt><dd>Prepare datasets, train YOLO object detection models, and evaluate their performance for your use case.</dd></div>
+  </dl>
+  <div class="profile-links"><a class="button-link" href="mailto:ikhwanpramuditha05@gmail.com?subject=Freelance%20project%20inquiry">Send email</a><a href="/#contact">Contact me</a></div>
+</Base>
+
+<style>
+  .service-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 32px; margin: 28px 0 0; }
+  .service-list > div { min-width: 0; padding: 20px 0; }
+  .service-list > div:nth-child(-n+2) { padding-top: 0; }
+  .service-list > div:nth-child(n+3) { border-top: 1px solid var(--rule); }
+  .service-list dt { font-size: 17px; font-weight: 600; }
+  .service-list dd { margin: 8px 0 0; color: var(--muted); font-size: 15px; }
+  @media (max-width: 760px) {
+    .service-list { grid-template-columns: minmax(0, 1fr); }
+    .service-list > div:nth-child(2) { padding-top: 20px; border-top: 1px solid var(--rule); }
+  }
+</style>

@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { readFile, access } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-const routes = ['/', '/blog/', '/projects/', '/media/', '/musics/',
+const routes = ['/', '/services/', '/blog/', '/projects/', '/media/', '/musics/',
   '/blog/securing-api-requests-with-hmac-in-swift/',
   '/blog/getting-to-know-server-sent-events-on-ios/',
   '/blog/the-sun-spacetime-and-the-order-of-creation/',
@@ -28,13 +28,25 @@ test('every portfolio subpage links directly back to home', async ({ page }) => 
 test('career comes first and engineering writing is curated', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pramuditha Muhammad Ikhwan')
-  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education', 'Services', 'Contact me'])
+  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education', 'Contact me'])
   await expect(page.locator('#writing li')).toHaveCount(3)
   await expect(page.locator('#writing')).not.toContainText('The Sun, Spacetime')
   await expect(page.locator('header nav, header a')).toHaveCount(0)
   await expect(page.getByRole('link', { name: 'Download resume', exact: true })).toHaveAttribute('href', '/resume.pdf')
-  await expect(page.locator('#services dt')).toHaveText(['Native iOS apps & MVPs', 'Features & integrations', 'Bug fixes, maintenance & releases', 'Websites & web applications', 'Data annotation', 'Computer vision & YOLO training'])
+  await expect(page.locator('#services')).toHaveCount(0)
   await expect(page.getByRole('link', { name: 'Send email', exact: true })).toHaveAttribute('href', 'mailto:ikhwanpramuditha05@gmail.com?subject=Freelance%20project%20inquiry')
+})
+
+test('services has its own page with the complete offering and contact links', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('navigation', { name: 'Portfolio sections' }).getByRole('link', { name: 'Services', exact: true }).click()
+  await expect(page).toHaveURL('/services/')
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Services')
+  await expect(page.locator('.service-list dt')).toHaveText(['Native iOS apps & MVPs', 'Android development', 'Features & integrations', 'Bug fixes, maintenance & releases', 'Websites & web applications', 'Data annotation', 'Computer vision & YOLO training'])
+  await expect(page.getByRole('link', { name: 'Send email', exact: true })).toHaveAttribute('href', 'mailto:ikhwanpramuditha05@gmail.com?subject=Freelance%20project%20inquiry')
+  await page.locator('main').getByRole('link', { name: 'Contact me', exact: true }).click()
+  await expect(page).toHaveURL('/#contact')
+  await expect(page.locator('#contact')).toBeInViewport()
 })
 
 test('single theme button defaults to dark and persists explicit choices', async ({ page }) => {
@@ -106,7 +118,7 @@ test('footer exposes crawlable portfolio sections and the requested copyright', 
     ['Experience', '/#experience', 'Experience'],
     ['Tech stack', '/#tech-stack', 'Tech stack'],
     ['Education', '/#education', 'Education'],
-    ['Services', '/#services', 'Services'],
+    ['Services', '/services/', 'Services'],
     ['Contact me', '/#contact', 'Contact me'],
   ]
   for (const [label, href, heading] of sections) {

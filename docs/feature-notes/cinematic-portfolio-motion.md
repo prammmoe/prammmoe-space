@@ -33,3 +33,45 @@ Branch: `codex/cinematic-portfolio-motion`
 - Increased glyph density, added layered gold garland and shaded gifts, and rotated the full scene geometry together. The homepage title stays readable below the taller seasonal panel.
 - The collapsed panel opens on scroll near the top of the page. Eight colored gift boxes join the rotating scene.
 - Dark mode is the default across the shared layout. The page and tree share a deep blue base, and near snowflakes fall faster than the flakes behind the tree.
+
+## 2026-11-27 - Footer Christmas tree
+
+- Moved the homepage seasonal tree into an after-footer layout slot, aligned to the right with a maximum width of 360 px and height of 340 px.
+- Reveal now waits until the footer area reaches the viewport. Seasonal dates and motion controls are preserved.
+- Removed the Cubbl Privacy Policy link from the footer; the policy route remains available directly.
+- Updated browser coverage for footer placement, responsive width, and the removed link.
+- Verification: Astro check and production build passed; `git diff --check` passed. Browser verification requires permission to start the local preview server outside the sandbox.
+
+## 2026-11-27 - Separate Services page
+
+- Moved all six service descriptions from the homepage to `/services/`, using the shared layout and a responsive two-column list that stacks on mobile.
+- Updated footer navigation to the new route and added email and homepage contact links on the Services page.
+- Kept Contact me on the homepage and removed the divider and service-specific styles left behind by the move.
+- Updated route, navigation, service content, and anchor tests for the new page.
+- Verification: Astro check and production build passed; built HTML checks confirmed the new route, all six offerings, navigation, contact links, and removal from home. Browser tests could not launch because the configured Google Chrome executable is unavailable.
+
+## 2026-11-27 - Android development service
+
+- Added Android development alongside iOS on the Services page, with the user-provided Batikan GitHub link as a work example.
+- Updated the introduction, search description, and service-content test for seven offerings.
+- Verification: Astro check, production build, built HTML assertions for Android content and the Batikan link, and `git diff --check` passed. Browser tests remain unavailable because the configured Chrome executable is missing.
+
+## 2026-11-27 - Remove Android work reference
+
+- Removed the GitHub reference from the Android service description and its link assertion; the Android service remains listed.
+- Verification: inspected the updated description and ran `git diff --check`.
+
+## 2026-11-27 - ASCII Christmas parade
+
+- Expanded the footer scene while keeping the rotating Christmas tree on the lower right. Added a snowy village, snowman, overhead colored lights, twinkling stars, and denser snowfall.
+- Added a detailed ASCII Santa with separate hat, face, beard, coat, gift sack, sleigh bowl, brass trim, and curled runners. Four articulated reindeer have branched antlers, harness bells, and a continuous rein.
+- A wide waving banner uses large five-row ASCII lettering for “tis the season”. The entire procession travels left to right, exits completely, then re-enters from the left without reversing direction.
+- Reduced motion renders the complete procession as a still frame. Offscreen and background-tab pausing remain in place. Removed the pause/play button at the user's request.
+- Replaced the small house outlines with two layers of detailed houses: colored front and side walls, snow roofs, icicles, brick chimneys, drifting smoke, warm mullioned windows, wreaths, porch steps, festive lights, and fences.
+- Verification: Astro check, production build, and all three Christmas browser tests passed using the installed Brave executable through a temporary configuration. Captured desktop/mobile browser screenshots. Renderer assertions verified finite glyph coordinates, changing frames, rightward travel, and wraparound. `git diff --check` passed.
+
+## 2026-11-27 - Hide Christmas art in light mode
+
+- Hide the entire Christmas scene in light mode without reserving space beneath the footer; dark mode restores it. The existing visibility observer pauses rendering while the scene is hidden.
+- Updated browser coverage for theme switching, animation suspension in light mode, and loading with a saved light theme.
+- Verification: Astro check, production build, `git diff --check`, and all four Christmas browser tests passed, including theme switching and saved light-mode preference.
