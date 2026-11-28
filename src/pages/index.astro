@@ -5,6 +5,7 @@ import { getCollection } from 'astro:content'
 import ChristmasTree from '../components/ChristmasTree.astro'
 import ProjectList from '../components/ProjectList.astro'
 import Recommendations from '../components/Recommendations.astro'
+import { journal, gemastik } from '../data/research'
 import portrait from '../assets/pram.jpg'
 import { profile, formatDate, techStack, technologyLogos } from '../data/profile'
 const articles = (await getCollection('blog')).filter((post) => !post.data.draft && post.data.featured)
@@ -31,6 +32,13 @@ const projects = (await getCollection('projects')).filter((project) => !project.
   <section class="home-section" id="writing" aria-labelledby="writing-heading">
     <div class="section-heading"><h2 id="writing-heading">Writing</h2><a href="/blog/">All writing</a></div>
     <ul class="listing">{articles.map((post) => <li><a href={`/blog/${post.slug}/`} lang={post.data.lang}>{post.data.title}</a><time class="date" datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time></li>)}</ul>
+  </section>
+  <section class="home-section" id="research" aria-labelledby="research-heading">
+    <div class="section-heading"><h2 id="research-heading">Research &amp; Publications</h2><a href="/research/">All research</a></div>
+    <ul class="research-list">
+      <li><h3><a href="/research/#ppe-detection">{journal.title}</a></h3><p>{journal.venue} · 2026</p></li>
+      <li><h3 lang="id"><a href="/research/#gemastik">{gemastik.title}</a></h3><p>{gemastik.distinction}</p></li>
+    </ul>
   </section>
   <section class="home-section" id="experience" aria-labelledby="experience-heading">
     <h2 id="experience-heading">Experience</h2>
@@ -65,6 +73,11 @@ const projects = (await getCollection('projects')).filter((project) => !project.
 </Base>
 
 <style>
+  .research-list { list-style: none; margin: 0; padding: 0; }
+  .research-list li { padding: 20px 0; border-bottom: 1px solid var(--rule); }
+  .research-list h3 { margin: 0; font-size: 18px; line-height: 1.45; }
+  .research-list a { text-decoration: underline; text-underline-offset: 4px; }
+  .research-list p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
   h2 { color: #007bff; }
   :global(:root[data-theme="dark"]) h2 { color: #70b5ff; }
   #contact-heading { color: #fff; }
