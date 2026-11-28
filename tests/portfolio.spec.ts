@@ -1,8 +1,10 @@
 import { test, expect } from '@playwright/test'
 
-test('other projects slider links directly to Nyaris Terkenal without a case study', async ({ page }, testInfo) => {
+test('other projects preview opens Nyaris Terkenal and its title opens the source', async ({ page }, testInfo) => {
   const destination = 'https://nyaris-terkenal.vercel.app/'
+  const source = 'https://github.com/prammmoe/nyaris-terkenal'
   await page.route(destination, (route) => route.fulfill({ contentType: 'text/html', body: '<title>Nyaris Terkenal</title>' }))
+  await page.route(source, (route) => route.fulfill({ contentType: 'text/html', body: '<title>Nyaris Terkenal source</title>' }))
   await page.goto('/projects/')
   for (const theme of ['light', 'dark']) {
     await page.evaluate((value) => localStorage.setItem('theme', value), theme)
@@ -21,7 +23,10 @@ test('other projects slider links directly to Nyaris Terkenal without a case stu
       await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
       await expect(image).toHaveAttribute('src', /\/_astro\/.*\.webp/)
       await expect(nyaris.getByRole('link')).toHaveCount(2)
-      for (const link of await nyaris.getByRole('link').all()) {
+      await expect(nyaris.getByRole('link', { name: 'Nyaris Terkenal', exact: true })).toHaveAttribute('href', source)
+      const demoLinks = nyaris.locator(`a[href="${destination}"]`)
+      await expect(demoLinks).toHaveCount(1)
+      for (const link of await demoLinks.all()) {
         await expect(link).toHaveAttribute('href', destination)
         await expect(link).not.toHaveAttribute('target', '_blank')
       }
@@ -35,13 +40,59 @@ test('other projects slider links directly to Nyaris Terkenal without a case stu
       await section.screenshot({ path: testInfo.outputPath(`other-projects-${width}-${theme}.png`) })
     }
   }
-  for (const name of ['Visit Nyaris Terkenal', 'Nyaris Terkenal']) {
+  for (const [name, url] of [['Visit Nyaris Terkenal', destination], ['Nyaris Terkenal', source]]) {
     await page.goto('/projects/')
     await page.getByRole('region', { name: 'Other Projects', exact: true }).getByRole('link', { name, exact: true }).click()
-    await expect(page).toHaveURL(destination)
+    await expect(page).toHaveURL(url)
   }
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Other Projects', exact: true })).toHaveCount(0)
+})
+
+test('curated GitHub projects expose distinct public sources without JavaScript', async ({ browser, page }, testInfo) => {
+  const context = await browser.newContext({ javaScriptEnabled: false })
+  const staticPage = await context.newPage()
+  try {
+    await staticPage.goto('http://127.0.0.1:4321/projects/')
+    const section = staticPage.getByRole('region', { name: 'Other Projects', exact: true })
+    await expect(staticPage.getByRole('heading', { name: 'Other Projects', exact: true })).toHaveCount(1)
+    await expect(staticPage.locator('.project-list h2')).toHaveCount(5)
+    await expect(section.locator('.github-projects > li')).toHaveCount(9)
+    const links = section.locator('.github-projects h3 a')
+    const sources = await links.evaluateAll((items) => items.map((item) => item.getAttribute('href')))
+    expect(new Set(sources).size).toBe(9)
+    for (const source of sources) expect(source).toMatch(/^https:\/\/github\.com\/prammmoe\/[^/]+$/)
+    await expect(section).not.toContainText('View on GitHub')
+    for (const link of await links.all()) expect(await link.evaluate((element) => getComputedStyle(element).textDecorationLine)).toContain('underline')
+    await expect(section.getByRole('heading', { name: 'Jokoson', exact: true })).toBeVisible()
+    await expect(section.getByRole('heading', { name: 'Iris Network Inspector', exact: true })).toBeVisible()
+    await expect(section.getByRole('heading', { name: 'Cubbl', exact: true })).toBeVisible()
+    for (const excluded of ['FLEX', 'prammmoe-cvat', 'SedekahQR', 'PicSweep', 'nyaris-terkenal', 'paintee-app', 'JastipinCMS', 'prammmoe-space', 'flightmate-backend', 'Metric', 'PicTrim']) {
+      await expect(section.locator(`[data-repository="${excluded}"]`)).toHaveCount(0)
+    }
+    await expect(staticPage.getByRole('link', { name: 'PicSweep', exact: true })).toHaveAttribute('href', 'https://github.com/prammmoe/PicSweep')
+    await staticPage.goto('http://127.0.0.1:4321/projects/paintee/')
+    await expect(staticPage.locator('article').getByRole('link', { name: 'View on GitHub', exact: true })).toHaveAttribute('href', 'https://github.com/prammmoe/paintee-app')
+  } finally {
+    await context.close()
+  }
+
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  for (const width of [375, 1440]) {
+    await page.setViewportSize({ width, height: 1000 })
+    for (const theme of ['light', 'dark']) {
+      await page.addInitScript((value) => localStorage.setItem('theme', value), theme)
+      await page.goto('/projects/')
+      const section = page.getByRole('region', { name: 'Other Projects', exact: true })
+      expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+      await section.screenshot({ path: testInfo.outputPath(`github-projects-${width}-${theme}.png`) })
+    }
+  }
+  const source = 'https://github.com/prammmoe/jokoson'
+  await page.route(source, (route) => route.fulfill({ contentType: 'text/html', body: '<title>Jokoson repository</title>' }))
+  await page.getByRole('link', { name: 'Jokoson', exact: true }).focus()
+  await page.keyboard.press('Enter')
+  await expect(page).toHaveURL(source)
 })
 
 test('PicSweep stacks five screenshots and keeps the active card accessible', async ({ page, request, browser }, testInfo) => {
