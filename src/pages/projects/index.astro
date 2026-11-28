@@ -1,6 +1,7 @@
 ---
 import Base from '../../layouts/Base.astro'
 import ProjectList from '../../components/ProjectList.astro'
+import GitHubProjects from '../../components/GitHubProjects.astro'
 import ScreenshotDeck from '../../components/ScreenshotDeck.astro'
 import { getCollection } from 'astro:content'
 import { Image, getImage } from 'astro:assets'
@@ -21,23 +22,24 @@ const projects = (await getCollection('projects')).filter((project) => !project.
 ---
 <Base title="Projects" description="Selected iOS development, web, design, and computer vision work by Pramuditha Muhammad Ikhwan.">
   <header class="page-header"><h1>Projects</h1></header>
-  <ProjectList projects={projects} />
+  <ProjectList projects={projects} headingLevel="h2" />
   <section class="home-section" aria-labelledby="other-projects-heading">
-    <h2 id="other-projects-heading">Other Projects</h2>
+    <div class="section-heading"><h2 id="other-projects-heading">Other Projects</h2><a href="https://github.com/prammmoe?tab=repositories">All repositories</a></div>
     <ul class="project-slider" tabindex="0" aria-label="Other project previews">
       <li class="project-slide">
         <a class="project-preview" href="https://nyaris-terkenal.vercel.app/" aria-label="Visit Nyaris Terkenal">
           <Image src={nyarisTerkenal} alt="Nyaris Terkenal game setup with players, round settings, and category selection." widths={[320, 640, 880]} sizes="(max-width: 400px) calc(100vw - 40px), 360px" format="webp" loading="lazy" />
         </a>
-        <h3><a href="https://nyaris-terkenal.vercel.app/">Nyaris Terkenal</a></h3>
+        <h3><a href="https://github.com/prammmoe/nyaris-terkenal">Nyaris Terkenal</a></h3>
         <p>A browser-based party game where friends guess entries in top-100 lists across different categories.</p>
       </li>
       <li class="project-slide">
         <ScreenshotDeck screens={picsweepScreens} />
-        <h3>PicSweep</h3>
+        <h3><a href="https://github.com/prammmoe/PicSweep">PicSweep</a></h3>
         <p>Android app that helps users find similar photos, keep the best shot, and safely free up storage space.</p>
       </li>
     </ul>
+    <GitHubProjects />
   </section>
   <div class="profile-links"><a href="/portfolio.pdf" download>Download portfolio</a></div>
 </Base>
@@ -48,5 +50,6 @@ const projects = (await getCollection('projects')).filter((project) => !project.
   .project-preview { display: block; margin-bottom: 20px; }
   .project-preview img { display: block; width: 100%; height: auto; border-radius: 4px; }
   .project-slide h3 { margin: 0 0 8px; font-size: 19px; }
+  .project-slide h3 a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
   .project-slide p { margin: 0; color: var(--muted); font-size: 15px; }
 </style>

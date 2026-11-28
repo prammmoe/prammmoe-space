@@ -336,9 +336,11 @@ p {
 .listing li + li {
   border-top: 1px solid var(--rule);
 }
-.project-row h3 {
+.project-row .project-title {
   font-size: 19px;
   margin: 0 0 8px;
+  font-weight: 700;
+  letter-spacing: normal;
 }
 .project-row p {
   font-size: 15px;
@@ -644,7 +646,7 @@ pre code {
   .project-row img {
     width: 112px;
   }
-  .project-row h3,
+  .project-row .project-title,
   .listing a {
     font-size: 17px;
   }

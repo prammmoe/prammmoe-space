@@ -5,6 +5,7 @@ thumbnail: "/projects/covers/paintee.png"
 pubDate: 2026-10-14
 tags: ["iOS", "AR", "Accessibility"]
 techStack: ["RealityKit", "SwiftUI", "Vision", "ARKit"]
+github: "https://github.com/prammmoe/paintee-app"
 ---
 
 Paintee helps beginners create proportional and symmetrical face painting. I approached it as a face-aware AR experience built from first principles.

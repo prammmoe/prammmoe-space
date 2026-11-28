@@ -1,0 +1,28 @@
+---
+import { githubProjects } from '../data/github-projects'
+---
+<div class="github-curation" id="github-projects">
+  <ul class="github-projects">
+    {githubProjects.map((project) => <li class="github-project" data-repository={project.repository}>
+      <h3><a href={`https://github.com/prammmoe/${project.repository}`}>{project.name}</a></h3>
+      <p class="github-description">{project.description}</p>
+      <p class="github-technologies">{project.technologies.join(' · ')}</p>
+      {project.website && <div class="github-links"><a href={project.website} aria-label={`Visit ${project.name} website`}>Website</a></div>}
+    </li>)}
+  </ul>
+</div>
+
+<style>
+  .github-curation { margin-top: 32px; }
+  .github-projects { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; list-style: none; margin: 0; padding: 0; }
+  .github-project { display: flex; flex-direction: column; min-width: 0; padding: 24px; border: 1px solid var(--rule); border-radius: 12px; background: var(--surface); }
+  .github-project h3 { margin: 0 0 12px; font-size: 19px; }
+  .github-project h3 a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: underline; text-underline-offset: 4px; }
+  .github-description { margin: 0 0 16px; color: var(--muted); font-size: 15px; line-height: 1.7; }
+  .github-technologies { margin: auto 0 12px; font-size: 13px; color: var(--muted); }
+  .github-links { display: flex; flex-wrap: wrap; gap: 8px 24px; }
+  .github-links a { display: inline-flex; align-items: center; min-height: 44px; font-size: 14px; }
+  @media (max-width: 600px) {
+    .github-projects { grid-template-columns: minmax(0, 1fr); }
+  }
+</style>

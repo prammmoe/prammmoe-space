@@ -4,6 +4,7 @@ module.exports = {
       staticDistDir: './dist',
       url: [
         'http://localhost/',
+        'http://localhost/projects/',
         'http://localhost/blog/',
         'http://localhost/blog/getting-to-know-server-sent-events-on-ios/',
         'http://localhost/projects/curated-works-2025/',
