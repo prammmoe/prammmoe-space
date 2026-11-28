@@ -5,6 +5,7 @@ module.exports = {
       url: [
         'http://localhost/',
         'http://localhost/projects/',
+        'http://localhost/research/',
         'http://localhost/blog/',
         'http://localhost/blog/getting-to-know-server-sent-events-on-ios/',
         'http://localhost/projects/curated-works-2025/',

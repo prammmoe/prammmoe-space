@@ -1,0 +1,56 @@
+---
+import Base from '../layouts/Base.astro'
+import { journal, gemastik } from '../data/research'
+const scholarlyArticle = {
+  '@context': 'https://schema.org',
+  '@type': 'ScholarlyArticle',
+  '@id': journal.url,
+  headline: journal.title,
+  url: journal.url,
+  datePublished: journal.published,
+  author: journal.authors.map((name, index) => index === 0
+    ? { '@type': 'Person', '@id': 'https://prammmoe.com/#person', name }
+    : { '@type': 'Person', name }),
+  isPartOf: { '@type': 'PublicationIssue', issueNumber: '1', isPartOf: {
+    '@type': 'PublicationVolume', volumeNumber: '4', isPartOf: { '@type': 'Periodical', name: journal.venue },
+  } },
+  description: journal.summary,
+}
+---
+<Base title="Research & Publications" description="Computer vision research by Pramuditha Muhammad Ikhwan: a journal publication on protective equipment detection and a GEMASTIK 2024 finalist paper on vehicle counting.">
+  <script slot="head" type="application/ld+json" is:inline set:html={JSON.stringify(scholarlyArticle).replace(/</g, '\\u003c')} />
+  <header class="page-header">
+    <h1>Research &amp; Publications</h1>
+    <p class="intro-copy">My research explores computer vision for construction safety and traffic management.</p>
+  </header>
+  <article class="research-entry" id="ppe-detection" aria-labelledby="journal-heading">
+    <p class="eyebrow">Journal publication</p>
+    <h2 id="journal-heading"><a href={journal.url}>{journal.title}</a></h2>
+    <p class="authors">{journal.authors.join(' · ')}</p>
+    <p class="venue">{journal.venue}<br />Vol. 4, No. 1 (2026) · Published <time datetime={journal.published}>18 November 2026</time></p>
+    <p>{journal.summary}</p>
+    <div class="profile-links"><a href={journal.url}>Read on the journal website</a></div>
+  </article>
+  <article class="research-entry" id="gemastik" aria-labelledby="gemastik-heading">
+    <p class="eyebrow">{gemastik.distinction}</p>
+    <h2 id="gemastik-heading" lang="id"><a href={gemastik.pdf}>{gemastik.title}</a></h2>
+    <p class="authors">{gemastik.authors.join(' · ')}</p>
+    <p>{gemastik.summary}</p>
+    <div class="profile-links">
+      <a href={gemastik.pdf} target="_blank" rel="noopener noreferrer">Open paper (PDF)</a>
+      <a href={gemastik.pdf} download>Download paper</a>
+    </div>
+    <p class="pdf-note">Research paper in Indonesian · 5 pages. If the preview is unavailable in your browser, open or download the PDF above.</p>
+    <iframe src={gemastik.pdf} title="GEMASTIK research paper: vehicle counting with YOLOv10 (Indonesian, 5 pages)" loading="lazy"></iframe>
+  </article>
+</Base>
+
+<style>
+  .research-entry { min-width: 0; padding: 32px 0; border-top: 1px solid var(--rule); }
+  .research-entry h2 { font-size: clamp(21px, 3vw, 27px); line-height: 1.35; overflow-wrap: anywhere; }
+  .research-entry h2 a { text-decoration: underline; text-underline-offset: 4px; }
+  .eyebrow { margin: 0 0 12px; color: var(--muted); font-size: 14px; font-weight: 600; }
+  .authors { margin-top: 16px; font-size: 15px; }
+  .venue, .pdf-note { color: var(--muted); font-size: 14px; }
+  iframe { display: block; width: 100%; height: clamp(440px, 75vh, 800px); margin-top: 16px; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+</style>

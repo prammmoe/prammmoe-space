@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { readFile, access } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
-const routes = ['/', '/services/', '/blog/', '/projects/', '/media/', '/musics/',
+const routes = ['/', '/services/', '/blog/', '/projects/', '/research/', '/media/', '/musics/',
   '/blog/securing-api-requests-with-hmac-in-swift/',
   '/blog/getting-to-know-server-sent-events-on-ios/',
   '/blog/the-sun-spacetime-and-the-order-of-creation/',
@@ -28,13 +28,38 @@ test('every portfolio subpage links directly back to home', async ({ page }) => 
 test('career comes first and engineering writing is curated', async ({ page }) => {
   await page.goto('/')
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Pramuditha Muhammad Ikhwan')
-  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Experience', 'Tech stack', 'Education', 'Recommendations', 'Contact me'])
+  await expect(page.locator('main h2')).toHaveText(['Projects', 'Writing', 'Research & Publications', 'Experience', 'Tech stack', 'Education', 'Recommendations', 'Contact me'])
   await expect(page.locator('#writing li')).toHaveCount(3)
   await expect(page.locator('#writing')).not.toContainText('The Sun, Spacetime')
   await expect(page.locator('header nav, header a')).toHaveCount(0)
   await expect(page.getByRole('link', { name: 'Download resume', exact: true })).toHaveAttribute('href', '/resume.pdf')
   await expect(page.locator('#services')).toHaveCount(0)
   await expect(page.getByRole('link', { name: 'Send email', exact: true })).toHaveAttribute('href', 'mailto:ikhwanpramuditha05@gmail.com?subject=Freelance%20project%20inquiry')
+})
+
+test('research credits coauthors and provides the original finalist paper', async ({ page, request }, testInfo) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' })
+  await page.goto('/')
+  await expect(page.locator('#research li')).toHaveCount(2)
+  await page.getByRole('link', { name: 'All research', exact: true }).click()
+  await expect(page).toHaveURL('/research/')
+  await expect(page.locator('#ppe-detection .authors')).toHaveText('Pramuditha Muhammad Ikhwan · Fatchul Arifin')
+  await expect(page.locator('#ppe-detection time')).toHaveAttribute('datetime', '2026-11-18')
+  await expect(page.locator('#gemastik .eyebrow')).toHaveText('GEMASTIK 2024 finalist · Data Mining')
+  await expect(page.getByRole('link', { name: 'Finalist announcement' })).toHaveCount(0)
+  await expect(page.locator('#gemastik .authors')).toHaveText('Rubens Juristanto · Pramuditha Muhammad Ikhwan · Zaki Nugraha · Agus Qomaruddin Munir')
+  const pdf = '/papers/gemastik-hashtag-vehicle-counting.pdf'
+  await expect(page.locator('iframe')).toHaveAttribute('src', pdf)
+  await expect(page.locator('iframe')).toHaveAttribute('title', /GEMASTIK research paper/)
+  const response = await request.get(pdf)
+  expect(response.headers()['content-type']).toContain('application/pdf')
+  expect(await response.body()).toEqual(await readFile(resolve('public', pdf.slice(1))))
+  const downloadPromise = page.waitForEvent('download')
+  await page.getByRole('link', { name: 'Download paper', exact: true }).click()
+  expect((await downloadPromise).suggestedFilename()).toBe('gemastik-hashtag-vehicle-counting.pdf')
+  await page.screenshot({ path: testInfo.outputPath('research-desktop.png'), fullPage: true })
+  await page.setViewportSize({ width: 375, height: 900 })
+  await page.screenshot({ path: testInfo.outputPath('research-mobile.png'), fullPage: true })
 })
 
 test('services has its own page with the complete offering and contact links', async ({ page }) => {
@@ -156,6 +181,7 @@ test('footer exposes crawlable portfolio sections and the requested copyright', 
   const sections = [
     ['Projects', '/projects/', 'Projects'],
     ['Writing', '/blog/', 'Writing'],
+    ['Research & Publications', '/research/', 'Research & Publications'],
     ['Experience', '/#experience', 'Experience'],
     ['Tech stack', '/#tech-stack', 'Tech stack'],
     ['Education', '/#education', 'Education'],
